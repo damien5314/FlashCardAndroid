@@ -15,8 +15,10 @@ public class Activity_QuizSession_Results extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quiz_session_results);
 		Bundle extras = getIntent().getExtras();
-		if (extras.containsKey("QuizCollection")) {
-			qc = extras.getParcelableArrayList("QuizCollection");
+		if (extras != null) {
+			if (extras.containsKey("QuizCollection")) {
+				qc = extras.getParcelableArrayList("QuizCollection");
+			}
 		}
 		// Calculate results and populate layout
 	}

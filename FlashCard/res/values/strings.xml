@@ -27,7 +27,9 @@
     <string name="title_activity_activity_quiz_session_results">Results</string>
     <string name="hello_world">Hello world!</string>
     <string name="sessionResults_label">Session Results</string>
-    <string name="sessionResults_phrasesTotal_Label">Phrases Studied</string>
-    <string name="sessionResults_phrasesTotal_Default">-10</string>
+    <string name="sessionResults_phrasesTotal_label">Phrases Studied</string>
+    <string name="sessionResults_phrasesTotal_default">-10</string>
+    <string name="sessionResults_listTitle_label">List</string>
+    <string name="sessionResults_listTitle_default">TitleDefault</string>
 
 </resources>
