@@ -1,7 +1,5 @@
 package com.ddiehl.flashcard;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,7 +18,7 @@ import android.widget.TextView;
 public class Activity_Quiz_NativePhonetic extends Activity {
 	private static final String TAG = "Activity_Quiz_KanjiKana";
 	private Quiz q;
-	private ArrayList<Quiz> qc;
+	private QuizCollection qc;
 	private QuizSession qs;
 
 	@Override
@@ -32,7 +30,7 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 		if (extras.containsKey("Quiz"))
 			q = extras.getParcelable("Quiz");
 		if (extras.containsKey("QuizCollection"))
-			qc = extras.getParcelableArrayList("QuizCollection");
+			qc = extras.getParcelable("QuizCollection");
 		if (extras.containsKey("QuizSession"))
 			qs = extras.getParcelable("QuizSession");
 		
@@ -51,7 +49,7 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 		
 		Phrase randomPhrase = null;
 		if (extras.containsKey("QuizCollection")) {
-			ArrayList<Quiz> qc = extras.getParcelableArrayList("QuizCollection");
+			QuizCollection qc = extras.getParcelable("QuizCollection");
 			do { // Perform until you get a random that isn't the same as the current word
 				int randomIndex = (int) (Math.random()*qc.size());
 				randomPhrase = qc.get(randomIndex).getQuizPhrase();

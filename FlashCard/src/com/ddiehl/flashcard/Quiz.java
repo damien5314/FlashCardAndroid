@@ -2,7 +2,6 @@ package com.ddiehl.flashcard;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Quiz implements Parcelable {
 	@SuppressWarnings("unused")

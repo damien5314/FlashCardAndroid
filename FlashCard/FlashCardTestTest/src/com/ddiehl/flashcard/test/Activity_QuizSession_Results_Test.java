@@ -28,6 +28,7 @@ public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTe
 
 	@Override
 	public void tearDown() throws Exception {
+		solo.sleep(2000);
 		super.tearDown();
 	}
 	

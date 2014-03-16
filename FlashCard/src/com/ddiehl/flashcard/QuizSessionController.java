@@ -94,6 +94,7 @@ public class QuizSessionController extends Activity {
 				// Display results screen
 				Intent intent = new Intent(getBaseContext(), Activity_QuizSession_Results.class);
 				intent.putExtra("QuizCollection", quizzesAll);
+				
 				startActivityForResult(intent, 2);
 //				endQuizSession();
 			}
