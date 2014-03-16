@@ -56,7 +56,7 @@ public class QuizSessionE2ETest extends ActivityInstrumentationTestCase2<Activit
 		} // Ends after we run out of quizzes
 		
 		assertTrue("Results screen not loaded", solo.waitForActivity(Activity_QuizSession_Results.class, TIMEOUT));
-		
+		solo.sleep(5000);
 	}
 	
 	@Override

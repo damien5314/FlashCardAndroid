@@ -24,9 +24,11 @@ public class Activity_QuizSession_Results extends Activity {
 	
 	private void initializeContent() {
 		// Set title of list
-		TextView tv = (TextView) findViewById(R.id.sessionResults_listTitle_value);
-		tv.setText(qc.getTitle());
+		TextView vTitle = (TextView) findViewById(R.id.sessionResults_listTitle_value);
+		vTitle.setText(qc.getTitle());
 		// Set number of phrases studied
+		TextView vPhrasesStudied = (TextView) findViewById(R.id.sessionResults_phrasesTotal_value);
+		vPhrasesStudied.setText(String.valueOf(qc.size()));
 		// List out phrases in ListView
 	}
 
