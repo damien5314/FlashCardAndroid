@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FlashCard</string>
+    <string name="assetListGroup">vocabularylists-2</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">FlashCard</string>
+    <string name="main_header">FlashCard</string>
+    <string name="button_start">Start</string>
+    <string name="title_activity_list_selection">Select List</string>
+    <string name="button_testlist">Test List</string>
+    <string name="title_activity_load_list_data">List Details</string>
+    <string name="list_data_title_default">ListTitle</string>
+    <string name="list_data_wordcount_total_label">Total</string>
+    <string name="list_data_wordcount_total_default">-100</string>
+    <string name="list_data_wordcount_started_label">Started</string>
+    <string name="list_data_wordcount_started_default">-0</string>
+    <string name="list_data_wordcount_completed_label">Mastered</string>
+    <string name="list_data_wordcount_completed_default">-0</string>
+    <string name="list_data_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent diam massa, adipiscing eu dui sed, facilisis mattis odio. Vestibulum et mollis sapien. Ut aliquet, justo in laoreet consectetur, neque leo scelerisque ante, quis convallis diam massa et sapien. Fusce risus mauris, condimentum in imperdiet id, rhoncus eu ligula. Aenean vulputate varius turpis a pulvinar. Curabitur consectetur sagittis eros nec fermentum. Mauris et molestie nisi, ut bibendum elit. Phasellus in pellentesque sapien. Nullam sed cursus leo, eget porttitor leo.</string>
+    <string name="list_data_start_text">Start!</string>
+    <string name="title_activity_quiz_session_controller">Quiz Start</string>
+    <string name="quiz_questionDefault">Select the correct kana.</string>
+    <string name="quiz_kanjiDefault">日本語</string>
+    <string name="quiz_button">Choice</string>
+    <string name="title_activity_quiz_kanji_kana">Quiz</string>
+    <string name="title_activity_activity_quiz_session_results">Results</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="sessionResults_label">Session Results</string>
+    <string name="sessionResults_phrasesTotal_Label">Phrases Studied</string>
+    <string name="sessionResults_phrasesTotal_Default">-10</string>
+
+</resources>

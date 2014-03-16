@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<vocabulary>
+    <information>
+        <Title>GenericList Test</Title>
+        <PhrasesTotal>30</PhrasesTotal>
+        <PhrasesStarted>23</PhrasesStarted>
+        <PhrasesMastered>4</PhrasesMastered>
+    </information>
+    <phrases>
+	    <phrase ID="1">
+			<p_native>漢字１</p_native>
+			<p_phonetic>かな１</p_phonetic>
+			<p_romanized>romaji_1</p_romanized>
+			<p_translated>english_1</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１</s_native>
+					<s_phonetic>例文かな１</s_phonetic>
+					<s_romanized>rei bun romaji 1</s_romanized>
+					<s_translated>sentence english 1</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="2">
+			<p_native>漢字２</p_native>
+			<p_phonetic>かな２</p_phonetic>
+			<p_romanized>romaji_2</p_romanized>
+			<p_translated>english_2</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２</s_native>
+					<s_phonetic>例文かな２</s_phonetic>
+					<s_romanized>rei bun romaji 2</s_romanized>
+					<s_translated>sentence english 2</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="3">
+			<p_native>漢字３</p_native>
+			<p_phonetic>かな３</p_phonetic>
+			<p_romanized>romaji_3</p_romanized>
+			<p_translated>english_3</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文３</s_native>
+					<s_phonetic>例文かな３</s_phonetic>
+					<s_romanized>rei bun romaji 3</s_romanized>
+					<s_translated>sentence english 3</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="4">
+			<p_native>漢字４</p_native>
+			<p_phonetic>かな４</p_phonetic>
+			<p_romanized>romaji_4</p_romanized>
+			<p_translated>english_4</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文４</s_native>
+					<s_phonetic>例文かな４</s_phonetic>
+					<s_romanized>rei bun romaji 4</s_romanized>
+					<s_translated>sentence english 4</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="5">
+			<p_native>漢字５</p_native>
+			<p_phonetic>かな５</p_phonetic>
+			<p_romanized>romaji_5</p_romanized>
+			<p_translated>english_5</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文５</s_native>
+					<s_phonetic>例文かな５</s_phonetic>
+					<s_romanized>rei bun romaji 5</s_romanized>
+					<s_translated>sentence english 5</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="6">
+			<p_native>漢字６</p_native>
+			<p_phonetic>かな６</p_phonetic>
+			<p_romanized>romaji_6</p_romanized>
+			<p_translated>english_6</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文６</s_native>
+					<s_phonetic>例文かな６</s_phonetic>
+					<s_romanized>rei bun romaji 6</s_romanized>
+					<s_translated>sentence english 6</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="7">
+			<p_native>漢字７</p_native>
+			<p_phonetic>かな７</p_phonetic>
+			<p_romanized>romaji_7</p_romanized>
+			<p_translated>english_7</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文７</s_native>
+					<s_phonetic>例文かな７</s_phonetic>
+					<s_romanized>rei bun romaji 7</s_romanized>
+					<s_translated>sentence english 7</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="8">
+			<p_native>漢字８</p_native>
+			<p_phonetic>かな８</p_phonetic>
+			<p_romanized>romaji_8</p_romanized>
+			<p_translated>english_8</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文８</s_native>
+					<s_phonetic>例文かな８</s_phonetic>
+					<s_romanized>rei bun romaji 8</s_romanized>
+					<s_translated>sentence english 8</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="9">
+			<p_native>漢字９</p_native>
+			<p_phonetic>かな９</p_phonetic>
+			<p_romanized>romaji_9</p_romanized>
+			<p_translated>english_9</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文９</s_native>
+					<s_phonetic>例文かな９</s_phonetic>
+					<s_romanized>rei bun romaji 9</s_romanized>
+					<s_translated>sentence english 9</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="10">
+			<p_native>漢字１０</p_native>
+			<p_phonetic>かな１０</p_phonetic>
+			<p_romanized>romaji_10</p_romanized>
+			<p_translated>english_10</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１０</s_native>
+					<s_phonetic>例文かな１０</s_phonetic>
+					<s_romanized>rei bun romaji 10</s_romanized>
+					<s_translated>sentence english 10</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="11">
+			<p_native>漢字１１</p_native>
+			<p_phonetic>かな１１</p_phonetic>
+			<p_romanized>romaji_11</p_romanized>
+			<p_translated>english_11</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１１</s_native>
+					<s_phonetic>例文かな１１</s_phonetic>
+					<s_romanized>rei bun romaji 11</s_romanized>
+					<s_translated>sentence english 11</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="12">
+			<p_native>漢字１２</p_native>
+			<p_phonetic>かな１２</p_phonetic>
+			<p_romanized>romaji_12</p_romanized>
+			<p_translated>english_12</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１２</s_native>
+					<s_phonetic>例文かな１２</s_phonetic>
+					<s_romanized>rei bun romaji 12</s_romanized>
+					<s_translated>sentence english 12</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="13">
+			<p_native>漢字１３</p_native>
+			<p_phonetic>かな１３</p_phonetic>
+			<p_romanized>romaji_13</p_romanized>
+			<p_translated>english_13</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１３</s_native>
+					<s_phonetic>例文かな１３</s_phonetic>
+					<s_romanized>rei bun romaji 13</s_romanized>
+					<s_translated>sentence english 13</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="14">
+			<p_native>漢字１４</p_native>
+			<p_phonetic>かな１４</p_phonetic>
+			<p_romanized>romaji_14</p_romanized>
+			<p_translated>english_14</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１４</s_native>
+					<s_phonetic>例文かな１４</s_phonetic>
+					<s_romanized>rei bun romaji 14</s_romanized>
+					<s_translated>sentence english 14</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="15">
+			<p_native>漢字１５</p_native>
+			<p_phonetic>かな１５</p_phonetic>
+			<p_romanized>romaji_15</p_romanized>
+			<p_translated>english_15</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１５</s_native>
+					<s_phonetic>例文かな１５</s_phonetic>
+					<s_romanized>rei bun romaji 15</s_romanized>
+					<s_translated>sentence english 15</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="16">
+			<p_native>漢字１６</p_native>
+			<p_phonetic>かな１６</p_phonetic>
+			<p_romanized>romaji_16</p_romanized>
+			<p_translated>english_16</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１６</s_native>
+					<s_phonetic>例文かな１６</s_phonetic>
+					<s_romanized>rei bun romaji 16</s_romanized>
+					<s_translated>sentence english 16</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="17">
+			<p_native>漢字１７</p_native>
+			<p_phonetic>かな１７</p_phonetic>
+			<p_romanized>romaji_17</p_romanized>
+			<p_translated>english_17</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１７</s_native>
+					<s_phonetic>例文かな１７</s_phonetic>
+					<s_romanized>rei bun romaji 17</s_romanized>
+					<s_translated>sentence english 17</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="18">
+			<p_native>漢字１８</p_native>
+			<p_phonetic>かな１８</p_phonetic>
+			<p_romanized>romaji_18</p_romanized>
+			<p_translated>english_18</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１８</s_native>
+					<s_phonetic>例文かな１８</s_phonetic>
+					<s_romanized>rei bun romaji 18</s_romanized>
+					<s_translated>sentence english 18</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="19">
+			<p_native>漢字１９</p_native>
+			<p_phonetic>かな１９</p_phonetic>
+			<p_romanized>romaji_19</p_romanized>
+			<p_translated>english_19</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文１９</s_native>
+					<s_phonetic>例文かな１９</s_phonetic>
+					<s_romanized>rei bun romaji 19</s_romanized>
+					<s_translated>sentence english 19</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="20">
+			<p_native>漢字２０</p_native>
+			<p_phonetic>かな２０</p_phonetic>
+			<p_romanized>romaji_20</p_romanized>
+			<p_translated>english_20</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２０</s_native>
+					<s_phonetic>例文かな２０</s_phonetic>
+					<s_romanized>rei bun romaji 20</s_romanized>
+					<s_translated>sentence english 20</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="21">
+			<p_native>漢字２１</p_native>
+			<p_phonetic>かな２１</p_phonetic>
+			<p_romanized>romaji_21</p_romanized>
+			<p_translated>english_21</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２１</s_native>
+					<s_phonetic>例文かな２１</s_phonetic>
+					<s_romanized>rei bun romaji 21</s_romanized>
+					<s_translated>sentence english 21</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="22">
+			<p_native>漢字２２</p_native>
+			<p_phonetic>かな２２</p_phonetic>
+			<p_romanized>romaji_22</p_romanized>
+			<p_translated>english_22</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２２</s_native>
+					<s_phonetic>例文かな２２</s_phonetic>
+					<s_romanized>rei bun romaji 22</s_romanized>
+					<s_translated>sentence english 22</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="23">
+			<p_native>漢字２３</p_native>
+			<p_phonetic>かな２３</p_phonetic>
+			<p_romanized>romaji_23</p_romanized>
+			<p_translated>english_23</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２３</s_native>
+					<s_phonetic>例文かな２３</s_phonetic>
+					<s_romanized>rei bun romaji 23</s_romanized>
+					<s_translated>sentence english 23</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="24">
+			<p_native>漢字２４</p_native>
+			<p_phonetic>かな２４</p_phonetic>
+			<p_romanized>romaji_24</p_romanized>
+			<p_translated>english_24</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２４</s_native>
+					<s_phonetic>例文かな２４</s_phonetic>
+					<s_romanized>rei bun romaji 24</s_romanized>
+					<s_translated>sentence english 24</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="25">
+			<p_native>漢字２５</p_native>
+			<p_phonetic>かな２５</p_phonetic>
+			<p_romanized>romaji_25</p_romanized>
+			<p_translated>english_25</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２５</s_native>
+					<s_phonetic>例文かな２５</s_phonetic>
+					<s_romanized>rei bun romaji 25</s_romanized>
+					<s_translated>sentence english 25</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="26">
+			<p_native>漢字２６</p_native>
+			<p_phonetic>かな２６</p_phonetic>
+			<p_romanized>romaji_26</p_romanized>
+			<p_translated>english_26</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２６</s_native>
+					<s_phonetic>例文かな２６</s_phonetic>
+					<s_romanized>rei bun romaji 26</s_romanized>
+					<s_translated>sentence english 26</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="27">
+			<p_native>漢字２７</p_native>
+			<p_phonetic>かな２７</p_phonetic>
+			<p_romanized>romaji_27</p_romanized>
+			<p_translated>english_27</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２７</s_native>
+					<s_phonetic>例文かな２７</s_phonetic>
+					<s_romanized>rei bun romaji 27</s_romanized>
+					<s_translated>sentence english 27</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="28">
+			<p_native>漢字２８</p_native>
+			<p_phonetic>かな２８</p_phonetic>
+			<p_romanized>romaji_28</p_romanized>
+			<p_translated>english_28</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２８</s_native>
+					<s_phonetic>例文かな２８</s_phonetic>
+					<s_romanized>rei bun romaji 28</s_romanized>
+					<s_translated>sentence english 28</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="29">
+			<p_native>漢字２９</p_native>
+			<p_phonetic>かな２９</p_phonetic>
+			<p_romanized>romaji_29</p_romanized>
+			<p_translated>english_29</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文２９</s_native>
+					<s_phonetic>例文かな２９</s_phonetic>
+					<s_romanized>rei bun romaji 29</s_romanized>
+					<s_translated>sentence english 29</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="30">
+			<p_native>漢字３０</p_native>
+			<p_phonetic>かな３０</p_phonetic>
+			<p_romanized>romaji_30</p_romanized>
+			<p_translated>english_30</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>例文３０</s_native>
+					<s_phonetic>例文かな３０</s_phonetic>
+					<s_romanized>rei bun romaji 30</s_romanized>
+					<s_translated>sentence english 30</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+    </phrases>
+</vocabulary>

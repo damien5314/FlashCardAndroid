@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Activity_Quiz_NativePhonetic" >
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+	    <TextView
+	        android:id="@+id/quizQuestion"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:gravity="center"
+	        android:text="@string/quiz_questionDefault"
+	        android:textSize="20sp" />
+	
+	    <TextView
+	        android:id="@+id/quizNative"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="4"
+	        android:gravity="center"
+	        android:text="@string/quiz_kanjiDefault"
+	        android:textSize="50sp" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+        
+        <Button
+	        android:id="@+id/choice1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:text="@string/quiz_button"
+	        android:textSize="@dimen/quiz_button_textSize" />
+	
+	    <Button
+	        android:id="@+id/choice2"
+	        android:layout_width="fill_parent"
+	        android:layout_height="0dp"
+	        android:layout_weight="1"
+	        android:text="@string/quiz_button"
+	        android:textSize="@dimen/quiz_button_textSize" />
+	        
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vocabulary>
+    <information>
+        <Title>Japanese 10</Title>
+        <PhrasesTotal>10</PhrasesTotal>
+        <PhrasesStarted>8</PhrasesStarted>
+        <PhrasesMastered>3</PhrasesMastered>
+    </information>
+    <phrases>
+        <phrase ID="1">
+			<p_native>日本語</p_native>
+			<p_phonetic>にほんご</p_phonetic>
+			<p_romanized>nihongo</p_romanized>
+			<p_translated>Japanese (language)</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>日本語が好きです</s_native>
+					<s_phonetic>にほんご　が　すき　です</s_phonetic>
+					<s_romanized>nihongo ga suki desu</s_romanized>
+					<s_translated>I like the Japanese language.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="2">
+			<p_native>映画</p_native>
+			<p_phonetic>えいが</p_phonetic>
+			<p_romanized>eiga</p_romanized>
+			<p_translated>film, movie</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>ドラマの映画が大好き</s_native>
+					<s_phonetic>ドラマ　の　えいが　が　だいすき</s_phonetic>
+					<s_romanized>dorama no eiga ga daisuki</s_romanized>
+					<s_translated>I love drama movies.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="3">
+			<p_native>no_kanji</p_native>
+			<p_phonetic>インターネット</p_phonetic>
+			<p_romanized>intaanetto</p_romanized>
+			<p_translated>Internet</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>インターネットで多くの情報が探せます</s_native>
+					<s_phonetic>インターネット　で　おおく　の　じょうほう　が　さがせます</s_phonetic>
+					<s_romanized>intaanetto de ooku no jouhou ga sagasemasu</s_romanized>
+					<s_translated>On the Internet, you can find a lot of information.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="4">
+			<p_native>好き</p_native>
+			<p_phonetic>すき</p_phonetic>
+			<p_romanized>suki</p_romanized>
+			<p_translated>like</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>日本語が大好きです</s_native>
+					<s_phonetic>にほんごがだいすきです</s_phonetic>
+					<s_romanized>nihongo ga daisuki desu</s_romanized>
+					<s_translated>I love the Japanese language.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="5">
+			<p_native>米</p_native>
+			<p_phonetic>こめ</p_phonetic>
+			<p_romanized>kome</p_romanized>
+			<p_translated>rice (grain)</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>日本人はお米が大好きです</s_native>
+					<s_phonetic>にほんじん は おこめ が だいすき です</s_phonetic>
+					<s_romanized>nihonjin wa okome ga daisuki desu</s_romanized>
+					<s_translated>Japanese people love rice.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="6">
+			<p_native>切る</p_native>
+			<p_phonetic>きる</p_phonetic>
+			<p_romanized>kiru</p_romanized>
+			<p_translated>to cut</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>この紙を半分に切ってください</s_native>
+					<s_phonetic>この かみ を はんぶん に きって ください</s_phonetic>
+					<s_romanized>kono kami wo hanbun ni kitte kudasai</s_romanized>
+					<s_translated>Please cut this paper in half.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="7">
+			<p_native>楽しい</p_native>
+			<p_phonetic>たのしい</p_phonetic>
+			<p_romanized>tanoshii</p_romanized>
+			<p_translated>fun, enjoyable</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>彼はとても楽しい人です</s_native>
+					<s_phonetic>かれ は とても たのしい ひと です</s_phonetic>
+					<s_romanized>kare wa totemo tanoshii hito desu</s_romanized>
+					<s_translated>He is a very fun person.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="8">
+			<p_native>嬉しい</p_native>
+			<p_phonetic>うれしい</p_phonetic>
+			<p_romanized>ureshii</p_romanized>
+			<p_translated>happy, glad</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>彼に会えて嬉しかった</s_native>
+					<s_phonetic>かれ に あえて うれしかった</s_phonetic>
+					<s_romanized>kare ni aete ureshikatta</s_romanized>
+					<s_translated>I was glad to meet him.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="9">
+			<p_native>腰</p_native>
+			<p_phonetic>こし</p_phonetic>
+			<p_romanized>koshi</p_romanized>
+			<p_translated>lower back</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>昨日から腰が痛い</s_native>
+					<s_phonetic>きのう から こし が いたい</s_phonetic>
+					<s_romanized>kinou kara koshi ga itai</s_romanized>
+					<s_translated>I've had a pain in my lower back since yesterday.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>
+		<phrase ID="10">
+			<p_native>お母さん</p_native>
+			<p_phonetic>おかあさん</p_phonetic>
+			<p_romanized>oksaasan</p_romanized>
+			<p_translated>mother</p_translated>
+			<sentences>
+				<sentence ID="1">
+					<s_native>お母さんによろしくお伝えください</s_native>
+					<s_phonetic>おかあさん に よろしく おつたえ ください</s_phonetic>
+					<s_romanized>okaasan ni yoroshiku otsutae kudasai</s_romanized>
+					<s_translated>Please say hello to your mother.</s_translated>
+				</sentence>
+			</sentences>
+		</phrase>    
+    </phrases>
+</vocabulary>
