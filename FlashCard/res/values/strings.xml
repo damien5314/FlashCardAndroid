@@ -32,7 +32,6 @@
     <string name="sessionResults_listTitle_label">List</string>
     <string name="sessionResults_listTitle_default">TitleDefault</string>
     <string name="sessionResults_listItem_default">漢字</string>
-    <string name="sessionResults_correct_itemContentDescription">Correct</string>
-    <string name="sessionResults_incorrect_itemContentDescription">Incorrect</string>
+    <string name="sessionResults_returnButton_text">End Session</string>
 
 </resources>

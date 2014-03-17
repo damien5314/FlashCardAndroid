@@ -63,6 +63,10 @@ public class Activity_QuizSession_Results extends Activity {
 		});
 		vLists.setAdapter(adapter);
 	}
+	
+	public void returnToListDetails(View v) {
+		finish();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

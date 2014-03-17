@@ -7,8 +7,7 @@
     <ImageView
         android:id="@+id/itemImage"
         android:layout_height="match_parent"
-        android:layout_width="50dp"
-        android:contentDescription="@string/sessionResults_correct_itemContentDescription" />
+        android:layout_width="40dp" />
     
     <TextView
         android:id="@+id/itemText"
