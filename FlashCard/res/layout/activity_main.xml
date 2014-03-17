@@ -17,6 +17,7 @@
         android:layout_weight="3"
         android:gravity="center"
         android:text="@string/main_header"
+        android:fontFamily="sans-serif-thin"
         android:textSize="60sp" />
     
     <Button
