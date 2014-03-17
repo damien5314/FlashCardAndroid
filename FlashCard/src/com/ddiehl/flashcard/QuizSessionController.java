@@ -77,11 +77,11 @@ public class QuizSessionController extends Activity {
 			Quiz q = quizzesIncomplete.get(0);
     		if (resultCode == 1) {
 				q.setActualScore(1);
-				q.setPotentialScore(1);
+				q.setPotentialScore(q.getPotentialScore()+1);
 				q.isCorrectlyAnswered(true);
     			quizzesComplete.add(quizzesIncomplete.remove(0)); // Remove from incomplete set, add to complete set
     		} else if (resultCode == 2) {
-				q.setPotentialScore(1); // Only set potentialScore, leave other variables as default 0/false
+				q.setPotentialScore(q.getPotentialScore()+1); // Only set potentialScore, leave other variables as default 0/false
     			quizzesIncomplete.add(quizzesIncomplete.remove(0)); // Push to the end of the list to be executed again
     		}
     		
