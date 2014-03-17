@@ -2,9 +2,9 @@ package com.ddiehl.flashcard.test;
 
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.ddiehl.flashcard.Activity_ListSelection;
 import com.ddiehl.flashcard.Activity_LoadListData;
@@ -56,6 +56,12 @@ public class QuizSessionE2ETest extends ActivityInstrumentationTestCase2<Activit
 		} // Ends after we run out of quizzes
 		
 		assertTrue("Results screen not loaded", solo.waitForActivity(Activity_QuizSession_Results.class, TIMEOUT));
+		assertFalse("Title is set to default",
+				( ( (TextView) solo.getView(R.id.sessionResults_listTitle_value) ).getText() )
+				.equals( solo.getString(R.string.sessionResults_listTitle_default) ) );
+		assertFalse("PhrasesTotal is set to default",
+				( ( (TextView) solo.getView(R.id.sessionResults_phrasesTotal_value) ).getText() )
+				.equals( solo.getString(R.string.sessionResults_phrasesTotal_default) ) );
 		solo.sleep(5000);
 	}
 	

@@ -1,8 +1,16 @@
 package com.ddiehl.flashcard;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Activity_QuizSession_Results extends Activity {
@@ -16,13 +24,12 @@ public class Activity_QuizSession_Results extends Activity {
 		if (extras != null) {
 			if (extras.containsKey("QuizCollection")) {
 				qc = extras.getParcelable("QuizCollection");
-				initializeContent();
+				displayQuizResults();
 			}
 		}
-		// Calculate results and populate layout
 	}
 	
-	private void initializeContent() {
+	private void displayQuizResults() {
 		// Set title of list
 		TextView vTitle = (TextView) findViewById(R.id.sessionResults_listTitle_value);
 		vTitle.setText(qc.getTitle());
@@ -30,6 +37,31 @@ public class Activity_QuizSession_Results extends Activity {
 		TextView vPhrasesStudied = (TextView) findViewById(R.id.sessionResults_phrasesTotal_value);
 		vPhrasesStudied.setText(String.valueOf(qc.size()));
 		// List out phrases in ListView
+		List<Quiz> correctAnswers = new ArrayList<Quiz>();
+		List<Quiz> incorrectAnswers = new ArrayList<Quiz>();
+		for (int i = 0; i < qc.size(); i++) {
+			Quiz q = qc.get(i);
+			if (q.getPotentialScore() == q.getActualScore())
+				correctAnswers.add(q);
+			else
+				incorrectAnswers.add(q);
+		}
+		QuizCollection list = new QuizCollection();
+		for (int i = 0; i < incorrectAnswers.size(); i++) {
+			list.add(incorrectAnswers.get(i));
+		}
+		for (int i = 0; i < correctAnswers.size(); i++) {
+			list.add(correctAnswers.get(i));
+		}
+		CustomAdapter adapter = new CustomAdapter(this, R.layout.activity_quiz_session_results_phrase, list);
+		ListView vLists = (ListView) findViewById(R.id.phraseList);
+		vLists.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// If we want any onClick behavior, set it here
+			}
+		});
+		vLists.setAdapter(adapter);
 	}
 
 	@Override

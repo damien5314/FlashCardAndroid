@@ -31,5 +31,8 @@
     <string name="sessionResults_phrasesTotal_default">-10</string>
     <string name="sessionResults_listTitle_label">List</string>
     <string name="sessionResults_listTitle_default">TitleDefault</string>
+    <string name="sessionResults_listItem_default">漢字</string>
+    <string name="sessionResults_correct_itemContentDescription">Correct</string>
+    <string name="sessionResults_incorrect_itemContentDescription">Incorrect</string>
 
 </resources>

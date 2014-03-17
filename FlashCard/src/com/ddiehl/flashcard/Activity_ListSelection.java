@@ -30,7 +30,8 @@ public class Activity_ListSelection extends Activity {
 			Log.e(TAG, "Error retrieving assets.");
 			e.printStackTrace();
 		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+		ArrayAdapter<String> adapter = 
+				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
 		ListView vLists = (ListView) findViewById(R.id.vocabulary_lists);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
