@@ -37,7 +37,7 @@ public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTe
 			p.setPhraseNative(s);
 			Quiz q = new Quiz(1, p);
 			double chance = Math.random();
-			if (chance < .5)
+			if (chance < .2)
 				q.setPotentialScore(1);
 			qc.add(q);
 		}

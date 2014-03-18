@@ -1,12 +1,17 @@
 package com.ddiehl.flashcard;
 
 import java.io.IOException;
+import java.io.InputStream;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,15 +28,28 @@ public class Activity_ListSelection extends Activity {
 		setContentView(R.layout.activity_list_selection);
 		
 		AssetManager assets = getAssets();
-		String[] list = null;
+		String[] list_raw = null;
 		try {
-			list = assets.list(getString(R.string.assetListGroup));
+			list_raw = assets.list(getString(R.string.assetListGroup));
 		} catch (IOException e) {
 			Log.e(TAG, "Error retrieving assets.");
 			e.printStackTrace();
 		}
+		String[] list_titles = new String[list_raw.length];
+		for (int i = 0; i < list_raw.length; i++) {
+			InputStream thisList;
+			try {
+				thisList = assets.open(getString(R.string.assetListGroup) + "/" + list_raw[i]);
+			} catch (IOException e) {
+				thisList = null;
+				Log.e(TAG, "Error opening asset.");
+				e.printStackTrace();
+			}
+	        ListInfo info = new ListInfo(thisList);
+	        list_titles[i] = info.getTitle();
+		}
 		ArrayAdapter<String> adapter = 
-				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
+				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_titles);
 		ListView vLists = (ListView) findViewById(R.id.vocabulary_lists);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -56,6 +74,58 @@ public class Activity_ListSelection extends Activity {
 	public void loadListData(View view) {
 		Intent i = new Intent(this, Activity_LoadListData.class);
 		startActivity(i);
+	}
+	
+	private class ListInfo {
+        private String title = null;
+        
+		public ListInfo(InputStream vocabulary) {
+			super();
+			XmlPullParser parser = Xml.newPullParser();
+	        try {
+				parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+		        parser.setInput(vocabulary, null);
+			} catch (Exception e) {
+				Log.e(TAG, "Error initializing XmlPullParser");
+				//e.printStackTrace();
+			}
+	        
+			try {
+				parseXML(parser);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
+		{
+	        int eventType = parser.getEventType();
+
+	        while (eventType != XmlPullParser.END_DOCUMENT) {
+	            String name = null;
+	            switch (eventType) {
+	                case XmlPullParser.START_DOCUMENT:
+	                    break;
+	                case XmlPullParser.START_TAG:
+	                    name = parser.getName();
+	                    if (name.equalsIgnoreCase("title")) {
+	                    	setTitle(parser.nextText());
+	                    }
+	                    break;
+	                case XmlPullParser.END_TAG:
+	                    break;
+	            }
+	            eventType = parser.next();
+	        }
+		}
+		
+		private void setTitle(String in) {
+			title = in;
+		}
+		
+		private String getTitle() {
+			return title;
+		}
 	}
 
 }
