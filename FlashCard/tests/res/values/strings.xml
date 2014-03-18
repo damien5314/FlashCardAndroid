@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">FlashCardTestTest</string>
-
+    <string name="app_name">FlashCardTest</string>
+    
+    <string name="results_test_string_1">Let\'s Learn A Language</string>
+    <string name="results_test_phrase_1">日本語</string>
+    <string name="results_test_phrase_2">映画</string>
+    <string name="results_test_phrase_3">お母さん</string>
 </resources>
