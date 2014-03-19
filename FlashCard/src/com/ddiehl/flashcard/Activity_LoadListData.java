@@ -2,6 +2,8 @@ package com.ddiehl.flashcard;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +14,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class Activity_LoadListData extends Activity {
@@ -26,39 +32,58 @@ public class Activity_LoadListData extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			int listNumber;
-			if (extras.containsKey("listnumber"))
-				listNumber = extras.getInt("listnumber");
-			else
+			if (!extras.containsKey("listnumber")) {
 				listNumber = 0;
-			AssetManager assets = getAssets();
-			String[] filenameList = null;
-			try {
-				filenameList = assets.list(getString(R.string.assetListGroup));
-			} catch (IOException e) {
-				Log.e(TAG, "Error retrieving assets.");
-				e.printStackTrace();
+			} else {
+				listNumber = extras.getInt("listnumber");
+				AssetManager assets = getAssets();
+				String[] filenameList = null;
+				try {
+					filenameList = assets.list(getString(R.string.assetListGroup));
+				} catch (IOException e) {
+					Log.e(TAG, "Error retrieving assets.");
+					e.printStackTrace();
+				}
+				mFilename = getString(R.string.assetListGroup) + "/" + filenameList[listNumber];
+				InputStream vocabularyList;
+				try {
+					vocabularyList = assets.open(mFilename);
+				} catch (IOException e) {
+					vocabularyList = null;
+					Log.e(TAG, "Error opening asset.");
+					e.printStackTrace();
+				}
+				PhraseCollection pc = new PhraseCollection(vocabularyList);
+				populateListData(pc);
 			}
-			mFilename = getString(R.string.assetListGroup) + "/" + filenameList[listNumber];
-			InputStream vocabularyList;
-			try {
-				vocabularyList = assets.open(mFilename);
-			} catch (IOException e) {
-				vocabularyList = null;
-				Log.e(TAG, "Error opening asset.");
-				e.printStackTrace();
-			}
-			PhraseCollection pc = new PhraseCollection(vocabularyList);
-			
-			TextView vTitle, vPhrasesTotal, vPhrasesStarted, vPhrasesMastered;
-			vTitle = (TextView) findViewById(R.id.list_data_title);
-			vPhrasesTotal = (TextView) findViewById(R.id.list_data_wordcount_total_value);
-			vPhrasesStarted = (TextView) findViewById(R.id.list_data_wordcount_started_value);
-			vPhrasesMastered = (TextView) findViewById(R.id.list_data_wordcount_completed_value);
-			vTitle.setText(pc.getTitle());
-			vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
-			vPhrasesStarted.setText(String.valueOf(pc.getPhrasesStarted()));
-			vPhrasesMastered.setText(String.valueOf(pc.getPhrasesMastered()));
 		}
+	}
+	
+	public void populateListData(PhraseCollection pc) {
+		TextView vTitle, vPhrasesTotal, vPhrasesStarted, vPhrasesMastered;
+		vTitle = (TextView) findViewById(R.id.list_data_title);
+		vPhrasesTotal = (TextView) findViewById(R.id.list_data_wordcount_total_value);
+		vPhrasesStarted = (TextView) findViewById(R.id.list_data_wordcount_started_value);
+		vPhrasesMastered = (TextView) findViewById(R.id.list_data_wordcount_completed_value);
+		vTitle.setText(pc.getTitle());
+		vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
+		vPhrasesStarted.setText(String.valueOf(pc.getPhrasesStarted()));
+		vPhrasesMastered.setText(String.valueOf(pc.getPhrasesMastered()));
+		
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < pc.size(); i++) {
+			list.add(pc.get(i).getPhraseNative());
+		}
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
+		ListView vLists = (ListView) findViewById(R.id.list_data_phrases);
+		vLists.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// If we want any onClick behavior, set it here
+			}
+		});
+		vLists.setAdapter(adapter);
 	}
 	
     public void startQuizSession(View view) {

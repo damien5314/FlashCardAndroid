@@ -33,7 +33,6 @@
 	        android:layout_weight="4"
 	        android:gravity="center"
 	        android:text="@string/quiz_kanjiDefault"
-	        android:textStyle="bold"
 	        android:textSize="50sp" />
         
     </LinearLayout>
