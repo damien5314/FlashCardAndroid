@@ -1,8 +1,7 @@
 package com.ddiehl.flashcard;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -15,7 +14,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class Activity_Quiz_NativePhonetic extends Activity {
@@ -140,25 +138,9 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	// Display prompt asking user if he or she wants to quit or save session
 	    	// see http://androidsnippets.com/prompt-user-input-with-an-alertdialog
-	    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-//	    	alert.setTitle("Title");
-	    	alert.setMessage("Quit session?");
-
-	    	alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-	    	public void onClick(DialogInterface dialog, int whichButton) {
-	    		finish();
-	    	  }
-	    	});
-
-	    	alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-	    	  public void onClick(DialogInterface dialog, int whichButton) {
-	    	    // Canceled.
-	    	  }
-	    	});
-
-	    	alert.show();
-//	        finish();
+	    	FragmentManager fm = getFragmentManager();
+	        final ConfirmSessionEndDialog dialog = ConfirmSessionEndDialog.newInstance();
+	        dialog.show(fm, "dialog_confirm_end_session");
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -166,5 +148,13 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 	
 	public Quiz getQuiz() {
 		return q;
+	}
+	
+	public void quitAndSaveSession(View v) {
+    	finish();
+	}
+	
+	public void quitAndDiscardSession(View v) {
+		finish();
 	}
 }

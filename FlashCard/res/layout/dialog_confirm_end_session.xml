@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="30dp" >
+    
+    <TextView
+        android:id="@+id/dialog_end_session_message"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:paddingBottom="10dp"
+        android:text="@string/quiz_session_end_dialog_text" />
+    
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quiz_session_end_dialog_save"
+        android:onClick="quitAndSaveSession" />
+    
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quiz_session_end_dialog_quit"
+        android:onClick="quitAndDiscardSession" />
+    
+    <Button
+        android:id="@+id/dialog_cancel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/quiz_session_end_dialog_cancel"
+        android:onClick="cancelDialog" />
+
+</LinearLayout>
