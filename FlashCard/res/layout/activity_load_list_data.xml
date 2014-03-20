@@ -12,8 +12,7 @@
     <TextView
         android:id="@+id/list_data_title"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:text="@string/list_data_title_default"
         android:textSize="30sp"
         android:fontFamily="sans-serif-light"
@@ -23,8 +22,7 @@
         android:orientation="horizontal"
         android:id="@+id/list_data"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2" >
+        android:layout_height="wrap_content" >
     
 	    <LinearLayout
 	        android:orientation="vertical"
@@ -81,13 +79,12 @@
         android:id="@+id/list_data_phrases"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="6" />
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/list_data_start"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="wrap_content"
         android:text="@string/list_data_start_text"
         android:textSize="30sp"
         android:fontFamily="sans-serif-light"
