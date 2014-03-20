@@ -1,6 +1,8 @@
 package com.ddiehl.flashcard;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Activity_Quiz_NativePhonetic extends Activity {
@@ -135,7 +138,27 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        finish();
+	    	// Display prompt asking user if he or she wants to quit or save session
+	    	// see http://androidsnippets.com/prompt-user-input-with-an-alertdialog
+	    	AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+//	    	alert.setTitle("Title");
+	    	alert.setMessage("Quit session?");
+
+	    	alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	    	public void onClick(DialogInterface dialog, int whichButton) {
+	    		finish();
+	    	  }
+	    	});
+
+	    	alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	    	  public void onClick(DialogInterface dialog, int whichButton) {
+	    	    // Canceled.
+	    	  }
+	    	});
+
+	    	alert.show();
+//	        finish();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
