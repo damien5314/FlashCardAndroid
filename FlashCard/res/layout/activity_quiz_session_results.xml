@@ -72,29 +72,17 @@
 	        android:text="@string/sessionResults_phrasesTotal_default" />
         
     </LinearLayout>
-    
-    <LinearLayout
+        
+    <ListView
+        android:id="@+id/phraseList"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:gravity="center"
-        android:orientation="vertical" >
+        android:layout_weight="1"
+        android:gravity="center" />
         
-        <ListView
-            android:id="@+id/phraseList"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
-            android:gravity="center" />
-        
-        <Button 
-            android:layout_width="fill_parent" 
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/sessionResults_returnButton_text"
-            android:onClick="returnToListDetails" />
-        
-    </LinearLayout>
+   <Button 
+       style="@style/CallToActionButton"
+       android:text="@string/sessionResults_returnButton_text"
+       android:onClick="returnToListDetails" />
     
 </LinearLayout>
