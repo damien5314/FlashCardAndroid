@@ -2,14 +2,14 @@ package com.ddiehl.flashcard;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -24,12 +24,16 @@ import android.widget.TextView;
 
 public class Activity_LoadListData extends Activity {
 	private static final String TAG = "Activity_LoadListData";
+	private final int[] optionValues = { 5, 10, 20 };
 	private String mFilename;
+	private int numPhrasesToStudy;
+	private PhraseCollection pc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_load_list_data);
+		setNumPhrasesToStudy(10); // Initialize to the default number of Phrases
     	getSharedPreferences("com.ddiehl.flashcard", Context.MODE_PRIVATE).edit().clear().commit(); // Clear SharedPrefs
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
@@ -55,28 +59,54 @@ public class Activity_LoadListData extends Activity {
 					Log.e(TAG, "Error opening asset.");
 					e.printStackTrace();
 				}
-				PhraseCollection pc = new PhraseCollection(vocabularyList);
-				populateListData(pc);
+				pc = new PhraseCollection(vocabularyList);
+				refreshListData();
 			}
 		}
-		
-		// Add onClick functionality to the options buttons
-		int[] optionValues = {5,10,20};
+
+		// Initialize options buttons
 		LinearLayout vButtons = (LinearLayout) findViewById(R.id.list_data_sessionOptions_buttons);
-		int numOptions = vButtons.getChildCount();
+		final int numOptions = vButtons.getChildCount();
 		for (int i = 0; i < numOptions; i++) {
 			Button b = (Button) vButtons.getChildAt(i);
+			// Set text to correct value from optionValues
 			b.setText(String.valueOf(optionValues[i]));
+			// Set onClick functionality of the button
 			b.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					// Set global variable representing # phrases to study
+					// Remove color filter of all other buttons 
+					for (int k = 0; k < numOptions; k++) {
+						Button b2 = (Button) ((LinearLayout)v.getParent()).getChildAt(k);
+						b2.getBackground().setColorFilter(null);
+//						b2.setBackgroundResource(R.drawable.option_button_unpressed);
+					}
+					// Set color filter on button pressed
+					v.getBackground().setColorFilter(Color.CYAN,PorterDuff.Mode.MULTIPLY);
+//					v.setBackgroundResource(R.drawable.option_button_pressed);
+					// Set global variable tracking number of phrases to study
+					setNumPhrasesToStudy(Integer.parseInt(((Button)v).getText().toString()));
 					// Refresh ListView to display correct icons
+					ListView vPhrases = (ListView) findViewById(R.id.list_data_phrases);
+					ListPhrasesAdapter adapter = (ListPhrasesAdapter) vPhrases.getAdapter();
+					for (int j = 0; j < adapter.getCount(); j++) {
+						Phrase p = (Phrase) adapter.getItem(j);
+						if (j+1 > getNumPhrasesToStudy())
+							p.setIncludedInSession(false);
+						else
+							p.setIncludedInSession(true);
+					}
+					refreshListData();
 				}
 			});
 		}
+		
+		if (android.os.Build.VERSION.SDK_INT >= 15)
+			vButtons.getChildAt(1).callOnClick();
+		else
+			vButtons.getChildAt(1).performClick();
 	}
 	
-	public void populateListData(PhraseCollection pc) {
+	public void refreshListData() {
 		TextView vTitle, vPhrasesTotal, vPhrasesStarted, vPhrasesMastered;
 		vTitle = (TextView) findViewById(R.id.list_data_title);
 		vPhrasesTotal = (TextView) findViewById(R.id.list_data_wordcount_total_value);
@@ -86,11 +116,6 @@ public class Activity_LoadListData extends Activity {
 		vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
 		vPhrasesStarted.setText(String.valueOf(pc.getPhrasesStarted()));
 		vPhrasesMastered.setText(String.valueOf(pc.getPhrasesMastered()));
-		
-		List<String> list = new ArrayList<String>();
-		for (int i = 0; i < pc.size(); i++) {
-			list.add(pc.get(i).getPhraseNative());
-		}
 		
 		ListPhrasesAdapter adapter = new ListPhrasesAdapter(this, R.layout.activity_load_list_data_phrase, pc);
 		ListView vLists = (ListView) findViewById(R.id.list_data_phrases);
@@ -109,7 +134,15 @@ public class Activity_LoadListData extends Activity {
 		startActivity(intent);
     }
     
-    @Override
+    public int getNumPhrasesToStudy() {
+		return numPhrasesToStudy;
+	}
+
+	public void setNumPhrasesToStudy(int numPhrasesToStudy) {
+		this.numPhrasesToStudy = numPhrasesToStudy;
+	}
+
+	@Override
     protected void onPause() {
     	super.onPause();
     	SharedPreferences prefs = this.getSharedPreferences("com.ddiehl.flashcard", Context.MODE_PRIVATE);

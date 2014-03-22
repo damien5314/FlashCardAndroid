@@ -78,7 +78,7 @@ public class QuizSessionController extends Activity {
     		if (resultCode == 1) {
 				q.setActualScore(1);
 				q.setPotentialScore(q.getPotentialScore()+1);
-				q.isCorrectlyAnswered(true);
+				q.setCorrectlyAnswered(true);
     			quizzesComplete.add(quizzesIncomplete.remove(0)); // Remove from incomplete set, add to complete set
     		} else if (resultCode == 2) {
 				q.setPotentialScore(q.getPotentialScore()+1); // Only set potentialScore, leave other variables as default 0/false

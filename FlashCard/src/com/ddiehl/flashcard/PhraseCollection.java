@@ -79,6 +79,7 @@ public class PhraseCollection extends ArrayList<Phrase> {
                 case XmlPullParser.END_TAG:
                     name = parser.getName();
                     if (name.equalsIgnoreCase("phrase") && currentPhrase != null) {
+                    	currentPhrase.setIncludedInSession(true);
                     	this.add(currentPhrase);
                     } 
             }

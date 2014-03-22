@@ -15,7 +15,7 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
 
 	Context context; 
     int layoutResourceId;    
-    List<Phrase> data = null;
+    PhraseCollection data = null;
     
     public ListPhrasesAdapter(Context context, int layoutResourceId, PhraseCollection data) {
         super(context, layoutResourceId, data);
@@ -43,7 +43,7 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
         }
         
         holder.itemText.setText(p.getPhraseNative());
-        holder.itemImage.setImageResource(R.drawable.phrase_play);
+        holder.itemImage.setImageResource( ((p.isIncludedInSession()) ? R.drawable.phrase_play : R.drawable.phrase_pause));
         
         return row;
     }

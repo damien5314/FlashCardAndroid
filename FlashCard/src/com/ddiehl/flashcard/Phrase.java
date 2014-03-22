@@ -9,17 +9,19 @@ public class Phrase implements Parcelable {
 	
 	private String phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 	private ArrayList<Sentence> sentences;
+	private boolean isIncludedInSession;
 	
 	public Phrase() {
 		
 	}
 	
-	public Phrase(String p_kanji, String p_kana, String p_romaji, String p_english, ArrayList<Sentence> p_sentences) {
+	public Phrase(String p_kanji, String p_kana, String p_romaji, String p_english, ArrayList<Sentence> p_sentences, boolean isIncluded) {
 		setPhraseNative(p_kanji);
 		setPhrasePhonetic(p_kana);
 		setPhraseRomanized(p_romaji);
 		setPhraseTranslated(p_english);
 		setPhraseSentences(p_sentences);
+		setIncludedInSession(isIncluded);
 	}
 	
 	public Phrase(Parcel in) {
@@ -28,6 +30,7 @@ public class Phrase implements Parcelable {
 		setPhraseRomanized(in.readString());
 		setPhraseTranslated(in.readString());
 		setPhraseSentences(in.readArrayList(Sentence.class.getClassLoader()));
+		setIncludedInSession(in.readByte() != 0);
 	}
 
 	public String getPhraseNative() {
@@ -85,6 +88,14 @@ public class Phrase implements Parcelable {
 		return sentences;
 	}
 
+	public boolean isIncludedInSession() {
+		return isIncludedInSession;
+	}
+
+	public void setIncludedInSession(boolean isIncludedInSession) {
+		this.isIncludedInSession = isIncludedInSession;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub
@@ -99,6 +110,7 @@ public class Phrase implements Parcelable {
 		arg0.writeString(getPhraseRomanized());
 		arg0.writeString(getPhraseTranslated());
 		arg0.writeList(sentences);
+		arg0.writeByte((byte) (isIncludedInSession() ? 1 : 0));
 	}
 
     public static final Parcelable.Creator<Phrase> CREATOR

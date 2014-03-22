@@ -19,7 +19,7 @@ public class Quiz implements Parcelable {
 	public Quiz(int type, Phrase p) {
 		setQuizType(type);
 		setQuizPhrase(p);
-		isCorrectlyAnswered(false);
+		setCorrectlyAnswered(false);
 		setActualScore(0);
 		setPotentialScore(0);
 	}
@@ -52,7 +52,7 @@ public class Quiz implements Parcelable {
 		return isCorrectlyAnswered;
 	}
 	
-	public void isCorrectlyAnswered(boolean foo) {
+	public void setCorrectlyAnswered(boolean foo) {
 		isCorrectlyAnswered = foo;
 	}
 
@@ -80,7 +80,7 @@ public class Quiz implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel in, int flags) {
 		in.writeInt(quizType);
-		in.writeByte((byte) (isCorrectlyAnswered ? 1 : 0));
+		in.writeByte((byte) (isCorrectlyAnswered() ? 1 : 0));
 		in.writeParcelable(quizPhrase, flags);
 		in.writeInt(actualScore);
 		in.writeInt(potentialScore);
