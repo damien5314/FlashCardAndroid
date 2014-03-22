@@ -26,10 +26,11 @@ public class QuizCollection implements Parcelable {
 		Iterator<Phrase> i = pc.iterator();
 		while (i.hasNext()) {
 			Phrase p = i.next();
-			for (int type = 1; type <= quizTypes; type++) {
-				Quiz q = new Quiz(type, p);
-				this.add(q);
-			}
+			if (p.isIncludedInSession())
+				for (int type = 1; type <= quizTypes; type++) {
+					Quiz q = new Quiz(type, p);
+					this.add(q);
+				}
 		}
 		setTitle(pc.getTitle());
 	}
@@ -90,7 +91,6 @@ public class QuizCollection implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		dest.writeTypedList(list);
 		dest.writeString(title);
 	}

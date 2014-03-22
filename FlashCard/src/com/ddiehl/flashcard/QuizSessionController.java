@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 public class QuizSessionController extends Activity {
@@ -14,6 +15,7 @@ public class QuizSessionController extends Activity {
 	private String mFilename;
 	private InputStream mVocabularyList;
 	private QuizSession session;
+	private PhraseCollection phrases;
 	private QuizCollection quizzesAll;
 	private QuizCollection quizzesIncomplete;
 	private QuizCollection quizzesComplete;
@@ -22,24 +24,36 @@ public class QuizSessionController extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		session = new QuizSession();
-		mFilename = getIntent().getStringExtra("mFilename");
-		AssetManager assets = getAssets();
-		try {
-			Log.d(TAG, "mFilename = " + mFilename);
-			mVocabularyList = assets.open(mFilename);
-		} catch (IOException e) {
-			mVocabularyList = null;
-			Log.e(TAG, "Error opening asset.");
-			e.printStackTrace();
+		Bundle extras = getIntent().getExtras();
+		
+		if (extras.containsKey("mFilename")) {
+			mFilename = extras.getString("mFilename");
+			AssetManager assets = getAssets();
+			try {
+				Log.d(TAG, "mFilename = " + mFilename);
+				mVocabularyList = assets.open(mFilename);
+			} catch (IOException e) {
+				mVocabularyList = null;
+				Log.e(TAG, "Error opening asset.");
+				e.printStackTrace();
+			}
+	        this.quizzesAll = generateQuizCollection(mVocabularyList);
 		}
-        this.quizzesAll = generateQuizCollection(mVocabularyList);
+		
+		if (extras.containsKey("PhraseCollection")) {
+			phrases = extras.getParcelable("PhraseCollection");
+	    	quizzesAll = new QuizCollection(phrases);
+	    	quizzesIncomplete = (QuizCollection) quizzesAll.clone();
+	    	quizzesComplete = new QuizCollection();
+		}
+		
         Log.i(TAG,"QuizCollection generated");
         startQuizSession();
 	}
     
     private QuizCollection generateQuizCollection(InputStream in_s) {
-    	PhraseCollection pc = new PhraseCollection(in_s);
-    	quizzesAll = new QuizCollection(pc);
+    	phrases = new PhraseCollection(in_s);
+    	quizzesAll = new QuizCollection(phrases);
     	quizzesIncomplete = (QuizCollection) quizzesAll.clone();
     	quizzesComplete = new QuizCollection();
     	return quizzesAll;
@@ -65,6 +79,7 @@ public class QuizSessionController extends Activity {
 			intent.putExtra("Quiz", q);
 			intent.putExtra("QuizSession", session);
 			intent.putExtra("QuizCollection", quizzesAll);
+			intent.putExtra("PhraseCollection", (Parcelable)phrases);
 			break;
     	// Add cases for additional quiz types when developed
 		}

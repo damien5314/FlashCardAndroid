@@ -3,16 +3,21 @@ package com.ddiehl.flashcard;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
 
-public class PhraseCollection extends ArrayList<Phrase> {
+public class PhraseCollection implements Parcelable {
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "PhraseCollection";
+	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
 	
@@ -36,6 +41,14 @@ public class PhraseCollection extends ArrayList<Phrase> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public PhraseCollection(Parcel in) {
+		in.readTypedList(list, Phrase.CREATOR);
+		this.setTitle(in.readString());
+		this.setPhrasesTotal(in.readInt());
+		this.setPhrasesStarted(in.readInt());
+		this.setPhrasesMastered(in.readInt());
 	}
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
@@ -87,6 +100,42 @@ public class PhraseCollection extends ArrayList<Phrase> {
         }
 
 	}
+	
+	public List<Phrase> add(Phrase q) {
+		list.add(q);
+		return list;
+	}
+	
+	public Phrase get(int index) {
+		return list.get(index);
+	}
+	
+	public Phrase remove(int index) {
+		return list.remove(index);
+	}
+	
+	public boolean isEmpty() {
+		return list.isEmpty();
+	}
+	
+	public PhraseCollection clone() {
+		PhraseCollection clone = new PhraseCollection();
+		clone.setTitle(getTitle());
+		clone.getList().addAll(getList());
+		return clone;
+	}
+	
+	public int size() {
+		return list.size();
+	}
+	
+	public List<Phrase> getList() {
+		return list;
+	}
+	
+	public void setList(List<Phrase> in) {
+		this.list = in;
+	}
 
 	public String getTitle() {
 		return title;
@@ -120,4 +169,31 @@ public class PhraseCollection extends ArrayList<Phrase> {
 		this.phrasesMastered = phrasesMastered;
 	}
 
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel arg0, int arg1) {
+		arg0.writeTypedList(list);
+		arg0.writeString(getTitle());
+		arg0.writeInt(getPhrasesTotal());
+		arg0.writeInt(getPhrasesStarted());
+		arg0.writeInt(getPhrasesMastered());
+	}
+	
+	public static final Parcelable.Creator<PhraseCollection> CREATOR = new Parcelable.Creator<PhraseCollection>() {
+		public PhraseCollection createFromParcel(Parcel in) {
+		    return new PhraseCollection(in);
+		}
+
+		public PhraseCollection[] newArray(int size) {
+		    return new PhraseCollection[size];
+		}
+	};
+
+	public Iterator<Phrase> iterator() {
+		return list.iterator();
+	}
 }

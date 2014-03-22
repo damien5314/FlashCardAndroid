@@ -12,6 +12,7 @@ import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -132,7 +133,8 @@ public class Activity_LoadListData extends Activity {
 	
     public void startQuizSession(View view) {
 		Intent intent = new Intent(this, QuizSessionController.class);
-		intent.putExtra("mFilename", mFilename);
+//		intent.putExtra("mFilename", mFilename);
+		intent.putExtra("PhraseCollection", (Parcelable)pc);
 		startActivity(intent);
     }
     
