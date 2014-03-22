@@ -28,18 +28,18 @@ public class Activity_ListSelection extends Activity {
 		setContentView(R.layout.activity_list_selection);
 		
 		AssetManager assets = getAssets();
-		String[] list_raw = null;
+		String[] list_filenames = null;
 		try {
-			list_raw = assets.list(getString(R.string.assetListGroup));
+			list_filenames = assets.list(getString(R.string.assetListGroup));
 		} catch (IOException e) {
 			Log.e(TAG, "Error retrieving assets.");
 			e.printStackTrace();
 		}
-		String[] list_titles = new String[list_raw.length];
-		for (int i = 0; i < list_raw.length; i++) {
+		String[] list_titles = new String[list_filenames.length];
+		for (int i = 0; i < list_filenames.length; i++) {
 			InputStream thisList;
 			try {
-				thisList = assets.open(getString(R.string.assetListGroup) + "/" + list_raw[i]);
+				thisList = assets.open(getString(R.string.assetListGroup) + "/" + list_filenames[i]);
 			} catch (IOException e) {
 				thisList = null;
 				Log.e(TAG, "Error opening asset.");

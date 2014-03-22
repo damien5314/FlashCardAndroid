@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">FlashCard</string>
-    <string name="assetListGroup">vocabularylists-2</string>
+    <string name="assetListGroup">vocabulary-lists</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">FlashCard</string>
     <string name="main_header">FlashCard</string>
