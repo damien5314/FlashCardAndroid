@@ -72,6 +72,36 @@
                 android:text="@string/list_data_wordcount_completed_default" />
 	        
 	    </LinearLayout>
+	    
+	    <LinearLayout
+	        android:id="@+id/sessionOptions"
+	        android:orientation="vertical"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center" >
+	        
+	        <TextView
+	            android:id="@+id/list_data_sessionOptions_label"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:text="@string/list_data_sessionOptions_label" />
+	        
+	        <LinearLayout
+	            android:id="@+id/list_data_sessionOptions_buttons"
+	            android:orientation="horizontal"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content" >
+	            
+	            <Button
+	                style="@style/ListDataSessionOptionsButton" />
+	            <Button
+	                style="@style/ListDataSessionOptionsButton" />
+	            <Button
+	                style="@style/ListDataSessionOptionsButton" />
+	            
+	        </LinearLayout>
+	        
+	    </LinearLayout>
         
     </LinearLayout>
     

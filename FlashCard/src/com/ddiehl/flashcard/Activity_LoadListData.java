@@ -14,8 +14,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,6 +58,21 @@ public class Activity_LoadListData extends Activity {
 				PhraseCollection pc = new PhraseCollection(vocabularyList);
 				populateListData(pc);
 			}
+		}
+		
+		// Add onClick functionality to the options buttons
+		int[] optionValues = {5,10,20};
+		LinearLayout vButtons = (LinearLayout) findViewById(R.id.list_data_sessionOptions_buttons);
+		int numOptions = vButtons.getChildCount();
+		for (int i = 0; i < numOptions; i++) {
+			Button b = (Button) vButtons.getChildAt(i);
+			b.setText(String.valueOf(optionValues[i]));
+			b.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					// Set global variable representing # phrases to study
+					// Refresh ListView to display correct icons
+				}
+			});
 		}
 	}
 	

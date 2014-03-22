@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -38,6 +38,11 @@
         <item name="android:layout_gravity">left</item>
         <item name="android:paddingLeft">5dp</item>
         <item name="android:textSize">14sp</item>
+    </style>
+    
+    <style name="ListDataSessionOptionsButton">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">40dp</item>
     </style>
 
 </resources>

@@ -17,6 +17,7 @@
     <string name="list_data_wordcount_started_default">-0</string>
     <string name="list_data_wordcount_completed_label">Mastered</string>
     <string name="list_data_wordcount_completed_default">-0</string>
+    <string name="list_data_sessionOptions_label"># Phrases</string>
     <string name="list_data_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent diam massa, adipiscing eu dui sed, facilisis mattis odio. Vestibulum et mollis sapien. Ut aliquet, justo in laoreet consectetur, neque leo scelerisque ante, quis convallis diam massa et sapien. Fusce risus mauris, condimentum in imperdiet id, rhoncus eu ligula. Aenean vulputate varius turpis a pulvinar. Curabitur consectetur sagittis eros nec fermentum. Mauris et molestie nisi, ut bibendum elit. Phasellus in pellentesque sapien. Nullam sed cursus leo, eget porttitor leo.</string>
     <string name="list_data_start_text">Start!</string>
     <string name="title_activity_quiz_session_controller">Quiz Start</string>
