@@ -3,6 +3,7 @@ package com.ddiehl.flashcard;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class Activity_LoadListData extends Activity {
 	private int numPhrasesToStudy;
 	private PhraseCollection pc;
 
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
