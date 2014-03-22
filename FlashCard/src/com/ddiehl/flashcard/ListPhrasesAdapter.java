@@ -43,7 +43,7 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
         }
         
         holder.itemText.setText(p.getPhraseNative());
-        // Set an image to holder.itemImage next
+        holder.itemImage.setImageResource(R.drawable.phrase_play);
         
         return row;
     }
