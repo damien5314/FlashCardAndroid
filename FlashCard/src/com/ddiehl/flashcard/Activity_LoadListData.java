@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -75,7 +74,7 @@ public class Activity_LoadListData extends Activity {
 			list.add(pc.get(i).getPhraseNative());
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, list);
+		ListPhrasesAdapter adapter = new ListPhrasesAdapter(this, R.layout.activity_load_list_data_phrase, pc);
 		ListView vLists = (ListView) findViewById(R.id.list_data_phrases);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override

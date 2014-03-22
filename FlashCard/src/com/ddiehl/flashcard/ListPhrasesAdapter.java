@@ -1,5 +1,7 @@
 package com.ddiehl.flashcard;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,14 +11,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class CustomAdapter extends ArrayAdapter<Quiz> {
+public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
 
 	Context context; 
     int layoutResourceId;    
-    QuizCollection data = null;
+    List<Phrase> data = null;
     
-    public CustomAdapter(Context context, int layoutResourceId, QuizCollection data) {
-        super(context, layoutResourceId, data.getList());
+    public ListPhrasesAdapter(Context context, int layoutResourceId, PhraseCollection data) {
+        super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
@@ -25,31 +27,28 @@ public class CustomAdapter extends ArrayAdapter<Quiz> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        QuizHolder holder = null;
-        Quiz q = data.get(position);
+        PhraseHolder holder = null;
+        Phrase p = data.get(position);
         
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             
-            holder = new QuizHolder();
+            holder = new PhraseHolder();
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
         	holder.itemImage = (ImageView) row.findViewById(R.id.itemImage);
             row.setTag(holder);
         } else {
-            holder = (QuizHolder) row.getTag();
+            holder = (PhraseHolder) row.getTag();
         }
         
-        holder.itemText.setText(q.getQuizPhrase().getPhraseNative());
-        if (q.getPotentialScore() == q.getActualScore())
-        	holder.itemImage.setImageResource(R.drawable.answer_correct);
-        else
-        	holder.itemImage.setImageResource(R.drawable.answer_incorrect);
+        holder.itemText.setText(p.getPhraseNative());
+        // Set an image to holder.itemImage next
         
         return row;
     }
     
-    static class QuizHolder
+    static class PhraseHolder
     {
         ImageView itemImage;
         TextView itemText;

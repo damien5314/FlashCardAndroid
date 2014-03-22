@@ -53,7 +53,7 @@ public class Activity_QuizSession_Results extends Activity {
 		for (int i = 0; i < correctAnswers.size(); i++) {
 			list.add(correctAnswers.get(i));
 		}
-		CustomAdapter adapter = new CustomAdapter(this, R.layout.activity_quiz_session_results_phrase, list);
+		QuizResultsAdapter adapter = new QuizResultsAdapter(this, R.layout.activity_quiz_session_results_phrase, list);
 		ListView vLists = (ListView) findViewById(R.id.phraseList);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
