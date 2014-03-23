@@ -8,9 +8,9 @@
     </string-array>
 
     <string-array name="pref_quizAnswerDelay_values">
-        <item name="DelayShortValue">250</item>
-        <item name="DelayMediumValue">500</item>
-        <item name="DelayLongValue">750</item>
+        <item name="DelayShortValue">300</item>
+        <item name="DelayMediumValue">600</item>
+        <item name="DelayLongValue">900</item>
     </string-array>
 
 </resources>

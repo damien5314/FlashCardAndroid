@@ -3,11 +3,13 @@ package com.ddiehl.flashcard;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -95,7 +97,7 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 						public void run() {
 							finish();	
 						}
-					}, 750);
+					}, getQuizAnswerDelay());
 				}
 			});
 		} else {
@@ -111,10 +113,16 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 						public void run() {
 							finish();	
 						}
-					}, 750);
+					}, getQuizAnswerDelay());
 				}
 			});
 		}
+	}
+	
+	private int getQuizAnswerDelay() {
+		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+		String quizAnswerDelay = sharedPref.getString("pref_quizAnswerDelay", "750");
+		return Integer.parseInt(quizAnswerDelay);
 	}
 	
 	private void removeButtonOnClickListeners() {
