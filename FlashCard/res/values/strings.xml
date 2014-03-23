@@ -3,7 +3,10 @@
 
     <string name="app_name">FlashCard</string>
     <string name="assetListGroup">vocabulary-lists</string>
+    <string name="title_activity_settings">Settings</string>
     <string name="action_settings">Settings</string>
+    <string name="pref_quizAnswerDelay">Answer Delay</string>
+    <string name="pref_quizAnswerDelay_default">750</string>
     <string name="title_activity_main">FlashCard</string>
     <string name="main_header">FlashCard</string>
     <string name="button_start">Start</string>

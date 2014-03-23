@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_quizAnswerDelay_entries">
+        <item name="DelayShort">Short</item>
+        <item name="DelayMedium">Medium</item>
+        <item name="DelayLong">Long</item>
+    </string-array>
+
+    <string-array name="pref_quizAnswerDelay_values">
+        <item name="DelayShortValue">250</item>
+        <item name="DelayMediumValue">500</item>
+        <item name="DelayLongValue">750</item>
+    </string-array>
+
+</resources>

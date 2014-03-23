@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -124,13 +123,6 @@ public class Activity_Quiz_NativePhonetic extends Activity {
 		buttons[1] = (Button) findViewById(R.id.choice2);
 		buttons[0].setOnClickListener(null);
 		buttons[1].setOnClickListener(null);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
 	}
 	
 	@Override
