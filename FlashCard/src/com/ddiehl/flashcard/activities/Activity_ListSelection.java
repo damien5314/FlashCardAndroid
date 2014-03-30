@@ -2,24 +2,23 @@ package com.ddiehl.flashcard.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import com.ddiehl.flashcard.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
+import com.ddiehl.flashcard.quizsession.ListInfo;
 
 public class Activity_ListSelection extends Activity {
 	private static final String TAG = "Activity_ListSelection";
@@ -31,13 +30,15 @@ public class Activity_ListSelection extends Activity {
 		
 		AssetManager assets = getAssets();
 		String[] list_filenames = null;
+		
 		try {
 			list_filenames = assets.list(getString(R.string.assetListGroup));
 		} catch (IOException e) {
 			Log.e(TAG, "Error retrieving assets.");
 			e.printStackTrace();
 		}
-		String[] list_titles = new String[list_filenames.length];
+		
+		ArrayList<ListInfo> vocabularyLists = new ArrayList<ListInfo>();
 		for (int i = 0; i < list_filenames.length; i++) {
 			InputStream thisList;
 			try {
@@ -48,10 +49,11 @@ public class Activity_ListSelection extends Activity {
 				e.printStackTrace();
 			}
 	        ListInfo info = new ListInfo(thisList);
-	        list_titles[i] = info.getTitle();
+	        vocabularyLists.add(info);
 		}
-		ArrayAdapter<String> adapter = 
-				new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list_titles);
+		ListSelectionAdapter adapter =
+				new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
+		
 		ListView vLists = (ListView) findViewById(R.id.vocabulary_lists);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
@@ -71,57 +73,7 @@ public class Activity_ListSelection extends Activity {
 		startActivity(i);
 	}
 	
-	private class ListInfo {
-        private String title = null;
-        
-		public ListInfo(InputStream vocabulary) {
-			super();
-			XmlPullParser parser = Xml.newPullParser();
-	        try {
-				parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-		        parser.setInput(vocabulary, null);
-			} catch (Exception e) {
-				Log.e(TAG, "Error initializing XmlPullParser");
-				//e.printStackTrace();
-			}
-	        
-			try {
-				parseXML(parser);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
-		{
-	        int eventType = parser.getEventType();
-
-	        while (eventType != XmlPullParser.END_DOCUMENT) {
-	            String name = null;
-	            switch (eventType) {
-	                case XmlPullParser.START_DOCUMENT:
-	                    break;
-	                case XmlPullParser.START_TAG:
-	                    name = parser.getName();
-	                    if (name.equalsIgnoreCase("title")) {
-	                    	setTitle(parser.nextText());
-	                    }
-	                    break;
-	                case XmlPullParser.END_TAG:
-	                    break;
-	            }
-	            eventType = parser.next();
-	        }
-		}
-		
-		private void setTitle(String in) {
-			title = in;
-		}
-		
-		private String getTitle() {
-			return title;
-		}
-	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

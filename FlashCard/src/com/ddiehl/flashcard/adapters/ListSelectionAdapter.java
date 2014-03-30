@@ -1,5 +1,7 @@
 package com.ddiehl.flashcard.adapters;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,16 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.adapters.ListPhrasesAdapter.PhraseHolder;
+import com.ddiehl.flashcard.quizsession.ListInfo;
 import com.ddiehl.flashcard.quizsession.Phrase;
-import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
-public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
+public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
 	Context context; 
     int layoutResourceId;
-    PhraseCollection data = null;
+    ArrayList<ListInfo> data = null;
     
-    public ListPhrasesAdapter(Context context, int layoutResourceId, PhraseCollection data) {
-        super(context, layoutResourceId, data.getList());
+    public ListSelectionAdapter(Context context, int layoutResourceId, ArrayList<ListInfo> data) {
+        super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
@@ -28,31 +31,27 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        PhraseHolder holder = null;
-        Phrase p = data.get(position);
+        ListHolder holder = null;
+        ListInfo info = data.get(position);
         
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             
-            holder = new PhraseHolder();
+            holder = new ListHolder();
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
-        	holder.itemImage = (ImageView) row.findViewById(R.id.itemImage);
             row.setTag(holder);
         } else {
-            holder = (PhraseHolder) row.getTag();
+            holder = (ListHolder) row.getTag();
         }
         
-        holder.itemText.setText(p.getPhraseNative());
-        holder.itemImage.setImageResource( ((p.isIncludedInSession()) ? R.drawable.phrase_play : R.drawable.phrase_pause));
+        holder.itemText.setText(info.getTitle());
         
         return row;
     }
     
-    static class PhraseHolder
+    static class ListHolder
     {
-        ImageView itemImage;
         TextView itemText;
     }
-
 }
