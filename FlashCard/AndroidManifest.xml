@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.ddiehl.flashcard.Activity_Main"
+            android:name="com.ddiehl.flashcard.activities.Activity_Main"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,27 +25,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.Activity_ListSelection"
+            android:name="com.ddiehl.flashcard.activities.Activity_ListSelection"
             android:label="@string/title_activity_list_selection" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.Activity_LoadListData"
+            android:name="com.ddiehl.flashcard.activities.Activity_LoadListData"
             android:label="@string/title_activity_load_list_data" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.QuizSessionController"
+            android:name="com.ddiehl.flashcard.activities.QuizSessionController"
             android:label="@string/title_activity_quiz_session_controller" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.Activity_Quiz_NativePhonetic"
+            android:name="com.ddiehl.flashcard.activities.Activity_Quiz_NativePhonetic"
             android:label="@string/title_activity_quiz_kanji_kana" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.Activity_QuizSession_Results"
+            android:name="com.ddiehl.flashcard.activities.Activity_QuizSession_Results"
             android:label="@string/title_activity_activity_quiz_session_results" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.SettingsActivity"
+            android:name="com.ddiehl.flashcard.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
     </application>

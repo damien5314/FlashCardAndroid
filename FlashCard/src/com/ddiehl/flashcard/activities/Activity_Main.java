@@ -1,4 +1,7 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.layout;
 
 import android.app.Activity;
 import android.content.Intent;

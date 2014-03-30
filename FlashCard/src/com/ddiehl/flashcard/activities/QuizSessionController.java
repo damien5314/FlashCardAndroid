@@ -1,7 +1,12 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
+import com.ddiehl.flashcard.quizsession.QuizSession;
 
 import android.app.Activity;
 import android.content.Intent;

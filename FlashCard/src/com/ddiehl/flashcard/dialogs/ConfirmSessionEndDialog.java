@@ -1,4 +1,8 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.dialogs;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.id;
+import com.ddiehl.flashcard.R.layout;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -1,7 +1,17 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.drawable;
+import com.ddiehl.flashcard.R.id;
+import com.ddiehl.flashcard.R.layout;
+import com.ddiehl.flashcard.R.menu;
+import com.ddiehl.flashcard.R.string;
+import com.ddiehl.flashcard.adapters.ListPhrasesAdapter;
+import com.ddiehl.flashcard.quizsession.Phrase;
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

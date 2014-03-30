@@ -1,4 +1,4 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.ddiehl.flashcard.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;

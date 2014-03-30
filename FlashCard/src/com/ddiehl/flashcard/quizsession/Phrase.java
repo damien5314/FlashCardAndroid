@@ -1,4 +1,4 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.quizsession;
 
 import java.util.ArrayList;
 

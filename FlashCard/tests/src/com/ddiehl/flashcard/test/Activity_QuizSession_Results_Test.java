@@ -8,11 +8,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ddiehl.flashcard.Activity_Main;
-import com.ddiehl.flashcard.Activity_QuizSession_Results;
-import com.ddiehl.flashcard.Phrase;
-import com.ddiehl.flashcard.Quiz;
-import com.ddiehl.flashcard.QuizCollection;
+import com.ddiehl.flashcard.activities.Activity_Main;
+import com.ddiehl.flashcard.activities.Activity_QuizSession_Results;
+import com.ddiehl.flashcard.quizsession.Phrase;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
 import com.robotium.solo.Solo;
 
 public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTestCase2<Activity_Main> {

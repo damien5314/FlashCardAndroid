@@ -1,4 +1,4 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.quizsession;
 
 import java.io.IOException;
 import java.io.InputStream;

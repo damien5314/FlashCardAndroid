@@ -5,9 +5,9 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.ddiehl.flashcard.Activity_ListSelection;
-import com.ddiehl.flashcard.Activity_Main;
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.activities.Activity_ListSelection;
+import com.ddiehl.flashcard.activities.Activity_Main;
 import com.robotium.solo.Solo;
 
 public class Activity_Main_Test extends SingleLaunchActivityTestCase<Activity_Main> {

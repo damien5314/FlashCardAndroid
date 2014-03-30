@@ -1,4 +1,13 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.id;
+import com.ddiehl.flashcard.R.layout;
+import com.ddiehl.flashcard.dialogs.ConfirmSessionEndDialog;
+import com.ddiehl.flashcard.quizsession.Phrase;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
+import com.ddiehl.flashcard.quizsession.QuizSession;
 
 import android.app.Activity;
 import android.app.FragmentManager;

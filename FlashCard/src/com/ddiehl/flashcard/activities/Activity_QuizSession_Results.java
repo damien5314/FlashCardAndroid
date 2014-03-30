@@ -1,7 +1,15 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.id;
+import com.ddiehl.flashcard.R.layout;
+import com.ddiehl.flashcard.R.menu;
+import com.ddiehl.flashcard.adapters.QuizResultsAdapter;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
 
 import android.app.Activity;
 import android.os.Bundle;

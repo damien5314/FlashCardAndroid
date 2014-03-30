@@ -1,6 +1,12 @@
-package com.ddiehl.flashcard;
+package com.ddiehl.flashcard.adapters;
 
 import java.util.List;
+
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.R.drawable;
+import com.ddiehl.flashcard.R.id;
+import com.ddiehl.flashcard.quizsession.Phrase;
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 import android.app.Activity;
 import android.content.Context;

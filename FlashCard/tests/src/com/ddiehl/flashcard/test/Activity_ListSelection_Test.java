@@ -7,9 +7,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ddiehl.flashcard.Activity_ListSelection;
-import com.ddiehl.flashcard.Activity_LoadListData;
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.activities.Activity_ListSelection;
+import com.ddiehl.flashcard.activities.Activity_LoadListData;
 import com.robotium.solo.Solo;
 
 public class Activity_ListSelection_Test extends ActivityInstrumentationTestCase2<Activity_ListSelection> {
