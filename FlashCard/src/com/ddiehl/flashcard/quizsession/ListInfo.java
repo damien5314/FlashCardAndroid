@@ -6,10 +6,14 @@ import java.io.InputStream;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.ddiehl.flashcard.activities.EditListActivity;
 
 public class ListInfo {
 	private static final String TAG = "ListInfo";
@@ -38,7 +42,9 @@ public class ListInfo {
 		setListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.d(TAG, "Edit button clicked: " + getTitle());
+				Context ctx = v.getContext();
+				Intent intent = new Intent(ctx, EditListActivity.class);
+				ctx.startActivity(intent);
 			}
 		});
 	}

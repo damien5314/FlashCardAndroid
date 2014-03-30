@@ -44,5 +44,6 @@
     <string name="quiz_session_end_dialog_save">Save and Quit</string>
     <string name="quiz_session_end_dialog_quit">Quit without Saving</string>
     <string name="quiz_session_end_dialog_cancel">Cancel</string>
+    <string name="title_activity_edit_list">Edit List</string>
 
 </resources>
