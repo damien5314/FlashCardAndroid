@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.quizsession.ListInfo;
 
 public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
+	private static final String TAG = "ListSelectionAdapter";
 	Context context; 
     int layoutResourceId;
     ArrayList<ListInfo> data = null;
@@ -37,12 +39,14 @@ public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
             
             holder = new ListHolder();
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
+            holder.itemEditButton = (Button) row.findViewById(R.id.itemEditButton);
             row.setTag(holder);
         } else {
             holder = (ListHolder) row.getTag();
         }
         
         holder.itemText.setText(info.getTitle());
+        holder.itemEditButton.setOnClickListener(info.getListener());
         
         return row;
     }
@@ -50,5 +54,6 @@ public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
     static class ListHolder
     {
         TextView itemText;
+        Button itemEditButton;
     }
 }

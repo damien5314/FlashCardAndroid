@@ -8,13 +8,18 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 import android.util.Xml;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 public class ListInfo {
 	private static final String TAG = "ListInfo";
+	InputStream list;
     private String title = null;
+    private OnClickListener listener;
     
 	public ListInfo(InputStream vocabulary) {
 		super();
+		list = vocabulary;
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -29,6 +34,13 @@ public class ListInfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		setListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.d(TAG, "Edit button clicked: " + getTitle());
+			}
+		});
 	}
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
@@ -59,5 +71,13 @@ public class ListInfo {
 	
 	public String getTitle() {
 		return title;
+	}
+
+	public OnClickListener getListener() {
+		return listener;
+	}
+
+	public void setListener(OnClickListener listener) {
+		this.listener = listener;
 	}
 }

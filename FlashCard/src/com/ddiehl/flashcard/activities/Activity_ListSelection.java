@@ -72,8 +72,6 @@ public class Activity_ListSelection extends Activity {
 		Intent i = new Intent(this, Activity_LoadListData.class);
 		startActivity(i);
 	}
-	
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
