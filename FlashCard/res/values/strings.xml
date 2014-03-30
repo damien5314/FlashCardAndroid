@@ -13,6 +13,7 @@
     <string name="button_start">Start</string>
     <string name="title_activity_list_selection">Select List</string>
     <string name="list_selection_item_default">Vocabulary List</string>
+    <string name="list_selection_item_edit_text">Edit</string>
     <string name="button_testlist">Test List</string>
     <string name="title_activity_load_list_data">List Details</string>
     <string name="list_data_title_default">ListTitle</string>

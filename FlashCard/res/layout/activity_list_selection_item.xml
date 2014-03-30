@@ -6,11 +6,18 @@
     
     <TextView
         android:id="@+id/itemText"
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:padding="20dp"
         android:textSize="20sp"
-        android:gravity="center"
+        android:gravity="left"
         android:text="@string/list_selection_item_default" />
+    
+    <Button
+        android:id="@+id/itemEditButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/list_selection_item_edit_text" />
     
 </LinearLayout>

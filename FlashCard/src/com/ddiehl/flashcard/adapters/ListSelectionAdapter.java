@@ -8,13 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.adapters.ListPhrasesAdapter.PhraseHolder;
 import com.ddiehl.flashcard.quizsession.ListInfo;
-import com.ddiehl.flashcard.quizsession.Phrase;
 
 public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
 	Context context; 
