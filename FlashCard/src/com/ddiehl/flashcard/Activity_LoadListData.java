@@ -20,7 +20,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -127,6 +129,21 @@ public class Activity_LoadListData extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				// If we want any onClick behavior, set it here
+			}
+		});
+		vLists.setOnItemLongClickListener(new OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				Phrase p = pc.get(position);
+				ImageView indicator = (ImageView) view.findViewById(R.id.itemImage);
+				if (p.isIncludedInSession()) {
+					p.setIncludedInSession(false);
+					indicator.setImageResource(R.drawable.phrase_pause);
+				} else {
+					p.setIncludedInSession(true);
+					indicator.setImageResource(R.drawable.phrase_play);
+				}
+				return false;
 			}
 		});
 		vLists.setAdapter(adapter);
