@@ -1,14 +1,10 @@
 package com.ddiehl.flashcard.activities;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -48,30 +44,11 @@ public class Activity_LoadListData extends Activity {
     	getSharedPreferences("com.ddiehl.flashcard", Context.MODE_PRIVATE).edit().clear().commit(); // Clear SharedPrefs
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			int listNumber;
-			if (!extras.containsKey("listnumber")) {
-				listNumber = 0;
-			} else {
-				listNumber = extras.getInt("listnumber");
-				AssetManager assets = getAssets();
-				String[] filenameList = null;
-				try {
-					filenameList = assets.list(getString(R.string.assetListGroup));
-				} catch (IOException e) {
-					Log.e(TAG, "Error retrieving assets.");
-					e.printStackTrace();
-				}
-				mFilename = getString(R.string.assetListGroup) + "/" + filenameList[listNumber];
-				InputStream vocabularyList;
-				try {
-					vocabularyList = assets.open(mFilename);
-				} catch (IOException e) {
-					vocabularyList = null;
-					Log.e(TAG, "Error opening asset.");
-					e.printStackTrace();
-				}
-				pc = new PhraseCollection(vocabularyList);
+			if (extras.containsKey("PhraseCollection")) {
+				pc = extras.getParcelable("PhraseCollection");
 				refreshListData();
+			} else {
+				Log.e(TAG, "No PhraseCollection included with extras.");
 			}
 		}
 

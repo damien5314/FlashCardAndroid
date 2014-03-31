@@ -22,6 +22,7 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class Activity_ListSelection extends Activity {
 	private static final String TAG = "Activity_ListSelection";
+	ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,6 @@ public class Activity_ListSelection extends Activity {
 			e.printStackTrace();
 		}
 		
-		ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 		for (int i = 0; i < list_filenames.length; i++) {
 			InputStream thisList;
 			try {
@@ -59,8 +59,8 @@ public class Activity_ListSelection extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Intent intent = new Intent(getBaseContext(), Activity_LoadListData.class);
-				// TODO Pass PhraseCollection instead of listnumber, we already generated it so no need to do it again
-				intent.putExtra("listnumber", position);
+				intent.putExtra("PhraseCollection", vocabularyLists.get(position));
+//				intent.putExtra("listnumber", position);
 				view.getContext().startActivity(intent);
 			}
 			
