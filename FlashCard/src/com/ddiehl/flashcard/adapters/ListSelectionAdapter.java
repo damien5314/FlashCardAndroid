@@ -4,14 +4,17 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.activities.EditListActivity;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
@@ -31,7 +34,8 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ListHolder holder = null;
-        PhraseCollection pc = data.get(position);
+        final int thisPosition = position;
+        PhraseCollection pc = data.get(thisPosition);
         
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
@@ -46,7 +50,16 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         }
         
         holder.itemText.setText(pc.getTitle());
-        holder.itemEditButton.setOnClickListener(pc.getEditListener());
+//		holder.itemEditButton.setOnClickListener(pc.getEditListener());
+        holder.itemEditButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Context ctx = v.getContext();
+				Intent intent = new Intent(ctx, EditListActivity.class);
+				intent.putExtra("PhraseCollection", data.get(thisPosition));
+				ctx.startActivity(intent);
+			}
+        });
         
         return row;
     }

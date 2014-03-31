@@ -47,7 +47,7 @@ public class PhraseCollection implements Parcelable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		/*
 		setEditListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -55,7 +55,7 @@ public class PhraseCollection implements Parcelable {
 				Intent intent = new Intent(ctx, EditListActivity.class);
 				ctx.startActivity(intent);
 			}
-		});
+		}); */
 	}
 	
 	public PhraseCollection(Parcel in) {

@@ -2,16 +2,29 @@ package com.ddiehl.flashcard.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
+	private static final String TAG = "EditListActivity";
+	private PhraseCollection pc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_list);
+		Bundle extras = getIntent().getExtras();
+		if (extras.containsKey("PhraseCollection")) {
+			pc = extras.getParcelable("PhraseCollection");
+			TextView tv = (TextView) findViewById(R.id.edit_list_title);
+			tv.setText(pc.getTitle());
+		} else {
+			Log.e(TAG, "No PhraseCollection included with extras.");
+		}
 	}
 
 	@Override

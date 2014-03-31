@@ -9,6 +9,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditListActivity" >
     
-    
+    <TextView
+        android:id="@+id/edit_list_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="30sp"
+        android:text="@string/list_data_title_default" />
 
 </LinearLayout>
