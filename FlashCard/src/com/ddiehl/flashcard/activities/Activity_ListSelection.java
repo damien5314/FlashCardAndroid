@@ -18,7 +18,7 @@ import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
-import com.ddiehl.flashcard.quizsession.ListInfo;
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class Activity_ListSelection extends Activity {
 	private static final String TAG = "Activity_ListSelection";
@@ -38,7 +38,7 @@ public class Activity_ListSelection extends Activity {
 			e.printStackTrace();
 		}
 		
-		ArrayList<ListInfo> vocabularyLists = new ArrayList<ListInfo>();
+		ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 		for (int i = 0; i < list_filenames.length; i++) {
 			InputStream thisList;
 			try {
@@ -48,8 +48,7 @@ public class Activity_ListSelection extends Activity {
 				Log.e(TAG, "Error opening asset.");
 				e.printStackTrace();
 			}
-	        ListInfo info = new ListInfo(thisList);
-	        vocabularyLists.add(info);
+	        vocabularyLists.add(new PhraseCollection(thisList));
 		}
 		ListSelectionAdapter adapter =
 				new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
@@ -60,6 +59,7 @@ public class Activity_ListSelection extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Intent intent = new Intent(getBaseContext(), Activity_LoadListData.class);
+				// TODO Pass PhraseCollection instead of listnumber, we already generated it so no need to do it again
 				intent.putExtra("listnumber", position);
 				view.getContext().startActivity(intent);
 			}
@@ -75,7 +75,6 @@ public class Activity_ListSelection extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}

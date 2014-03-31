@@ -9,17 +9,23 @@ import java.util.List;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
+import android.view.View;
+import android.view.View.OnClickListener;
+
+import com.ddiehl.flashcard.activities.EditListActivity;
 
 public class PhraseCollection implements Parcelable {
-	private static final long serialVersionUID = 1L;
 	private static final String TAG = "PhraseCollection";
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
+    private OnClickListener editListener;
 	
 	public PhraseCollection() {
 		super();	
@@ -41,6 +47,15 @@ public class PhraseCollection implements Parcelable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		setEditListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Context ctx = v.getContext();
+				Intent intent = new Intent(ctx, EditListActivity.class);
+				ctx.startActivity(intent);
+			}
+		});
 	}
 	
 	public PhraseCollection(Parcel in) {
@@ -100,7 +115,15 @@ public class PhraseCollection implements Parcelable {
         }
 
 	}
-	
+
+	public OnClickListener getEditListener() {
+		return editListener;
+	}
+
+	public void setEditListener(OnClickListener listener) {
+		this.editListener = listener;
+	}
+
 	public List<Phrase> add(Phrase q) {
 		list.add(q);
 		return list;

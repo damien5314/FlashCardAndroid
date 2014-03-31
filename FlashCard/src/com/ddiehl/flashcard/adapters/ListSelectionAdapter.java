@@ -12,15 +12,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.quizsession.ListInfo;
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
-public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
+public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
 	private static final String TAG = "ListSelectionAdapter";
 	Context context; 
     int layoutResourceId;
-    ArrayList<ListInfo> data = null;
+    ArrayList<PhraseCollection> data = null;
     
-    public ListSelectionAdapter(Context context, int layoutResourceId, ArrayList<ListInfo> data) {
+    public ListSelectionAdapter(Context context, int layoutResourceId, ArrayList<PhraseCollection> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
@@ -31,7 +31,7 @@ public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ListHolder holder = null;
-        ListInfo info = data.get(position);
+        PhraseCollection pc = data.get(position);
         
         if (row == null) {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
@@ -45,8 +45,8 @@ public class ListSelectionAdapter extends ArrayAdapter<ListInfo> {
             holder = (ListHolder) row.getTag();
         }
         
-        holder.itemText.setText(info.getTitle());
-        holder.itemEditButton.setOnClickListener(info.getListener());
+        holder.itemText.setText(pc.getTitle());
+        holder.itemEditButton.setOnClickListener(pc.getEditListener());
         
         return row;
     }
