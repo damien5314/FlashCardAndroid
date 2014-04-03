@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
@@ -25,6 +26,10 @@ public class EditListActivity extends Activity {
 		} else {
 			Log.e(TAG, "No PhraseCollection included with extras.");
 		}
+	}
+	
+	public void addPhrase(View v) {
+		Log.d(TAG, "Add phrase button clicked.");
 	}
 
 	@Override
