@@ -5,9 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
+import com.ddiehl.flashcard.adapters.ListPhrasesAdapter;
+import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
@@ -23,6 +29,17 @@ public class EditListActivity extends Activity {
 			pc = extras.getParcelable("PhraseCollection");
 			TextView tv = (TextView) findViewById(R.id.edit_list_title);
 			tv.setText(pc.getTitle());
+			TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
+			vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
+			EditListPhrasesAdapter adapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_phrase, pc);
+			ListView vLists = (ListView) findViewById(R.id.editList_phraseList);
+			vLists.setOnItemClickListener(new OnItemClickListener(){
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					// If we want any onClick behavior, set it here
+				}
+			});
+			vLists.setAdapter(adapter);
 		} else {
 			Log.e(TAG, "No PhraseCollection included with extras.");
 		}
