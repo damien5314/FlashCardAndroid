@@ -1,19 +1,18 @@
 package com.ddiehl.flashcard.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
-import com.ddiehl.flashcard.adapters.ListPhrasesAdapter;
-import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
@@ -37,7 +36,9 @@ public class EditListActivity extends Activity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					// Open EditPhrase activity
-					
+					Intent i = new Intent(view.getContext(), EditPhraseActivity.class);
+					i.putExtra("Phrase", pc.get(position));
+					startActivity(i);
 				}
 			});
 			vLists.setAdapter(adapter);

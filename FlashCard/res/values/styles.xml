@@ -46,5 +46,26 @@
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">40dp</item>
     </style>
+    
+    <style name="EditPhraseItem">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="EditPhraseLabel">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily" tools:targetApi="16">sans-serif-bold</item>
+    </style>
+    
+    <style name="EditPhraseValue">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:inputType">text</item>
+    </style>
 
 </resources>

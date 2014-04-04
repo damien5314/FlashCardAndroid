@@ -52,6 +52,10 @@
             android:name="com.ddiehl.flashcard.activities.EditListActivity"
             android:label="@string/title_activity_edit_list" >
         </activity>
+        <activity
+            android:name="com.ddiehl.flashcard.activities.EditPhraseActivity"
+            android:label="@string/title_activity_edit_phrase" >
+        </activity>
     </application>
 
 </manifest>

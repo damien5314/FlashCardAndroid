@@ -49,5 +49,14 @@
     <string name="editList_listPhrases_total_label">Total Phrases</string>
     <string name="editList_listPhrases_total_default">0</string>
     <string name="editList_listItem_default">漢字</string>
+    <string name="title_activity_edit_phrase">Edit Phrase</string>
+    <string name="edit_phrase_native_label">Native</string>
+    <string name="edit_phrase_native_default">漢字</string>
+    <string name="edit_phrase_phonetic_label">Phonetic</string>
+    <string name="edit_phrase_phonetic_default">かな</string>
+    <string name="edit_phrase_romanized_label">Romanized</string>
+    <string name="edit_phrase_romanized_default">nihongo</string>
+    <string name="edit_phrase_translated_label">Translated</string>
+    <string name="edit_phrase_translated_default">english</string>
 
 </resources>
