@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Sentence implements Parcelable {
-
 	private String sentenceKanji, sentenceKana, sentenceRomaji, sentenceEnglish;
 	
 	public Sentence() {
@@ -19,7 +18,6 @@ public class Sentence implements Parcelable {
 	}
 
 	public Sentence(Parcel in) {
-		// TODO Auto-generated constructor stub
 		setSentenceKanji(in.readString());
 		setSentenceKana(in.readString());
 		setSentenceRomaji(in.readString());
@@ -60,13 +58,11 @@ public class Sentence implements Parcelable {
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		// TODO Auto-generated method stub
 		dest.writeString(getSentenceKanji());
 		dest.writeString(getSentenceKana());
 		dest.writeString(getSentenceRomaji());
