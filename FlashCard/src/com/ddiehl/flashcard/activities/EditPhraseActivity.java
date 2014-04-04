@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.EditText;
 
 import com.ddiehl.flashcard.R;
@@ -36,6 +37,10 @@ public class EditPhraseActivity extends Activity {
 		phraseRomanized.setText(String.valueOf(phrase.getPhraseRomanized()));
 		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
 		phraseTranslated.setText(String.valueOf(phrase.getPhraseTranslated()));
+	}
+	
+	public void savePhrase(View v) {
+		
 	}
 
 	@Override

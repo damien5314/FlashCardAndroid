@@ -58,5 +58,7 @@
     <string name="edit_phrase_romanized_default">nihongo</string>
     <string name="edit_phrase_translated_label">Translated</string>
     <string name="edit_phrase_translated_default">english</string>
+    <string name="edit_phrase_sentences_label">Example Sentences</string>
+    <string name="edit_phrase_save_button_text">Save</string>
 
 </resources>

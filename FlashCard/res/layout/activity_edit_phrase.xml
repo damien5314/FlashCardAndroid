@@ -68,5 +68,31 @@
 	        android:hint="@string/edit_phrase_translated_default" />
         
     </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        
+        <TextView
+            android:id="@+id/edit_phrase_sentences_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_phrase_sentences_label"
+            android:textSize="12sp" />
+        
+        <ListView
+            android:id="@+id/edit_phrase_sentences_list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        
+    </LinearLayout>
+    
+    <Button
+        style="@style/CallToActionButton"
+        android:id="@+id/edit_phrase_save"
+        android:text="@string/edit_phrase_save_button_text"
+        android:onClick="savePhrase" />
 
 </LinearLayout>
