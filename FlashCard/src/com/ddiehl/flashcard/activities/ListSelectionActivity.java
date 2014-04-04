@@ -20,7 +20,7 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
-public class Activity_ListSelection extends Activity {
+public class ListSelectionActivity extends Activity {
 	private static final String TAG = "Activity_ListSelection";
 	ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 
@@ -58,7 +58,7 @@ public class Activity_ListSelection extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				Intent intent = new Intent(getBaseContext(), Activity_LoadListData.class);
+				Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
 				intent.putExtra("PhraseCollection", vocabularyLists.get(position));
 //				intent.putExtra("listnumber", position);
 				view.getContext().startActivity(intent);
@@ -69,7 +69,7 @@ public class Activity_ListSelection extends Activity {
 	}
 	
 	public void loadListData(View view) {
-		Intent i = new Intent(this, Activity_LoadListData.class);
+		Intent i = new Intent(this, LoadListDataActivity.class);
 		startActivity(i);
 	}
 

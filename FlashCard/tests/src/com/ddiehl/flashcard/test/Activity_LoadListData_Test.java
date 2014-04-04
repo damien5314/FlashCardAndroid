@@ -5,16 +5,16 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.Button;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.activities.Activity_LoadListData;
+import com.ddiehl.flashcard.activities.LoadListDataActivity;
 import com.robotium.solo.Solo;
 
-public class Activity_LoadListData_Test extends	ActivityInstrumentationTestCase2<Activity_LoadListData> {
+public class Activity_LoadListData_Test extends	ActivityInstrumentationTestCase2<LoadListDataActivity> {
 	private static final String TAG = "Activity_LoadListData_Test";
 	private static final int TIMEOUT = 5000;
 	private Solo solo;
 	
 	public Activity_LoadListData_Test() {
-		super(Activity_LoadListData.class);
+		super(LoadListDataActivity.class);
 	}
 	
 	@Override

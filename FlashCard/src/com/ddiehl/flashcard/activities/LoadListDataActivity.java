@@ -28,7 +28,7 @@ import com.ddiehl.flashcard.adapters.ListPhrasesAdapter;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
-public class Activity_LoadListData extends Activity {
+public class LoadListDataActivity extends Activity {
 	private static final String TAG = "Activity_LoadListData";
 	private final int[] optionValues = { 5, 10, 20 };
 	private String mFilename;

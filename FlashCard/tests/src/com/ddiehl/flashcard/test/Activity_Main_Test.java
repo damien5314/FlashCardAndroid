@@ -6,16 +6,16 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.activities.Activity_ListSelection;
-import com.ddiehl.flashcard.activities.Activity_Main;
+import com.ddiehl.flashcard.activities.ListSelectionActivity;
+import com.ddiehl.flashcard.activities.MainActivity;
 import com.robotium.solo.Solo;
 
-public class Activity_Main_Test extends SingleLaunchActivityTestCase<Activity_Main> {
+public class Activity_Main_Test extends SingleLaunchActivityTestCase<MainActivity> {
 	private Solo solo;
 	private int TIMEOUT = 10000;
 
 	public Activity_Main_Test() {
-		super("com.ddiehl.flashcard", Activity_Main.class);
+		super("com.ddiehl.flashcard", MainActivity.class);
 	}
 	
 	@Override
@@ -36,7 +36,7 @@ public class Activity_Main_Test extends SingleLaunchActivityTestCase<Activity_Ma
 		Button mStartButton = (Button) solo.getView(R.id.button_start);
 		assertNotNull("Start button is null", mStartButton);
 		solo.clickOnView(mStartButton);
-		assertTrue("ListSelection not loaded", solo.waitForActivity(Activity_ListSelection.class, TIMEOUT));
+		assertTrue("ListSelection not loaded", solo.waitForActivity(ListSelectionActivity.class, TIMEOUT));
 		assertTrue("ListView not loaded", solo.waitForView(R.id.vocabulary_lists));
 		ListView vVocabularyLists = (ListView) solo.getView(R.id.vocabulary_lists);
 		assertNotNull("ListView is null", vVocabularyLists);

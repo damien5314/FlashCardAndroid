@@ -8,26 +8,26 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ddiehl.flashcard.activities.Activity_Main;
-import com.ddiehl.flashcard.activities.Activity_QuizSession_Results;
+import com.ddiehl.flashcard.activities.MainActivity;
+import com.ddiehl.flashcard.activities.QuizSession_Results;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Quiz;
 import com.ddiehl.flashcard.quizsession.QuizCollection;
 import com.robotium.solo.Solo;
 
-public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTestCase2<Activity_Main> {
+public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTestCase2<MainActivity> {
 	private static final String TAG = "Activity_QuizSession_Results_Test";
 	private static final int TIMEOUT = 5000;
 	private Solo solo;
 	
 	public Activity_QuizSession_Results_Test() {
-		super(Activity_Main.class);
+		super(MainActivity.class);
 }
 	
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		Intent intent = new Intent(getActivity().getApplicationContext(), Activity_QuizSession_Results.class);
+		Intent intent = new Intent(getActivity().getApplicationContext(), QuizSession_Results.class);
 		QuizCollection qc = new QuizCollection();
 		qc.setTitle(getInstrumentation().getContext().getString(R.string.results_test_string_1));
 		Phrase p;

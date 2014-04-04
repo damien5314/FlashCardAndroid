@@ -8,17 +8,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.activities.Activity_ListSelection;
-import com.ddiehl.flashcard.activities.Activity_LoadListData;
+import com.ddiehl.flashcard.activities.ListSelectionActivity;
+import com.ddiehl.flashcard.activities.LoadListDataActivity;
 import com.robotium.solo.Solo;
 
-public class Activity_ListSelection_Test extends ActivityInstrumentationTestCase2<Activity_ListSelection> {
+public class Activity_ListSelection_Test extends ActivityInstrumentationTestCase2<ListSelectionActivity> {
 	private static final String TAG = "Activity_ListSelection_Test";
 	private static final int TIMEOUT = 5000;
 	private Solo solo;
 	
 	public Activity_ListSelection_Test() {
-		super(Activity_ListSelection.class);
+		super(ListSelectionActivity.class);
 	}
 	
 	@Override
@@ -40,7 +40,7 @@ public class Activity_ListSelection_Test extends ActivityInstrumentationTestCase
 		View vToClick = lv.getChildAt(0);
 		assertNotNull(vToClick);
 		solo.clickInList(0);
-		solo.waitForActivity(Activity_LoadListData.class, TIMEOUT);
+		solo.waitForActivity(LoadListDataActivity.class, TIMEOUT);
 		
 		TextView tv;
 		Button b;

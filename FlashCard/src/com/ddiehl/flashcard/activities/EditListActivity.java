@@ -36,7 +36,8 @@ public class EditListActivity extends Activity {
 			vLists.setOnItemClickListener(new OnItemClickListener(){
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					// If we want any onClick behavior, set it here
+					// Open EditPhrase activity
+					
 				}
 			});
 			vLists.setAdapter(adapter);

@@ -1,8 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.R.layout;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +7,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class Activity_Main extends Activity {
+import com.ddiehl.flashcard.R;
+
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +20,7 @@ public class Activity_Main extends Activity {
     }
     
     public void startAppFlow(View view) {
-    	Intent i = new Intent(this, Activity_ListSelection.class);
+    	Intent i = new Intent(this, ListSelectionActivity.class);
     	startActivity(i);
     }
     
