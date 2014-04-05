@@ -45,8 +45,12 @@ public class QuizResultsAdapter extends ArrayAdapter<Quiz> {
         } else {
             holder = (QuizHolder) row.getTag();
         }
+
+        if (q.getQuizPhrase().hasNativeText())
+        	holder.itemText.setText(q.getQuizPhrase().getPhraseNative());
+        else
+        	holder.itemText.setText(q.getQuizPhrase().getPhrasePhonetic());
         
-        holder.itemText.setText(q.getQuizPhrase().getPhraseNative());
         if (q.getPotentialScore() == q.getActualScore())
         	holder.itemImage.setImageResource(R.drawable.answer_correct);
         else

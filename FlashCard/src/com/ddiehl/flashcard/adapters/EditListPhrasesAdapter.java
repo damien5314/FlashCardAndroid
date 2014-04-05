@@ -41,8 +41,11 @@ public class EditListPhrasesAdapter extends ArrayAdapter<Phrase> {
         } else {
             holder = (PhraseHolder) row.getTag();
         }
-        
-        holder.itemText.setText(p.getPhraseNative());
+
+        if (data.get(position).hasNativeText())
+        	holder.itemText.setText(p.getPhraseNative());
+        else
+        	holder.itemText.setText(p.getPhrasePhonetic());
         
         return row;
     }

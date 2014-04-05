@@ -43,7 +43,10 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
             holder = (PhraseHolder) row.getTag();
         }
         
-        holder.itemText.setText(p.getPhraseNative());
+        if (data.get(position).hasNativeText())
+        	holder.itemText.setText(p.getPhraseNative());
+        else
+        	holder.itemText.setText(p.getPhrasePhonetic());
         holder.itemImage.setImageResource( ((p.isIncludedInSession()) ? R.drawable.phrase_play : R.drawable.phrase_pause));
         
         return row;

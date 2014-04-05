@@ -4,25 +4,28 @@ import java.util.ArrayList;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Phrase implements Parcelable {
 	private static final String TAG = "Phrase";
 	private String phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 	private ArrayList<Sentence> sentences;
 	private boolean isIncludedInSession;
+	private boolean hasNativeText;
 	
 	public Phrase() {
 		
 	}
 	
-	public Phrase(String p_kanji, String p_kana, String p_romaji, String p_english, ArrayList<Sentence> p_sentences, boolean isIncluded) {
+	public Phrase(String p_kanji, String p_kana, String p_romaji, String p_english, 
+			ArrayList<Sentence> p_sentences, boolean isIncluded) {
 		setPhraseNative(p_kanji);
 		setPhrasePhonetic(p_kana);
 		setPhraseRomanized(p_romaji);
 		setPhraseTranslated(p_english);
 		setPhraseSentences(p_sentences);
 		setIncludedInSession(isIncluded);
+		boolean nativeIsEmpty = ( p_kanji.equals(null) || p_kanji.equals("") );
+		hasNativeText(!nativeIsEmpty);
 	}
 	
 	public Phrase(Parcel in) {
@@ -32,6 +35,7 @@ public class Phrase implements Parcelable {
 		setPhraseTranslated(in.readString());
 		setPhraseSentences(in.readArrayList(Sentence.class.getClassLoader()));
 		setIncludedInSession(in.readByte() != 0);
+		hasNativeText(in.readByte() != 0);
 	}
 
 	public String getPhraseNative() {
@@ -40,6 +44,8 @@ public class Phrase implements Parcelable {
 	
 	public String setPhraseNative(String k) {
 		phraseNative = k;
+		boolean nativeIsEmpty = ( phraseNative.equals(null) || phraseNative.equals("") );
+		hasNativeText(!nativeIsEmpty);
 		return phraseNative;
 	}
 	
@@ -97,6 +103,14 @@ public class Phrase implements Parcelable {
 		this.isIncludedInSession = isIncludedInSession;
 	}
 
+	public boolean hasNativeText() {
+		return hasNativeText;
+	}
+
+	public void hasNativeText(boolean hasNativeText) {
+		this.hasNativeText = hasNativeText;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
@@ -110,6 +124,7 @@ public class Phrase implements Parcelable {
 		arg0.writeString(getPhraseTranslated());
 		arg0.writeList(sentences);
 		arg0.writeByte((byte) (isIncludedInSession() ? 1 : 0));
+		arg0.writeByte((byte) (hasNativeText() ? 1 : 0));
 	}
 
     public static final Parcelable.Creator<Phrase> CREATOR
