@@ -54,7 +54,8 @@
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.EditPhraseActivity"
-            android:label="@string/title_activity_edit_phrase" >
+            android:label="@string/title_activity_edit_phrase"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
     </application>
 
