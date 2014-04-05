@@ -60,17 +60,11 @@ public class ListSelectionActivity extends Activity {
 					long id) {
 				Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
 				intent.putExtra("PhraseCollection", vocabularyLists.get(position));
-//				intent.putExtra("listnumber", position);
 				view.getContext().startActivity(intent);
 			}
 			
 		});
 		vLists.setAdapter(adapter);
-	}
-	
-	public void loadListData(View view) {
-		Intent i = new Intent(this, LoadListDataActivity.class);
-		startActivity(i);
 	}
 
 	@Override

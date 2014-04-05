@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
@@ -43,7 +43,7 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
             
             holder = new ListHolder();
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
-            holder.itemEditButton = (Button) row.findViewById(R.id.itemEditButton);
+            holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
             row.setTag(holder);
         } else {
             holder = (ListHolder) row.getTag();
@@ -67,6 +67,6 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     static class ListHolder
     {
         TextView itemText;
-        Button itemEditButton;
+        ImageButton itemEditButton;
     }
 }

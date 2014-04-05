@@ -66,11 +66,9 @@ public class LoadListDataActivity extends Activity {
 					for (int k = 0; k < numOptions; k++) {
 						Button b2 = (Button) ((LinearLayout)v.getParent()).getChildAt(k);
 						b2.getBackground().setColorFilter(null);
-//						b2.setBackgroundResource(R.drawable.option_button_unpressed);
 					}
 					// Set color filter on button pressed
 					v.getBackground().setColorFilter(Color.CYAN,PorterDuff.Mode.MULTIPLY);
-//					v.setBackgroundResource(R.drawable.option_button_pressed);
 					// Set global variable tracking number of phrases to study
 					setNumPhrasesToStudy(Integer.parseInt(((Button)v).getText().toString()));
 					// Refresh ListView to display correct icons
