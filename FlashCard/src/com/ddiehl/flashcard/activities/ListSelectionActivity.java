@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
+import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {

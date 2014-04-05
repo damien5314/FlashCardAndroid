@@ -50,7 +50,6 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         }
         
         holder.itemText.setText(pc.getTitle());
-//		holder.itemEditButton.setOnClickListener(pc.getEditListener());
         holder.itemEditButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

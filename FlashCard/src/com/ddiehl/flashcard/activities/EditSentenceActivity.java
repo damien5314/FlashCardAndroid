@@ -40,7 +40,7 @@ public class EditSentenceActivity extends Activity {
 	}
 	
 	public void save(View v) {
-		
+		finish();
 	}
 
 	@Override

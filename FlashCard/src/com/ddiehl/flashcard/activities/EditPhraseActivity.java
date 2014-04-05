@@ -65,7 +65,20 @@ public class EditPhraseActivity extends Activity {
 	}
 	
 	public void save(View v) {
+		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
+		phraseNative = (EditText) findViewById(R.id.edit_phrase_native_value);
+		phrase.setPhraseNative(phraseNative.getText().toString());
+		phrasePhonetic = (EditText) findViewById(R.id.edit_phrase_phonetic_value);
+		phrase.setPhrasePhonetic(phrasePhonetic.getText().toString());
+		phraseRomanized = (EditText) findViewById(R.id.edit_phrase_romanized_value);
+		phrase.setPhraseRomanized(phraseRomanized.getText().toString());
+		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
+		phrase.setPhraseTranslated(phraseTranslated.getText().toString());
 		
+		Intent returnIntent = new Intent();
+		returnIntent.putExtra("Phrase", phrase);
+		setResult(1, returnIntent);
+		finish();
 	}
 
 	@Override
@@ -74,5 +87,4 @@ public class EditPhraseActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 }
