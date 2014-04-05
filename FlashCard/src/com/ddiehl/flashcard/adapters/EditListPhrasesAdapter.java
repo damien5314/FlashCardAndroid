@@ -36,12 +36,18 @@ public class EditListPhrasesAdapter extends ArrayAdapter<Phrase> {
             row = inflater.inflate(layoutResourceId, parent, false);
             
             holder = new PhraseHolder();
+            holder.itemLabel = (ImageView) row.findViewById(R.id.itemLabel);
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
             row.setTag(holder);
         } else {
             holder = (PhraseHolder) row.getTag();
         }
 
+        String imageResourceName = "ic_item_" + ( String.format("%02d", position+1));
+        int imageResourceId = context.getResources().getIdentifier(imageResourceName, "drawable", context.getPackageName());
+        
+        holder.itemLabel.setImageResource(imageResourceId);
+        
         if (data.get(position).hasNativeText())
         	holder.itemText.setText(p.getPhraseNative());
         else
@@ -52,7 +58,7 @@ public class EditListPhrasesAdapter extends ArrayAdapter<Phrase> {
     
     static class PhraseHolder
     {
-        ImageView itemImage;
+        ImageView itemLabel;
         TextView itemText;
     }
 

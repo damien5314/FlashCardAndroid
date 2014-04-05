@@ -24,8 +24,7 @@ public class Phrase implements Parcelable {
 		setPhraseTranslated(p_english);
 		setPhraseSentences(p_sentences);
 		setIncludedInSession(isIncluded);
-		boolean nativeIsEmpty = ( p_kanji.equals(null) || p_kanji.equals("") );
-		hasNativeText(!nativeIsEmpty);
+		hasNativeText(!nativeIsEmpty());
 	}
 	
 	public Phrase(Parcel in) {
@@ -44,8 +43,7 @@ public class Phrase implements Parcelable {
 	
 	public String setPhraseNative(String k) {
 		phraseNative = k;
-		boolean nativeIsEmpty = ( phraseNative.equals(null) || phraseNative.equals("") );
-		hasNativeText(!nativeIsEmpty);
+		hasNativeText(!nativeIsEmpty());
 		return phraseNative;
 	}
 	
@@ -109,6 +107,10 @@ public class Phrase implements Parcelable {
 
 	public void hasNativeText(boolean hasNativeText) {
 		this.hasNativeText = hasNativeText;
+	}
+	
+	private boolean nativeIsEmpty() {
+		return ( getPhraseNative().equals(null) || getPhraseNative().equals("") );
 	}
 
 	@Override
