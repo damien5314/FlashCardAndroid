@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
@@ -36,12 +37,14 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
             row = inflater.inflate(layoutResourceId, parent, false);
             
             holder = new ItemHolder();
+            holder.itemImage = (ImageView) row.findViewById(R.id.itemImage);
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
             row.setTag(holder);
         } else {
             holder = (ItemHolder) row.getTag();
         }
         
+        holder.itemImage.setImageResource(R.drawable.ic_content_edit);
         holder.itemText.setText(s.getSentenceNative());
         
         return row;
@@ -49,6 +52,7 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
     
     static class ItemHolder
     {
+    	ImageView itemImage;
         TextView itemText;
     }
 }
