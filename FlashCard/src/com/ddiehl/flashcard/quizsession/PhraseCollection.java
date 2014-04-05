@@ -70,6 +70,8 @@ public class PhraseCollection implements Parcelable {
 	{
         int eventType = parser.getEventType();
         Phrase currentPhrase = null;
+        ArrayList<Sentence> phraseSentences = null;
+        Sentence currentSentence = null;
 
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String name = null;
@@ -101,6 +103,18 @@ public class PhraseCollection implements Parcelable {
                         	currentPhrase.setPhraseRomanized(parser.nextText());
                         } else if (name.equalsIgnoreCase("p_translated")) {
                         	currentPhrase.setPhraseTranslated(parser.nextText());
+                        } else if (name.equalsIgnoreCase("sentences")) {
+                        	phraseSentences = new ArrayList<Sentence>();
+                        } else if (name.equalsIgnoreCase("sentence")) {
+                        	currentSentence = new Sentence();
+                        } else if (name.equalsIgnoreCase("s_native")) {
+                        	currentSentence.setSentenceNative(parser.nextText());
+                        } else if (name.equalsIgnoreCase("s_phonetic")) {
+                        	currentSentence.setSentencePhonetic(parser.nextText());                        	
+                        } else if (name.equalsIgnoreCase("s_romanized")) {
+                        	currentSentence.setSentenceRomanized(parser.nextText());
+                        } else if (name.equalsIgnoreCase("s_translated")) {
+                        	currentSentence.setSentenceTranslated(parser.nextText());
                         }
                     }
                     break;
@@ -109,7 +123,11 @@ public class PhraseCollection implements Parcelable {
                     if (name.equalsIgnoreCase("phrase") && currentPhrase != null) {
                     	currentPhrase.setIncludedInSession(true);
                     	this.add(currentPhrase);
-                    } 
+                    } else if (name.equalsIgnoreCase("sentence") && currentSentence != null) {
+                    	phraseSentences.add(currentSentence);
+                    } else if (name.equalsIgnoreCase("sentences") && phraseSentences != null) {
+                    	currentPhrase.setPhraseSentences(phraseSentences);
+                    }
             }
             eventType = parser.next();
         }

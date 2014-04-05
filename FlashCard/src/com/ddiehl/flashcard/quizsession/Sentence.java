@@ -4,56 +4,56 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Sentence implements Parcelable {
-	private String sentenceKanji, sentenceKana, sentenceRomaji, sentenceEnglish;
+	private String sentenceNative, sentencePhonetic, sentenceRomanized, sentenceTranslated;
 	
 	public Sentence() {
 		
 	}
 	
 	public Sentence(String s_kanji, String s_kana, String s_romaji, String s_english) {
-		setSentenceKanji(s_kanji);
-		setSentenceKana(s_kana);
-		setSentenceRomaji(s_romaji);
-		setSentenceEnglish(s_english);
+		setSentenceNative(s_kanji);
+		setSentencePhonetic(s_kana);
+		setSentenceRomanized(s_romaji);
+		setSentenceTranslated(s_english);
 	}
 
 	public Sentence(Parcel in) {
-		setSentenceKanji(in.readString());
-		setSentenceKana(in.readString());
-		setSentenceRomaji(in.readString());
-		setSentenceEnglish(in.readString());
+		setSentenceNative(in.readString());
+		setSentencePhonetic(in.readString());
+		setSentenceRomanized(in.readString());
+		setSentenceTranslated(in.readString());
 	}
 
-	public String getSentenceKanji() {
-		return sentenceKanji;
+	public String getSentenceNative() {
+		return sentenceNative;
 	}
 
-	public void setSentenceKanji(String sentenceKanji) {
-		this.sentenceKanji = sentenceKanji;
+	public void setSentenceNative(String sentenceKanji) {
+		this.sentenceNative = sentenceKanji;
 	}
 
-	public String getSentenceKana() {
-		return sentenceKana;
+	public String getSentencePhonetic() {
+		return sentencePhonetic;
 	}
 
-	public void setSentenceKana(String sentenceKana) {
-		this.sentenceKana = sentenceKana;
+	public void setSentencePhonetic(String sentenceKana) {
+		this.sentencePhonetic = sentenceKana;
 	}
 
-	public String getSentenceRomaji() {
-		return sentenceRomaji;
+	public String getSentenceRomanized() {
+		return sentenceRomanized;
 	}
 
-	public void setSentenceRomaji(String sentenceRomaji) {
-		this.sentenceRomaji = sentenceRomaji;
+	public void setSentenceRomanized(String sentenceRomaji) {
+		this.sentenceRomanized = sentenceRomaji;
 	}
 
-	public String getSentenceEnglish() {
-		return sentenceEnglish;
+	public String getSentenceTranslated() {
+		return sentenceTranslated;
 	}
 
-	public void setSentenceEnglish(String sentenceEnglish) {
-		this.sentenceEnglish = sentenceEnglish;
+	public void setSentenceTranslated(String sentenceEnglish) {
+		this.sentenceTranslated = sentenceEnglish;
 	}
 
 	@Override
@@ -63,10 +63,10 @@ public class Sentence implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(getSentenceKanji());
-		dest.writeString(getSentenceKana());
-		dest.writeString(getSentenceRomaji());
-		dest.writeString(getSentenceEnglish());
+		dest.writeString(getSentenceNative());
+		dest.writeString(getSentencePhonetic());
+		dest.writeString(getSentenceRomanized());
+		dest.writeString(getSentenceTranslated());
 	}
 
     public static final Parcelable.Creator<Sentence> CREATOR

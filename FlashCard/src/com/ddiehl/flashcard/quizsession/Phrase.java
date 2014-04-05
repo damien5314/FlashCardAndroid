@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Phrase implements Parcelable {
-	
+	private static final String TAG = "Phrase";
 	private String phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 	private ArrayList<Sentence> sentences;
 	private boolean isIncludedInSession;
@@ -71,10 +72,10 @@ public class Phrase implements Parcelable {
 	
 	public ArrayList<Sentence> addSentence(String s_kanji, String s_kana, String s_romaji, String s_english) {
 		Sentence s = new Sentence();
-		s.setSentenceKanji(s_kanji);
-		s.setSentenceKana(s_kana);
-		s.setSentenceRomaji(s_romaji);
-		s.setSentenceEnglish(s_english);
+		s.setSentenceNative(s_kanji);
+		s.setSentencePhonetic(s_kana);
+		s.setSentenceRomanized(s_romaji);
+		s.setSentenceTranslated(s_english);
 		sentences.add(s);
 		return sentences;
 	}

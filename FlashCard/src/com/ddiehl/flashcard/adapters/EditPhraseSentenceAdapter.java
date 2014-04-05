@@ -42,7 +42,7 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
             holder = (ItemHolder) row.getTag();
         }
         
-        holder.itemText.setText(s.getSentenceKanji());
+        holder.itemText.setText(s.getSentenceNative());
         
         return row;
     }
