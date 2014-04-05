@@ -17,3 +17,5 @@ Allow users to create vocabulary lists, and provide an interface for studying th
 ![List Data](/screenshots/03_list_data.png "List Data")
 ![Quiz](/screenshots/04_quiz.png "Quiz")
 ![Session Results](/screenshots/05_session_results.png "Session Results")
+![Edit List](/screenshots/06_edit_list.png "Edit List")
+![Edit Phrase](/screenshots/07_edit_phrase.png "Edit Phrase")
