@@ -19,6 +19,12 @@
 					<s_romanized>nihongo ga suki desu</s_romanized>
 					<s_translated>I like the Japanese language.</s_translated>
 				</sentence>
+				<sentence ID="2">
+					<s_native>私の好きな言葉は日本語です</s_native>
+					<s_phonetic>わたし　の　すきな　ことば　は　にほんご　です</s_phonetic>
+					<s_romanized>watashi no sukina kotoba ha nihongo desu</s_romanized>
+					<s_translated>My favorite language is Japanese.</s_translated>
+				</sentence>
 			</sentences>
 		</phrase>
 		<phrase ID="2">
@@ -36,7 +42,7 @@
 			</sentences>
 		</phrase>
 		<phrase ID="3">
-			<p_native>no_kanji</p_native>
+			<p_native />
 			<p_phonetic>インターネット</p_phonetic>
 			<p_romanized>intaanetto</p_romanized>
 			<p_translated>Internet</p_translated>

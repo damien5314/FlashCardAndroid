@@ -15,6 +15,7 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
+	private static final String TAG = "EditPhraseSentenceAdapter";
 	Context context; 
     int layoutResourceId;
     ArrayList<Sentence> data = null;
@@ -37,14 +38,17 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
             row = inflater.inflate(layoutResourceId, parent, false);
             
             holder = new ItemHolder();
-            holder.itemImage = (ImageView) row.findViewById(R.id.itemImage);
+            holder.itemLabel = (ImageView) row.findViewById(R.id.itemLabel);
             holder.itemText = (TextView) row.findViewById(R.id.itemText);
             row.setTag(holder);
         } else {
             holder = (ItemHolder) row.getTag();
         }
         
-        holder.itemImage.setImageResource(R.drawable.ic_content_edit);
+        String imageResourceName = "ic_item_" + ( String.format("%02d", position+1));
+        int imageResourceId = context.getResources().getIdentifier(imageResourceName, "drawable", context.getPackageName());
+        
+        holder.itemLabel.setImageResource(imageResourceId);
         holder.itemText.setText(s.getSentenceNative());
         
         return row;
@@ -52,7 +56,7 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
     
     static class ItemHolder
     {
-    	ImageView itemImage;
+    	ImageView itemLabel;
         TextView itemText;
     }
 }
