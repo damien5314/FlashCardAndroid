@@ -3,6 +3,7 @@ package com.ddiehl.flashcard.activities;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import com.ddiehl.flashcard.quizsession.Sentence;
 public class EditPhraseActivity extends Activity {
 	private static final String TAG = "EditPhraseActivity";
 	private Phrase phrase;
+	ArrayList<Sentence> sentences;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,13 +30,14 @@ public class EditPhraseActivity extends Activity {
 		Bundle extras = this.getIntent().getExtras();
 		if (extras.containsKey("Phrase")) {
 			phrase = extras.getParcelable("Phrase");
-			populatePhraseContents();
+			sentences = phrase.getPhraseSentences();
+			populateContents();
 		} else {
 			Log.e(TAG, "No Phrase detected in extras.");
 		}
 	}
 	
-	private void populatePhraseContents() {
+	private void populateContents() {
 		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 		phraseNative = (EditText) findViewById(R.id.edit_phrase_native_value);
 		phraseNative.setText(String.valueOf(phrase.getPhraseNative()));
@@ -45,7 +48,6 @@ public class EditPhraseActivity extends Activity {
 		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
 		phraseTranslated.setText(String.valueOf(phrase.getPhraseTranslated()));
 		
-		ArrayList<Sentence> sentences = phrase.getPhraseSentences();
 		if (sentences != null && !sentences.isEmpty()) {
 			EditPhraseSentenceAdapter adapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_sentence, sentences);
 			ListView vLists = (ListView) findViewById(R.id.edit_phrase_sentences_list);
@@ -53,20 +55,23 @@ public class EditPhraseActivity extends Activity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					// Open EditSentence activity
+					Intent intent = new Intent(view.getContext(), EditSentenceActivity.class);
+					intent.putExtra("Sentence", sentences.get(position));
+					startActivity(intent);
 				}
 			});
 			vLists.setAdapter(adapter);
 		}
 	}
 	
-	public void savePhrase(View v) {
+	public void save(View v) {
 		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_phrase, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 

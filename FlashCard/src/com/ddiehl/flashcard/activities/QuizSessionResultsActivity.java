@@ -21,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QuizSession_Results extends Activity {
+public class QuizSessionResultsActivity extends Activity {
 	private QuizCollection qc;
 
 	@Override

@@ -61,5 +61,17 @@
     <string name="edit_phrase_sentences_label">Example Sentences</string>
     <string name="edit_phrase_save_button_text">Save</string>
     <string name="edit_phrase_sentence_default">Sentence</string>
+    <string name="title_activity_edit_sentence">Edit Sentence</string>
+    <string name="edit_sentence_native_label">Native</string>
+    <string name="edit_sentence_native_default">文</string>
+    <string name="edit_sentence_phonetic_label">Phonetic</string>
+    <string name="edit_sentence_phonetic_default">文かな</string>
+    <string name="edit_sentence_romanized_label">Romanized</string>
+    <string name="edit_sentence_romanized_default">rei bun</string>
+    <string name="edit_sentence_translated_label">Translated</string>
+    <string name="edit_sentence_translated_default">This is an example sentence.</string>
+    <string name="edit_sentence_sentences_label">Example Sentences</string>
+    <string name="edit_sentence_save_button_text">Save</string>
+    <string name="edit_sentence_sentence_default">Sentence</string>
 
 </resources>

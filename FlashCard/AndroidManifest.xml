@@ -37,11 +37,11 @@
             android:label="@string/title_activity_quiz_session_controller" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.Quiz_NativePhonetic"
+            android:name="com.ddiehl.flashcard.activities.QuizNativePhonetic"
             android:label="@string/title_activity_quiz_kanji_kana" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.QuizSession_Results"
+            android:name="com.ddiehl.flashcard.activities.QuizSessionResultsActivity"
             android:label="@string/title_activity_activity_quiz_session_results" >
         </activity>
         <activity
@@ -56,6 +56,10 @@
             android:name="com.ddiehl.flashcard.activities.EditPhraseActivity"
             android:label="@string/title_activity_edit_phrase"
             android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.ddiehl.flashcard.activities.EditSentenceActivity"
+            android:label="@string/title_activity_edit_sentence" >
         </activity>
     </application>
 

@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".EditSentenceActivity" >
+    
+    <LinearLayout
+        style="@style/EditPhraseItem" >
+        
+	    <TextView
+	        style="@style/EditPhraseLabel"
+	        android:id="@+id/edit_sentence_native_label"
+	        android:text="@string/edit_sentence_native_label" />
+	    
+	    <EditText
+	        style="@style/EditPhraseValue"
+	        android:id="@+id/edit_sentence_native_value"
+	        android:hint="@string/edit_sentence_native_default" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        style="@style/EditPhraseItem" >
+        
+	    <TextView
+	        style="@style/EditPhraseLabel"
+	        android:id="@+id/edit_sentence_phonetic_label"
+	        android:text="@string/edit_sentence_phonetic_label" />
+	    
+	    <EditText
+	        style="@style/EditPhraseValue"
+	        android:id="@+id/edit_sentence_phonetic_value"
+	        android:hint="@string/edit_sentence_phonetic_default" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        style="@style/EditPhraseItem" >
+        
+	    <TextView
+	        style="@style/EditPhraseLabel"
+	        android:id="@+id/edit_sentence_romanized_label"
+	        android:text="@string/edit_sentence_romanized_label" />
+	    
+	    <EditText
+	        style="@style/EditPhraseValue"
+	        android:id="@+id/edit_sentence_romanized_value"
+	        android:hint="@string/edit_sentence_romanized_default" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        style="@style/EditPhraseItem" >
+        
+	    <TextView
+	        style="@style/EditPhraseLabel"
+	        android:id="@+id/edit_sentence_translated_label"
+	        android:text="@string/edit_sentence_translated_label" />
+	    
+	    <EditText
+	        style="@style/EditPhraseValue"
+	        android:id="@+id/edit_sentence_translated_value"
+	        android:hint="@string/edit_sentence_translated_default" />
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+    
+    <Button
+        style="@style/CallToActionButton"
+        android:id="@+id/edit_sentence_save"
+        android:text="@string/edit_sentence_save_button_text"
+        android:onClick="save" />
+
+</LinearLayout>

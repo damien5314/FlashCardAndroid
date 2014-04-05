@@ -80,7 +80,7 @@ public class QuizSessionController extends Activity {
 		Intent intent = null;
     	switch (q.getQuizType()) {
 		case 1:
-			intent = new Intent(this, Quiz_NativePhonetic.class);
+			intent = new Intent(this, QuizNativePhonetic.class);
 			intent.putExtra("Quiz", q);
 			intent.putExtra("QuizSession", session);
 			intent.putExtra("QuizCollection", quizzesAll);
@@ -112,7 +112,7 @@ public class QuizSessionController extends Activity {
     			startQuiz(nextQuiz);
 			} else { // No more quizzes
 				// Display results screen
-				Intent intent = new Intent(getBaseContext(), QuizSession_Results.class);
+				Intent intent = new Intent(getBaseContext(), QuizSessionResultsActivity.class);
 				intent.putExtra("QuizCollection", quizzesAll);
 				
 				startActivityForResult(intent, 2);

@@ -26,7 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class Quiz_NativePhonetic extends Activity {
+public class QuizNativePhonetic extends Activity {
 	private static final String TAG = "Activity_Quiz_KanjiKana";
 	private Quiz q;
 	private QuizCollection qc;

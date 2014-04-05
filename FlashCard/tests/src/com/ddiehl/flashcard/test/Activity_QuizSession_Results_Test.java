@@ -9,7 +9,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.activities.MainActivity;
-import com.ddiehl.flashcard.activities.QuizSession_Results;
+import com.ddiehl.flashcard.activities.QuizSessionResultsActivity;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Quiz;
 import com.ddiehl.flashcard.quizsession.QuizCollection;
@@ -27,7 +27,7 @@ public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTe
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		Intent intent = new Intent(getActivity().getApplicationContext(), QuizSession_Results.class);
+		Intent intent = new Intent(getActivity().getApplicationContext(), QuizSessionResultsActivity.class);
 		QuizCollection qc = new QuizCollection();
 		qc.setTitle(getInstrumentation().getContext().getString(R.string.results_test_string_1));
 		Phrase p;

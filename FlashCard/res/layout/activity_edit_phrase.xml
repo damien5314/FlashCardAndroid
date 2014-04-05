@@ -93,6 +93,6 @@
         style="@style/CallToActionButton"
         android:id="@+id/edit_phrase_save"
         android:text="@string/edit_phrase_save_button_text"
-        android:onClick="savePhrase" />
+        android:onClick="save" />
 
 </LinearLayout>

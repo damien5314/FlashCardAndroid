@@ -10,8 +10,8 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.activities.ListSelectionActivity;
 import com.ddiehl.flashcard.activities.LoadListDataActivity;
 import com.ddiehl.flashcard.activities.MainActivity;
-import com.ddiehl.flashcard.activities.QuizSession_Results;
-import com.ddiehl.flashcard.activities.Quiz_NativePhonetic;
+import com.ddiehl.flashcard.activities.QuizSessionResultsActivity;
+import com.ddiehl.flashcard.activities.QuizNativePhonetic;
 import com.ddiehl.flashcard.activities.QuizSessionController;
 import com.robotium.solo.Solo;
 
@@ -44,8 +44,8 @@ public class QuizSessionE2ETest extends ActivityInstrumentationTestCase2<MainAct
 		assertTrue("Start button not loaded", solo.waitForView(R.id.list_data_start));
 		solo.clickOnView(solo.getView(R.id.list_data_start));
 		
-		while (solo.waitForActivity(Quiz_NativePhonetic.class, TIMEOUT)) {
-			Quiz_NativePhonetic act = (Quiz_NativePhonetic) solo.getCurrentActivity();
+		while (solo.waitForActivity(QuizNativePhonetic.class, TIMEOUT)) {
+			QuizNativePhonetic act = (QuizNativePhonetic) solo.getCurrentActivity();
 			String correctAnswer = act.getQuiz().getQuizPhrase().getPhrasePhonetic();
 			assertTrue("Choice1 not loaded", solo.waitForView(R.id.choice1));
 			assertTrue("Choice2 not loaded", solo.waitForView(R.id.choice2));
@@ -55,7 +55,7 @@ public class QuizSessionE2ETest extends ActivityInstrumentationTestCase2<MainAct
 			solo.waitForActivity(QuizSessionController.class, TIMEOUT);
 		} // Ends after we run out of quizzes
 		
-		assertTrue("Results screen not loaded", solo.waitForActivity(QuizSession_Results.class, TIMEOUT));
+		assertTrue("Results screen not loaded", solo.waitForActivity(QuizSessionResultsActivity.class, TIMEOUT));
 		assertFalse("Title is set to default",
 				( ( (TextView) solo.getView(R.id.sessionResults_listTitle_value) ).getText() )
 				.equals( solo.getString(R.string.sessionResults_listTitle_default) ) );
