@@ -23,7 +23,8 @@ public class EditListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edit_list);Bundle extras = getIntent().getExtras();
+		setContentView(R.layout.activity_edit_list);
+		Bundle extras = getIntent().getExtras();
 		if (extras.containsKey("PhraseCollection")) {
 			populateContentView((PhraseCollection) extras.getParcelable("PhraseCollection"));
 		} else {
@@ -69,7 +70,7 @@ public class EditListActivity extends Activity {
     }
 	
 	public void save(View v) {
-		// Write PhraseCollection to XML
+		pc.save(v.getContext());
 	}
 
 	@Override

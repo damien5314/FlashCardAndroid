@@ -1,24 +1,24 @@
 package com.ddiehl.flashcard.quizsession;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
-import android.view.View;
 import android.view.View.OnClickListener;
-
-import com.ddiehl.flashcard.activities.EditListActivity;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = "PhraseCollection";
@@ -123,6 +123,87 @@ public class PhraseCollection implements Parcelable {
             eventType = parser.next();
         }
 
+	}
+	
+	public void save(Context ctx) {
+		try {
+			// Write PhraseCollection to XML
+	        String filename = "vocabulary-saved.xml";
+//	        File file = new File(ctx.getFilesDir(), filename); // Why can't I pass this below?
+	        FileOutputStream myFile = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
+	        XmlSerializer xmlSerializer = Xml.newSerializer();
+	        StringWriter writer = new StringWriter();
+	        xmlSerializer.setOutput(writer);
+	        
+	        String ns = ""; // namespace
+	        xmlSerializer.startDocument("UTF-8",true);
+	        xmlSerializer.startTag(ns, "vocabulary");
+	        xmlSerializer.startTag(ns, "information");
+	        xmlSerializer.startTag(ns, "Title");
+	        xmlSerializer.text(this.getTitle());
+	        xmlSerializer.endTag(ns, "Title");
+	        xmlSerializer.startTag(ns, "PhrasesTotal");
+	        xmlSerializer.text(String.valueOf(this.getPhrasesTotal()));
+	        xmlSerializer.endTag(ns, "PhrasesTotal");
+	        xmlSerializer.startTag(ns, "PhrasesStarted");
+	        xmlSerializer.text(String.valueOf(this.getPhrasesStarted()));
+	        xmlSerializer.endTag(ns, "PhrasesStarted");
+	        xmlSerializer.startTag(ns, "PhrasesMastered");
+	        xmlSerializer.text(String.valueOf(this.getPhrasesMastered()));
+	        xmlSerializer.endTag(ns, "PhrasesMastered");
+	        xmlSerializer.endTag(ns, "information");
+	        xmlSerializer.startTag(ns, "phrases");
+	        for (int i = 0; i < list.size(); i++) {
+	        	Phrase p = list.get(i);
+	        	ArrayList<Sentence> sentences = p.getPhraseSentences();
+		        xmlSerializer.startTag(ns, "phrase");
+		        xmlSerializer.attribute(ns, "ID", String.valueOf(i+1));
+		        xmlSerializer.startTag(ns, "p_native");
+		        xmlSerializer.text(p.getPhraseNative());
+		        xmlSerializer.endTag(ns, "p_native");
+		        xmlSerializer.startTag(ns, "p_phonetic");
+		        xmlSerializer.text(p.getPhrasePhonetic());
+		        xmlSerializer.endTag(ns, "p_phonetic");
+		        xmlSerializer.startTag(ns, "p_romanized");
+		        xmlSerializer.text(p.getPhraseRomanized());
+		        xmlSerializer.endTag(ns, "p_romanized");
+		        xmlSerializer.startTag(ns, "p_translated");
+		        xmlSerializer.text(p.getPhraseTranslated());
+		        xmlSerializer.endTag(ns, "p_translated");
+		        xmlSerializer.startTag(ns, "sentences");
+		        for (int j = 0; j < sentences.size(); j++) {
+		        	Sentence s = sentences.get(j);
+			        xmlSerializer.startTag(ns, "sentence");
+			        xmlSerializer.attribute(ns, "ID", String.valueOf(j+1));
+			        xmlSerializer.startTag(ns, "s_native");
+			        xmlSerializer.text(s.getSentenceNative());
+			        xmlSerializer.endTag(ns, "s_native");
+			        xmlSerializer.startTag(ns, "s_phonetic");
+			        xmlSerializer.text(s.getSentencePhonetic());
+			        xmlSerializer.endTag(ns, "s_phonetic");
+			        xmlSerializer.startTag(ns, "s_romanized");
+			        xmlSerializer.text(s.getSentenceRomanized());
+			        xmlSerializer.endTag(ns, "s_romanized");
+			        xmlSerializer.startTag(ns, "s_translated");
+			        xmlSerializer.text(s.getSentenceTranslated());
+			        xmlSerializer.endTag(ns, "s_translated");
+			        xmlSerializer.endTag(ns, "sentence");
+		        }
+		        xmlSerializer.endTag(ns, "sentences");
+		        xmlSerializer.endTag(ns, "phrase");
+	        }
+	        xmlSerializer.endTag(ns, "phrases");
+	        xmlSerializer.endTag(ns, "vocabulary");
+	        xmlSerializer.endDocument();
+	        
+	        String output = writer.toString();
+	        myFile.write(output.getBytes());
+	        myFile.close();
+		} catch (FileNotFoundException e) {
+		    Log.e(TAG, "FileNotFoundException: " + e.getMessage());
+		} catch (IOException e) {
+		    Log.e(TAG, "Caught IOException: " + e.getMessage());
+		}
 	}
 
 	public OnClickListener getEditListener() {
