@@ -68,8 +68,8 @@ public class EditListActivity extends Activity {
     	refreshContentView();
     }
 	
-	public void addPhrase(View v) {
-		Log.d(TAG, "Add phrase button clicked.");
+	public void save(View v) {
+		// Write PhraseCollection to XML
 	}
 
 	@Override

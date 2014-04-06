@@ -45,7 +45,7 @@
     <string name="quiz_session_end_dialog_quit">Quit without Saving</string>
     <string name="quiz_session_end_dialog_cancel">Cancel</string>
     <string name="title_activity_edit_list">Edit List</string>
-    <string name="edit_list_cta_text">Add Phrase</string>
+    <string name="edit_list_cta_text">Save</string>
     <string name="editList_listPhrases_total_label">Total Phrases</string>
     <string name="editList_listPhrases_total_default">0</string>
     <string name="editList_listItem_default">漢字</string>
