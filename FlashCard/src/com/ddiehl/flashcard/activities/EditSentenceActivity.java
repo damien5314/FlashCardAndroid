@@ -1,6 +1,7 @@
 package com.ddiehl.flashcard.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -40,6 +41,19 @@ public class EditSentenceActivity extends Activity {
 	}
 	
 	public void save(View v) {
+		EditText sentenceNative, sentencePhonetic, sentenceRomanized, sentenceTranslated;
+		sentenceNative = (EditText) findViewById(R.id.edit_sentence_native_value);
+		sentence.setSentenceNative(sentenceNative.getText().toString());
+		sentencePhonetic = (EditText) findViewById(R.id.edit_sentence_phonetic_value);
+		sentence.setSentencePhonetic(sentencePhonetic.getText().toString());
+		sentenceRomanized = (EditText) findViewById(R.id.edit_sentence_romanized_value);
+		sentence.setSentenceRomanized(sentenceRomanized.getText().toString());
+		sentenceTranslated = (EditText) findViewById(R.id.edit_sentence_translated_value);
+		sentence.setSentenceTranslated(sentenceTranslated.getText().toString());
+		
+		Intent returnIntent = new Intent();
+		returnIntent.putExtra("Sentence", sentence);
+		setResult(1, returnIntent);
 		finish();
 	}
 

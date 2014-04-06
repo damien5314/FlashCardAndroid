@@ -48,6 +48,10 @@ public class EditPhraseActivity extends Activity {
 		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
 		phraseTranslated.setText(String.valueOf(phrase.getPhraseTranslated()));
 		
+		populateSentencesView();
+	}
+	
+	private void populateSentencesView() {
 		if (sentences != null && !sentences.isEmpty()) {
 			EditPhraseSentenceAdapter adapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_sentence, sentences);
 			ListView vLists = (ListView) findViewById(R.id.edit_phrase_sentences_list);
@@ -57,7 +61,8 @@ public class EditPhraseActivity extends Activity {
 					// Open EditSentence activity
 					Intent intent = new Intent(view.getContext(), EditSentenceActivity.class);
 					intent.putExtra("Sentence", sentences.get(position));
-					startActivity(intent);
+					intent.putExtra("position", position);
+					startActivityForResult(intent, 1);
 				}
 			});
 			vLists.setAdapter(adapter);
@@ -80,6 +85,18 @@ public class EditPhraseActivity extends Activity {
 		setResult(1, returnIntent);
 		finish();
 	}
+	
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == 1) {
+    		if (resultCode == 1) {
+    			Bundle extras = data.getExtras();
+    			if (extras.containsKey("Sentence")) {
+					sentences.set(extras.getInt("position"), (Sentence) extras.getParcelable("Sentence"));
+    			}
+    		}
+    	}
+    	populateSentencesView();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
