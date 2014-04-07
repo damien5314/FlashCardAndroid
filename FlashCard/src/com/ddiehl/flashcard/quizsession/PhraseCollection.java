@@ -22,6 +22,7 @@ import android.view.View.OnClickListener;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = "PhraseCollection";
+	private String mFilename;
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
@@ -30,16 +31,15 @@ public class PhraseCollection implements Parcelable {
 	public PhraseCollection() {
 		super();	
 	}
-	
+
 	public PhraseCollection(InputStream vocabulary) {
-		super();
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	        parser.setInput(vocabulary, null);
 		} catch (Exception e) {
 			Log.e(TAG, "Error initializing XmlPullParser");
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
         
 		try {
@@ -48,13 +48,23 @@ public class PhraseCollection implements Parcelable {
 			e.printStackTrace();
 		}
 	}
-	
-	public PhraseCollection(Parcel in) {
-		in.readTypedList(list, Phrase.CREATOR);
-		this.setTitle(in.readString());
-		this.setPhrasesTotal(in.readInt());
-		this.setPhrasesStarted(in.readInt());
-		this.setPhrasesMastered(in.readInt());
+
+	public PhraseCollection(InputStream vocabulary, String filename) {
+		mFilename = filename;
+		XmlPullParser parser = Xml.newPullParser();
+        try {
+			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+	        parser.setInput(vocabulary, null);
+		} catch (Exception e) {
+			Log.e(TAG, "Error initializing XmlPullParser");
+			e.printStackTrace();
+		}
+        
+		try {
+			parseXML(parser);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
@@ -126,11 +136,11 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public void save(Context ctx) {
+		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);
 		try {
 			// Write PhraseCollection to XML
-	        String filename = "vocabulary-saved.xml";
 //	        File file = new File(ctx.getFilesDir(), filename); // Why can't I pass this below?
-	        FileOutputStream myFile = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
+	        FileOutputStream myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
@@ -290,9 +300,19 @@ public class PhraseCollection implements Parcelable {
 	public int describeContents() {
 		return 0;
 	}
+	
+	public PhraseCollection(Parcel in) {
+		mFilename = in.readString();
+		in.readTypedList(list, Phrase.CREATOR);
+		this.setTitle(in.readString());
+		this.setPhrasesTotal(in.readInt());
+		this.setPhrasesStarted(in.readInt());
+		this.setPhrasesMastered(in.readInt());
+	}
 
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
+		arg0.writeString(mFilename);
 		arg0.writeTypedList(list);
 		arg0.writeString(getTitle());
 		arg0.writeInt(getPhrasesTotal());

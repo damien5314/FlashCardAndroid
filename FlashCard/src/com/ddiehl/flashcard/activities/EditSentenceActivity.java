@@ -41,6 +41,7 @@ public class EditSentenceActivity extends Activity {
 	}
 	
 	public void save(View v) {
+		Log.i(TAG, "Saving Sentence.");
 		EditText sentenceNative, sentencePhonetic, sentenceRomanized, sentenceTranslated;
 		sentenceNative = (EditText) findViewById(R.id.edit_sentence_native_value);
 		sentence.setSentenceNative(sentenceNative.getText().toString());

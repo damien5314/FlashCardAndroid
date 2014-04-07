@@ -70,6 +70,7 @@ public class EditPhraseActivity extends Activity {
 	}
 	
 	public void save(View v) {
+		Log.i(TAG, "Saving Phrase.");
 		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 		phraseNative = (EditText) findViewById(R.id.edit_phrase_native_value);
 		phrase.setPhraseNative(phraseNative.getText().toString());

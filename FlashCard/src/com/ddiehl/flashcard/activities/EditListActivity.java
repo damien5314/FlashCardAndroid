@@ -71,11 +71,14 @@ public class EditListActivity extends Activity {
 	
 	public void save(View v) {
 		pc.save(v.getContext());
+		Intent rIntent = new Intent();
+		rIntent.putExtra("PhraseCollection", pc);
+		setResult(1, rIntent);
+		finish();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
