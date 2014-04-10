@@ -159,11 +159,11 @@ public class QuizNativePhonetic extends Activity {
 		return q;
 	}
 	
-	public void quitAndSaveSession(View v) {
+	public void quitAndSave(View v) {
     	finish();
 	}
 	
-	public void quitAndDiscardSession(View v) {
+	public void quitAndDiscard(View v) {
 		finish();
 	}
 }

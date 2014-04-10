@@ -97,7 +97,7 @@ public class EditPhraseActivity extends Activity {
 		save(v);
 	}
 	
-	public void quitAndDiscardChanges(View v) {
+	public void quitAndDiscard(View v) {
 		finish();
 	}
 	
@@ -106,7 +106,7 @@ public class EditPhraseActivity extends Activity {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	    	FragmentManager fm = getFragmentManager();
 	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
-	        dialog.show(fm, "dialog_end_session");
+	        dialog.show(fm, "dialog_discard_changed_phrase");
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

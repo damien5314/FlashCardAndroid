@@ -15,16 +15,18 @@
         android:text="@string/quiz_session_end_dialog_text" />
     
     <Button
+        android:id="@+id/dialog_save"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/quiz_session_end_dialog_save"
-        android:onClick="quitAndSaveSession" />
+        android:onClick="quitAndSave" />
     
     <Button
+        android:id="@+id/dialog_quit"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/quiz_session_end_dialog_quit"
-        android:onClick="quitAndDiscardSession" />
+        android:onClick="quitAndDiscard" />
     
     <Button
         android:id="@+id/dialog_cancel"

@@ -26,7 +26,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/dialog_edit_phrase_quit_text"
-        android:onClick="quitAndDiscardChanges" />
+        android:onClick="quitAndDiscard" />
     
     <Button
         android:id="@+id/dialog_cancel"

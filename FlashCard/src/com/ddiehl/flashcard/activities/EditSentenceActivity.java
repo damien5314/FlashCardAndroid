@@ -1,14 +1,17 @@
 package com.ddiehl.flashcard.activities;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 
 import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditSentenceActivity extends Activity {
@@ -59,6 +62,25 @@ public class EditSentenceActivity extends Activity {
 		returnIntent.putExtra("position", mPosition);
 		setResult(1, returnIntent);
 		finish();
+	}
+	
+	public void quitAndSave(View v) {
+		save(v);
+	}
+	
+	public void quitAndDiscard(View v) {
+		finish();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	FragmentManager fm = getFragmentManager();
+	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+	        dialog.show(fm, "dialog_discard_changed_phrase");
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
