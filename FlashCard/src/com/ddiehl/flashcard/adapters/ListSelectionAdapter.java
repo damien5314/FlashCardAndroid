@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,20 +33,18 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         View row = convertView;
         ItemHolder holder = null;
         PhraseCollection pc = data.get(position);
+        Log.d(TAG, "getView() called");
+        Log.d(TAG, "position: " + position);
+
+        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+        row = inflater.inflate(layoutResourceId, parent, false);
         
-        if (row == null) {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-            row = inflater.inflate(layoutResourceId, parent, false);
-            
-            holder = new ItemHolder();
-            holder.phraseCollection = pc;
-            holder.itemText = (TextView) row.findViewById(R.id.itemText);
-            holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
-            holder.itemEditButton.setTag(holder.phraseCollection);
-            row.setTag(holder);
-        } else {
-            holder = (ItemHolder) row.getTag();
-        }
+        holder = new ItemHolder();
+        holder.phraseCollection = pc;
+        holder.itemText = (TextView) row.findViewById(R.id.itemText);
+        holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
+        holder.itemEditButton.setTag(holder.phraseCollection);
+        row.setTag(holder);
 
         holder.itemText.setText(pc.getTitle());
         

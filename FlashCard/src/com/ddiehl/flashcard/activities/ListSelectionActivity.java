@@ -27,7 +27,8 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {
 	private static final String TAG = "Activity_ListSelection";
-	ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
+	private ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
+	private ListSelectionAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,7 @@ public class ListSelectionActivity extends Activity {
 	        vocabularyLists.add(new PhraseCollection(thisList, filename));
 		}
 		
-		ListSelectionAdapter adapter =
-				new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
+		adapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
 		
 		ListView vLists = (ListView) findViewById(R.id.vocabulary_lists);
 		vLists.setOnItemClickListener(new OnItemClickListener() {
@@ -84,6 +84,7 @@ public class ListSelectionActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
 				intent.putExtra("PhraseCollection", vocabularyLists.get(position));
+				intent.putExtra("position", position);
 				view.getContext().startActivity(intent);
 			}
 		});
@@ -94,7 +95,7 @@ public class ListSelectionActivity extends Activity {
 		PhraseCollection pc = (PhraseCollection) v.getTag();
 		Intent intent = new Intent(this, EditListActivity.class);
 		intent.putExtra("PhraseCollection", pc);
-		startActivity(intent);
+		startActivityForResult(intent, 1);
 	}
 	
     private void copyAssetToData(String filename) throws IOException {
@@ -113,9 +114,15 @@ public class ListSelectionActivity extends Activity {
 	
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	Log.d(TAG, "onActivityResult called");
 		if (resultCode == 1) {
-			refreshContentView();
+			Bundle extras = data.getExtras();
+			if (extras.containsKey("PhraseCollection") && extras.containsKey("position")) {
+				PhraseCollection thisCollection = (PhraseCollection)extras.getParcelable("PhraseCollection");
+//				adapter.remove(vocabularyLists.get(extras.getInt("position")));
+//				adapter.insert(thisCollection, extras.getInt("position"));
+				vocabularyLists.set(extras.getInt("position"), thisCollection);
+				adapter.notifyDataSetChanged();
+			}
 		}
     }
 

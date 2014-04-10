@@ -19,12 +19,16 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 public class EditListActivity extends Activity {
 	private static final String TAG = "EditListActivity";
 	private PhraseCollection pc;
+	private int listNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_list);
 		Bundle extras = getIntent().getExtras();
+		if (extras.containsKey("position")) {
+			listNumber = extras.getInt("position");
+		}
 		if (extras.containsKey("PhraseCollection")) {
 			populateContentView((PhraseCollection) extras.getParcelable("PhraseCollection"));
 		} else {
@@ -43,7 +47,6 @@ public class EditListActivity extends Activity {
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// Open EditPhrase activity
 				Intent i = new Intent(view.getContext(), EditPhraseActivity.class);
 				i.putExtra("Phrase", pc.get(position));
 				i.putExtra("position", position);
@@ -73,6 +76,7 @@ public class EditListActivity extends Activity {
 		pc.save(v.getContext());
 		Intent rIntent = new Intent();
 		rIntent.putExtra("PhraseCollection", pc);
+		rIntent.putExtra("position", listNumber);
 		setResult(1, rIntent);
 		finish();
 	}
