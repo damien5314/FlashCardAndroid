@@ -14,6 +14,7 @@ import com.ddiehl.flashcard.quizsession.Sentence;
 public class EditSentenceActivity extends Activity {
 	private static final String TAG = "EditSentenceActivity";
 	private Sentence sentence;
+	private int mPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,7 @@ public class EditSentenceActivity extends Activity {
 		Bundle extras = this.getIntent().getExtras();
 		if (extras.containsKey("Sentence")) {
 			sentence = extras.getParcelable("Sentence");
+			mPosition = extras.getInt("position");
 			populateContents();
 		} else {
 			Log.e(TAG, "No Sentence included in extras.");
@@ -54,6 +56,7 @@ public class EditSentenceActivity extends Activity {
 		
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra("Sentence", sentence);
+		returnIntent.putExtra("position", mPosition);
 		setResult(1, returnIntent);
 		finish();
 	}

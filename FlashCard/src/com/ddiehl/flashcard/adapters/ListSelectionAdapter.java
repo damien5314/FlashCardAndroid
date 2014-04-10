@@ -33,8 +33,6 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         View row = convertView;
         ItemHolder holder = null;
         PhraseCollection pc = data.get(position);
-        Log.d(TAG, "getView() called");
-        Log.d(TAG, "position: " + position);
 
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);

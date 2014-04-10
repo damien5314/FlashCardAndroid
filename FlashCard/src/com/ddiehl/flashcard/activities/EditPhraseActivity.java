@@ -21,7 +21,8 @@ import com.ddiehl.flashcard.quizsession.Sentence;
 public class EditPhraseActivity extends Activity {
 	private static final String TAG = "EditPhraseActivity";
 	private Phrase phrase;
-	ArrayList<Sentence> sentences;
+	private ArrayList<Sentence> sentences;
+	private int mPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class EditPhraseActivity extends Activity {
 		if (extras.containsKey("Phrase")) {
 			phrase = extras.getParcelable("Phrase");
 			sentences = phrase.getPhraseSentences();
+			mPosition = extras.getInt("position");
 			populateContents();
 		} else {
 			Log.e(TAG, "No Phrase detected in extras.");
@@ -83,6 +85,7 @@ public class EditPhraseActivity extends Activity {
 		
 		Intent returnIntent = new Intent();
 		returnIntent.putExtra("Phrase", phrase);
+		returnIntent.putExtra("position", mPosition);
 		setResult(1, returnIntent);
 		finish();
 	}
