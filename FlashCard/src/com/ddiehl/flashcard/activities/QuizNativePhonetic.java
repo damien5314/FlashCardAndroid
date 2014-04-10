@@ -3,7 +3,7 @@ package com.ddiehl.flashcard.activities;
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.R.id;
 import com.ddiehl.flashcard.R.layout;
-import com.ddiehl.flashcard.dialogs.ConfirmSessionEndDialog;
+import com.ddiehl.flashcard.dialogs.SessionEndDialog;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Quiz;
 import com.ddiehl.flashcard.quizsession.QuizCollection;
@@ -148,8 +148,8 @@ public class QuizNativePhonetic extends Activity {
 	    	// Display prompt asking user if he or she wants to quit or save session
 	    	// see http://androidsnippets.com/prompt-user-input-with-an-alertdialog
 	    	FragmentManager fm = getFragmentManager();
-	        final ConfirmSessionEndDialog dialog = ConfirmSessionEndDialog.newInstance();
-	        dialog.show(fm, "dialog_confirm_end_session");
+	        final SessionEndDialog dialog = SessionEndDialog.newInstance();
+	        dialog.show(fm, "dialog_end_session");
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

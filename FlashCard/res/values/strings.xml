@@ -41,8 +41,12 @@
     <string name="sessionResults_listItem_default">漢字</string>
     <string name="sessionResults_returnButton_text">End Session</string>
     <string name="quiz_session_end_dialog_text">End session?</string>
-    <string name="quiz_session_end_dialog_save">Save and Quit</string>
+    <string name="quiz_session_end_dialog_save">Save &amp; Quit</string>
     <string name="quiz_session_end_dialog_quit">Quit without Saving</string>
+    <string name="dialog_edit_phrase_text">Save changes?</string>
+    <string name="dialog_edit_phrase_save_text">Save &amp; Quit</string>
+    <string name="dialog_edit_phrase_quit_text">Quit without Saving</string>
+    <string name="dialog_edit_phrase_cancel_text">Cancel</string>
     <string name="quiz_session_end_dialog_cancel">Cancel</string>
     <string name="title_activity_edit_list">Edit List</string>
     <string name="edit_list_cta_text">Save</string>

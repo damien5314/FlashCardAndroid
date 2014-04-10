@@ -1,28 +1,25 @@
 package com.ddiehl.flashcard.dialogs;
 
-import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.R.id;
-import com.ddiehl.flashcard.R.layout;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class ConfirmSessionEndDialog extends DialogFragment {
+import com.ddiehl.flashcard.R;
+
+public class SessionEndDialog extends DialogFragment {
 	private static final String TAG = "ConfirmSessionEndDialog";
 	
-	public ConfirmSessionEndDialog() {
+	public SessionEndDialog() {
 		// Empty constructor required
 	}
 	
-	public static ConfirmSessionEndDialog newInstance() {
-		ConfirmSessionEndDialog frag = new ConfirmSessionEndDialog();
+	public static SessionEndDialog newInstance() {
+		SessionEndDialog frag = new SessionEndDialog();
 		Bundle args = new Bundle();
 		frag.setArguments(args);
 		return frag;
@@ -32,7 +29,7 @@ public class ConfirmSessionEndDialog extends DialogFragment {
 		// Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View v = inflater.inflate(R.layout.dialog_confirm_end_session, null);
+        View v = inflater.inflate(R.layout.dialog_end_session, null);
         Button vCancel = (Button) v.findViewById(R.id.dialog_cancel);
         vCancel.setOnClickListener(new OnClickListener() {
 			@Override

@@ -3,9 +3,11 @@ package com.ddiehl.flashcard.activities;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +17,7 @@ import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditPhraseSentenceAdapter;
+import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
@@ -88,6 +91,25 @@ public class EditPhraseActivity extends Activity {
 		returnIntent.putExtra("position", mPosition);
 		setResult(1, returnIntent);
 		finish();
+	}
+	
+	public void quitAndSave(View v) {
+		save(v);
+	}
+	
+	public void quitAndDiscardChanges(View v) {
+		finish();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	FragmentManager fm = getFragmentManager();
+	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+	        dialog.show(fm, "dialog_end_session");
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
