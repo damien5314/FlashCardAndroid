@@ -91,6 +91,13 @@ public class ListSelectionActivity extends Activity {
 		vLists.setAdapter(adapter);
 	}
 	
+	public void addNew() {
+		PhraseCollection newPc = new PhraseCollection();
+		newPc.setTitle("New List");
+		vocabularyLists.add(newPc);
+		adapter.notifyDataSetChanged();
+	}
+	
 	public void editList(View v) {
 		PhraseCollection pc = (PhraseCollection) v.getTag();
 		Intent intent = new Intent(this, EditListActivity.class);
@@ -128,7 +135,7 @@ public class ListSelectionActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.edit_item, menu);
 		return true;
 	}
 	
@@ -139,7 +146,11 @@ public class ListSelectionActivity extends Activity {
 	        Intent intent = new Intent(this, SettingsActivity.class);
 	        startActivity(intent);
 	        return true;
+	    case R.id.action_add_new:
+	    	addNew();
+	    	return true;
+        default:
+            return super.onOptionsItemSelected(item);
 	    }
-	    return false;
 	}
 }

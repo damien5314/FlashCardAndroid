@@ -62,6 +62,10 @@ public class EditListActivity extends Activity {
     	populateContentView(pc);
 	}
 	
+	public void addNew() {
+		
+	}
+	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (requestCode == 1) {
     		if (resultCode == 1) {

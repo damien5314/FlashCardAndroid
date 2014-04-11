@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -18,7 +19,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
-import android.view.View.OnClickListener;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = "PhraseCollection";
@@ -26,10 +26,11 @@ public class PhraseCollection implements Parcelable {
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
-    private OnClickListener editListener;
+//    private OnClickListener editListener;
 	
 	public PhraseCollection() {
-		super();	
+		super();
+		mFilename = UUID.randomUUID().toString();
 	}
 
 	public PhraseCollection(InputStream vocabulary) {
@@ -215,7 +216,7 @@ public class PhraseCollection implements Parcelable {
 		    Log.e(TAG, "Caught IOException: " + e.getMessage());
 		}
 	}
-
+/* Don't think we need these functions anymore
 	public OnClickListener getEditListener() {
 		return editListener;
 	}
@@ -223,7 +224,7 @@ public class PhraseCollection implements Parcelable {
 	public void setEditListener(OnClickListener listener) {
 		this.editListener = listener;
 	}
-
+*/
 	public List<Phrase> add(Phrase q) {
 		list.add(q);
 		return list;
