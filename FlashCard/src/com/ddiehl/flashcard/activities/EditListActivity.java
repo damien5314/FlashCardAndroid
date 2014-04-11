@@ -1,9 +1,11 @@
 package com.ddiehl.flashcard.activities;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,13 +15,14 @@ import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
+import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
 	private static final String TAG = "EditListActivity";
 	private PhraseCollection pc;
-	private int listNumber;
+	private int mPosition;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,7 @@ public class EditListActivity extends Activity {
 		setContentView(R.layout.activity_edit_list);
 		Bundle extras = getIntent().getExtras();
 		if (extras.containsKey("position")) {
-			listNumber = extras.getInt("position");
+			mPosition = extras.getInt("position");
 		}
 		if (extras.containsKey("PhraseCollection")) {
 			populateContentView((PhraseCollection) extras.getParcelable("PhraseCollection"));
@@ -76,9 +79,28 @@ public class EditListActivity extends Activity {
 		pc.save(v.getContext());
 		Intent rIntent = new Intent();
 		rIntent.putExtra("PhraseCollection", pc);
-		rIntent.putExtra("position", listNumber);
+		rIntent.putExtra("position", mPosition);
 		setResult(1, rIntent);
 		finish();
+	}
+	
+	public void quitAndSave(View v) {
+		save(v);
+	}
+	
+	public void quitAndDiscard(View v) {
+		finish();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	FragmentManager fm = getFragmentManager();
+	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+	        dialog.show(fm, "dialog_discard_changed_phrase");
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
