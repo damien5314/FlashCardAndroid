@@ -27,6 +27,7 @@ import android.util.SparseBooleanArray;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
+import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {
@@ -94,55 +95,7 @@ public class ListSelectionActivity extends Activity {
 			}
 		});
 		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		mListView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-			
-			@Override
-			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		        switch (item.getItemId()) {
-		        case R.id.menu_delete:
-	                SparseBooleanArray selected = adapter.getSelectedIds();
-	                Log.d(TAG, "Selected IDs: " + selected.toString());
-	                for (int i = (selected.size() - 1); i >= 0; i--) {
-	                    if (selected.valueAt(i)) {
-	                        PhraseCollection selecteditem = adapter.getItem(selected.keyAt(i));
-	                        adapter.remove(selecteditem);
-	                    }
-	                }
-	                mode.finish();
-	                return true;
-		        default:
-		        	return false;
-		        }
-			}
-
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-		        MenuInflater inflater = mode.getMenuInflater();
-		        inflater.inflate(R.menu.list_selection_context, menu);
-		        return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode arg0) {
-                adapter.removeSelection();
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode arg0, Menu arg1) {
-				// Here you can perform updates to the CAB due to
-		        // an invalidate() request
-		        return false;
-			}
-
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode,
-					int position, long id, boolean checked) {
-                final int checkedCount = mListView.getCheckedItemCount();
-                mode.setTitle(checkedCount + " Selected");
-                adapter.toggleSelection(position);
-			}
-			
-		});
+		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, adapter));
 		mListView.setAdapter(adapter);
 	}
 
