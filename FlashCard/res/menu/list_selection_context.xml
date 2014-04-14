@@ -3,7 +3,8 @@
     <item
         android:id="@+id/menu_delete"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_content_remove"
         android:title="@string/action_delete" />
 
 </menu>

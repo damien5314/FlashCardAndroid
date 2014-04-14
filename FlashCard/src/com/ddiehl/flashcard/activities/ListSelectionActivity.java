@@ -14,16 +14,12 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.util.SparseBooleanArray;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
@@ -31,7 +27,7 @@ import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {
-	private static final String TAG = "Activity_ListSelection";
+	private static final String TAG = ListSelectionActivity.class.getSimpleName();
 	private ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 	private ListSelectionAdapter adapter;
 	private ListView mListView;
@@ -94,12 +90,13 @@ public class ListSelectionActivity extends Activity {
 				view.getContext().startActivity(intent);
 			}
 		});
-		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+//		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+//		mListView.setSelector(android.R.color.darker_gray);
 		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, adapter));
 		mListView.setAdapter(adapter);
 	}
 
-	public void addNew() {
+	public void addNewList() {
 		PhraseCollection newPc = new PhraseCollection();
 		newPc.setTitle("New List");
 		vocabularyLists.add(0, newPc);
@@ -124,8 +121,7 @@ public class ListSelectionActivity extends Activity {
 	private void copyAssetToData(String filename) throws IOException {
 		InputStream myInput = getAssets().open("vocabulary-lists/" + filename);
 		String outFilename = filename;
-		FileOutputStream myFile = openFileOutput(outFilename,
-				Context.MODE_PRIVATE);
+		FileOutputStream myFile = openFileOutput(outFilename, Context.MODE_PRIVATE);
 		byte[] buffer = new byte[1024];
 		int length;
 		while ((length = myInput.read(buffer)) > 0) {
@@ -164,7 +160,7 @@ public class ListSelectionActivity extends Activity {
 			startActivity(intent);
 			return true;
 		case R.id.action_add_new:
-			addNew();
+			addNewList();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

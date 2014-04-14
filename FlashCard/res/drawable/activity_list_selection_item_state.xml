@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/apptheme_list_selector_holo_light" android:state_selected="true"></item>
+    <item android:drawable="@drawable/apptheme_list_selector_background_transition_holo_light" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/apptheme_activated_background_holo_light" android:state_activated="true"></item>
+    <item android:drawable="@drawable/apptheme_item_background_holo_light"></item>
+
+</selector>
