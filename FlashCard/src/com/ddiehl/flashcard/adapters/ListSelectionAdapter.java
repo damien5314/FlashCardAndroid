@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,14 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
 	Context context; 
     int layoutResourceId;
     ArrayList<PhraseCollection> data = null;
+    private SparseBooleanArray mSelectedItemsIds;
     
     public ListSelectionAdapter(Context context, int layoutResourceId, ArrayList<PhraseCollection> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.mSelectedItemsIds = new SparseBooleanArray();
     }
 
     @Override
@@ -47,6 +50,32 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         holder.itemText.setText(pc.getTitle());
         
         return row;
+    }
+ 
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+ 
+    public void removeSelection() {
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+ 
+    public void selectView(int position, boolean value) {
+    	Log.d(TAG, "selectView() called; position: " + position + "; value: " + value);
+        if (value)
+            mSelectedItemsIds.put(position, value);
+        else
+            mSelectedItemsIds.delete(position);
+        notifyDataSetChanged();
+    }
+ 
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+    
+    public SparseBooleanArray getSelectedIds() {
+    	return this.mSelectedItemsIds;
     }
     
     static class ItemHolder

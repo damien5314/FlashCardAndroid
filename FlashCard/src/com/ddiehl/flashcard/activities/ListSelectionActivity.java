@@ -9,32 +9,31 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.Button;
 import android.widget.ListView;
+import android.util.SparseBooleanArray;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
-import com.ddiehl.flashcard.dialogs.DeleteListDialog;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {
 	private static final String TAG = "Activity_ListSelection";
 	private ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
 	private ListSelectionAdapter adapter;
+	private ListView mListView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +43,16 @@ public class ListSelectionActivity extends Activity {
 	}
 
 	private void refreshContentView() {
-		Log.d(TAG, "Refreshing content view: ListSelection");
 		File fileDir = getFilesDir();
 		File[] myFiles = fileDir.listFiles();
 
 		// If no files are in file directory, port the files from
 		// /assets/vocabulary-lists/
 		if (myFiles.length == 0) {
-			Log.i(TAG,
-					"No previous files detected, copying lists from /assets/ into /data/.");
+			Log.i(TAG, "No previous files detected, copying lists from /assets/ into /data/.");
 			AssetManager assets = getAssets();
 			try {
-				String[] assetFilenames = assets
-						.list(getString(R.string.assetListGroup));
+				String[] assetFilenames = assets.list(getString(R.string.assetListGroup));
 				for (int i = 0; i < assetFilenames.length; i++) {
 					copyAssetToData(assetFilenames[i]);
 				}
@@ -85,11 +81,10 @@ public class ListSelectionActivity extends Activity {
 			vocabularyLists.add(new PhraseCollection(thisList, filename));
 		}
 
-		adapter = new ListSelectionAdapter(this,
-				R.layout.activity_list_selection_item, vocabularyLists);
+		adapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
 
-		ListView vLists = (ListView) findViewById(R.id.vocabulary_lists);
-		vLists.setOnItemClickListener(new OnItemClickListener() {
+		mListView = (ListView) findViewById(R.id.vocabulary_lists);
+		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
@@ -98,25 +93,57 @@ public class ListSelectionActivity extends Activity {
 				view.getContext().startActivity(intent);
 			}
 		});
-		vLists.setOnItemLongClickListener(new OnItemLongClickListener() {
+		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		mListView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		    	FragmentManager fm = getFragmentManager();
-		        final DeleteListDialog dialog = DeleteListDialog.newInstance();
-		        final int pos = position;
-		        dialog.show(fm, "dialog_delete_list");
-		        // View is likely not available at the time we are trying to retrieve it, look in docs for DialogInterface
-		        Button bConfirm = (Button) findViewById(R.id.dialog_confirm);
-		        bConfirm.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						deleteList(pos);
-					}
-		        });
-				return true;
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+		        switch (item.getItemId()) {
+		        case R.id.menu_delete:
+	                SparseBooleanArray selected = adapter.getSelectedIds();
+	                Log.d(TAG, "Selected IDs: " + selected.toString());
+	                for (int i = (selected.size() - 1); i >= 0; i--) {
+	                    if (selected.valueAt(i)) {
+	                        PhraseCollection selecteditem = adapter.getItem(selected.keyAt(i));
+	                        adapter.remove(selecteditem);
+	                    }
+	                }
+	                mode.finish();
+	                return true;
+		        default:
+		        	return false;
+		        }
 			}
+
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+		        MenuInflater inflater = mode.getMenuInflater();
+		        inflater.inflate(R.menu.list_selection_context, menu);
+		        return true;
+			}
+
+			@Override
+			public void onDestroyActionMode(ActionMode arg0) {
+                adapter.removeSelection();
+			}
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode arg0, Menu arg1) {
+				// Here you can perform updates to the CAB due to
+		        // an invalidate() request
+		        return false;
+			}
+
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode,
+					int position, long id, boolean checked) {
+                final int checkedCount = mListView.getCheckedItemCount();
+                mode.setTitle(checkedCount + " Selected");
+                adapter.toggleSelection(position);
+			}
+			
 		});
-		vLists.setAdapter(adapter);
+		mListView.setAdapter(adapter);
 	}
 
 	public void addNew() {
@@ -125,7 +152,7 @@ public class ListSelectionActivity extends Activity {
 		vocabularyLists.add(0, newPc);
 		adapter.notifyDataSetChanged();
 	}
-	
+
 	public void deleteList(int position) {
 		vocabularyLists.remove(position);
 		adapter.notifyDataSetChanged();
@@ -162,7 +189,8 @@ public class ListSelectionActivity extends Activity {
 			Bundle extras = data.getExtras();
 			if (extras.containsKey("PhraseCollection")
 					&& extras.containsKey("position")) {
-				PhraseCollection thisCollection = (PhraseCollection) extras.getParcelable("PhraseCollection");
+				PhraseCollection thisCollection = (PhraseCollection) extras
+						.getParcelable("PhraseCollection");
 				vocabularyLists.set(extras.getInt("position"), thisCollection);
 				adapter.notifyDataSetChanged();
 			}

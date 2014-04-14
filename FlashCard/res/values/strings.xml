@@ -15,6 +15,7 @@
     <string name="title_activity_list_selection">Select List</string>
     <string name="list_selection_item_default">Vocabulary List</string>
     <string name="list_selection_item_edit_text">Edit</string>
+    <string name="action_delete">Delete</string>
     <string name="dialog_delete_list_message">Delete list?</string>
     <string name="dialog_delete_list_confirm">OK</string>
     <string name="dialog_delete_list_cancel">Cancel</string>
