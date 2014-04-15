@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,10 +65,11 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     }
  
     public void selectView(int position, boolean value) {
-        if (value)
+        if (value) {
             mSelectedItemsIds.put(position, value);
-        else
+        } else {
             mSelectedItemsIds.delete(position);
+        }
         notifyDataSetChanged();
     }
  
