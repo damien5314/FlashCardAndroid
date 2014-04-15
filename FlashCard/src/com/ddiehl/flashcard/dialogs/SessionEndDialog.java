@@ -12,7 +12,7 @@ import android.widget.Button;
 import com.ddiehl.flashcard.R;
 
 public class SessionEndDialog extends DialogFragment {
-	private static final String TAG = "ConfirmSessionEndDialog";
+	private static final String TAG = SessionEndDialog.class.getSimpleName();
 	
 	public SessionEndDialog() {
 		// Empty constructor required

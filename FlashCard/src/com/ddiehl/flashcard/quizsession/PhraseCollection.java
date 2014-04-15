@@ -21,7 +21,7 @@ import android.util.Log;
 import android.util.Xml;
 
 public class PhraseCollection implements Parcelable {
-	private static final String TAG = "PhraseCollection";
+	private static final String TAG = PhraseCollection.class.getSimpleName();
 	private String mFilename;
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;

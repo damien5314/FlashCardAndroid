@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Sentence implements Parcelable {
+	private static final String TAG = Sentence.class.getSimpleName();
 	private String sentenceNative, sentencePhonetic, sentenceRomanized, sentenceTranslated;
 	
 	public Sentence() {

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.ddiehl.flashcard.R;
 
 public class MainActivity extends Activity {
+	private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -19,7 +19,7 @@ import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
-	private static final String TAG = "EditListActivity";
+	private static final String TAG = EditListActivity.class.getSimpleName();
 	private PhraseCollection pc;
 	private int mPosition;
 

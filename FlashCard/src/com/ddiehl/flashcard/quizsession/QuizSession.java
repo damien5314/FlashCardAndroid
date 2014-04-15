@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class QuizSession implements Parcelable {
-	
+	private static final String TAG = QuizSession.class.getSimpleName();
 	private Date sessionStartTime, sessionEndTime; // Represents the start and end times (UTC) for the quiz session
 	private float sessionActualStudyTime; // To be updated after each quiz with amount of time taken
 	

@@ -1,11 +1,5 @@
 package com.ddiehl.flashcard.adapters;
 
-import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.R.drawable;
-import com.ddiehl.flashcard.R.id;
-import com.ddiehl.flashcard.quizsession.Quiz;
-import com.ddiehl.flashcard.quizsession.QuizCollection;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,8 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class QuizResultsAdapter extends ArrayAdapter<Quiz> {
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
 
+public class QuizResultsAdapter extends ArrayAdapter<Quiz> {
+	private static final String TAG = QuizResultsAdapter.class.getSimpleName();
 	Context context; 
     int layoutResourceId;    
     QuizCollection data = null;

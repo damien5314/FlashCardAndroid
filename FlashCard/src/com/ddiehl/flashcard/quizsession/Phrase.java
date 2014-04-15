@@ -6,7 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Phrase implements Parcelable {
-	private static final String TAG = "Phrase";
+	private static final String TAG = Phrase.class.getSimpleName();
 	private String phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 	private ArrayList<Sentence> sentences;
 	private boolean isIncludedInSession;

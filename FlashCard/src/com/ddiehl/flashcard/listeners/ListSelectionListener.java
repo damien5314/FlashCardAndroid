@@ -13,7 +13,7 @@ import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionListener implements MultiChoiceModeListener {
-	private static final String TAG = "ListSelectionListener";
+	private static final String TAG = ListSelectionListener.class.getSimpleName();
 	private ListSelectionAdapter mAdapter;
 	private ListView mListView;
 	

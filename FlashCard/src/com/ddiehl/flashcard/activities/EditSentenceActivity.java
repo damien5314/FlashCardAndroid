@@ -14,7 +14,7 @@ import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditSentenceActivity extends Activity {
-	private static final String TAG = "EditSentenceActivity";
+	private static final String TAG = EditSentenceActivity.class.getSimpleName();
 	private Sentence sentence;
 	private int mPosition;
 

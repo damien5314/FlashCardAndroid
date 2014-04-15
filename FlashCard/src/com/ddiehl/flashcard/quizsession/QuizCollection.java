@@ -8,7 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class QuizCollection implements Parcelable {
-	private static final String TAG = "QuizCollection";
+	private static final String TAG = QuizCollection.class.getSimpleName();
 	private List<Quiz> list = new ArrayList<Quiz>();
 	private String title;
 	

@@ -4,8 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Quiz implements Parcelable {
-	@SuppressWarnings("unused")
-	private static final String TAG = "Quiz";
+	private static final String TAG = Quiz.class.getSimpleName();
 	private int quizType;
 	private Phrase quizPhrase;
 	private boolean isCorrectlyAnswered;

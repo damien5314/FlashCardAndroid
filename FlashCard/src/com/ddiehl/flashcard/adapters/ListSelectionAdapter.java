@@ -4,10 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +16,7 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
-	private static final String TAG = "ListSelectionAdapter";
+	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
 	Context context; 
     int layoutResourceId;
     ArrayList<PhraseCollection> data = null;

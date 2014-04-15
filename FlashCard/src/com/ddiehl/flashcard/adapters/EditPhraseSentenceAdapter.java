@@ -15,7 +15,7 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
-	private static final String TAG = "EditPhraseSentenceAdapter";
+	private static final String TAG = EditPhraseSentenceAdapter.class.getSimpleName();
 	Context context; 
     int layoutResourceId;
     ArrayList<Sentence> data = null;

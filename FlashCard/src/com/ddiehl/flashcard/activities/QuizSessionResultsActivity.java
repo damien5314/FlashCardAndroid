@@ -3,25 +3,22 @@ package com.ddiehl.flashcard.activities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.R.id;
-import com.ddiehl.flashcard.R.layout;
-import com.ddiehl.flashcard.R.menu;
-import com.ddiehl.flashcard.adapters.QuizResultsAdapter;
-import com.ddiehl.flashcard.quizsession.Quiz;
-import com.ddiehl.flashcard.quizsession.QuizCollection;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ddiehl.flashcard.R;
+import com.ddiehl.flashcard.adapters.QuizResultsAdapter;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
+
 public class QuizSessionResultsActivity extends Activity {
+	private static final String TAG = QuizSessionResultsActivity.class.getSimpleName();
 	private QuizCollection qc;
 
 	@Override

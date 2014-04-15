@@ -1,15 +1,14 @@
 package com.ddiehl.flashcard.activities;
 
-import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.R.xml;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 
+import com.ddiehl.flashcard.R;
+
 public class SettingsActivity extends Activity {
-	public static final String TAG = "SettingsActivity";
+	private static final String TAG = SettingsActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

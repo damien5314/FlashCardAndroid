@@ -3,11 +3,6 @@ package com.ddiehl.flashcard.activities;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.ddiehl.flashcard.quizsession.PhraseCollection;
-import com.ddiehl.flashcard.quizsession.Quiz;
-import com.ddiehl.flashcard.quizsession.QuizCollection;
-import com.ddiehl.flashcard.quizsession.QuizSession;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -15,8 +10,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
 
+import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.quizsession.Quiz;
+import com.ddiehl.flashcard.quizsession.QuizCollection;
+import com.ddiehl.flashcard.quizsession.QuizSession;
+
 public class QuizSessionController extends Activity {
-	private static final String TAG = "QuizSessionController";
+	private static final String TAG = QuizSessionController.class.getSimpleName();
 	private String mFilename;
 	private InputStream mVocabularyList;
 	private QuizSession session;

@@ -21,7 +21,7 @@ import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditPhraseActivity extends Activity {
-	private static final String TAG = "EditPhraseActivity";
+	private static final String TAG = EditPhraseActivity.class.getSimpleName();
 	private Phrase phrase;
 	private ArrayList<Sentence> sentences;
 	private int mPosition;

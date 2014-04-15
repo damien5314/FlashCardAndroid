@@ -16,7 +16,7 @@ import android.view.View.OnClickListener;
 import com.ddiehl.flashcard.activities.EditListActivity;
 
 public class ListInfo {
-	private static final String TAG = "ListInfo";
+	private static final String TAG = ListInfo.class.getSimpleName();
 	InputStream list;
     private String title = null;
     private OnClickListener listener;

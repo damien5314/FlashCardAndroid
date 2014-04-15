@@ -14,6 +14,7 @@ import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListPhrasesAdapter extends ArrayAdapter<Phrase> {
+	private static final String TAG = EditListPhrasesAdapter.class.getSimpleName();
 	Context context; 
     int layoutResourceId;
     PhraseCollection data = null;

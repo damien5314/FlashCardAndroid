@@ -12,7 +12,7 @@ import android.widget.Button;
 import com.ddiehl.flashcard.R;
 
 public class DiscardChangedPhraseDialog extends DialogFragment {
-	private static final String TAG = "ConfirmSessionEndDialog";
+	private static final String TAG = DiscardChangedPhraseDialog.class.getSimpleName();
 	
 	public DiscardChangedPhraseDialog() {
 		// Empty constructor required
