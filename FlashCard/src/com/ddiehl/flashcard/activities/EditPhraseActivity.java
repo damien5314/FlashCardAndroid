@@ -24,9 +24,10 @@ import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditPhraseActivity extends Activity {
 	private static final String TAG = EditPhraseActivity.class.getSimpleName();
-	private Phrase phrase;
-	private ArrayList<Sentence> sentences;
+	private Phrase mPhrase;
+	private ArrayList<Sentence> mSentences;
 	private int mPosition;
+	private EditPhraseSentenceAdapter mSentenceAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,8 @@ public class EditPhraseActivity extends Activity {
 		setContentView(R.layout.activity_edit_phrase);
 		Bundle extras = this.getIntent().getExtras();
 		if (extras.containsKey("Phrase")) {
-			phrase = extras.getParcelable("Phrase");
-			sentences = phrase.getPhraseSentences();
+			mPhrase = extras.getParcelable("Phrase");
+			mSentences = mPhrase.getPhraseSentences();
 			mPosition = extras.getInt("position");
 			populateContents();
 		} else {
@@ -46,54 +47,55 @@ public class EditPhraseActivity extends Activity {
 	private void populateContents() {
 		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 		phraseNative = (EditText) findViewById(R.id.edit_phrase_native_value);
-		phraseNative.setText(String.valueOf(phrase.getPhraseNative()));
+		phraseNative.setText(String.valueOf(mPhrase.getPhraseNative()));
 		phrasePhonetic = (EditText) findViewById(R.id.edit_phrase_phonetic_value);
-		phrasePhonetic.setText(String.valueOf(phrase.getPhrasePhonetic()));
+		phrasePhonetic.setText(String.valueOf(mPhrase.getPhrasePhonetic()));
 		phraseRomanized = (EditText) findViewById(R.id.edit_phrase_romanized_value);
-		phraseRomanized.setText(String.valueOf(phrase.getPhraseRomanized()));
+		phraseRomanized.setText(String.valueOf(mPhrase.getPhraseRomanized()));
 		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
-		phraseTranslated.setText(String.valueOf(phrase.getPhraseTranslated()));
+		phraseTranslated.setText(String.valueOf(mPhrase.getPhraseTranslated()));
 		
 		populateSentencesView();
 	}
 	
 	private void populateSentencesView() {
-		if (sentences != null && !sentences.isEmpty()) {
-			EditPhraseSentenceAdapter adapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_sentence, sentences);
-			ListView vLists = (ListView) findViewById(R.id.edit_phrase_sentences_list);
-			vLists.setOnItemClickListener(new OnItemClickListener(){
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					// Open EditSentence activity
-					Intent intent = new Intent(view.getContext(), EditSentenceActivity.class);
-					intent.putExtra("Sentence", sentences.get(position));
-					intent.putExtra("position", position);
-					startActivityForResult(intent, 1);
-				}
-			});
-			vLists.setAdapter(adapter);
+		mSentenceAdapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_sentence, mSentences);ListView vLists = (ListView) findViewById(R.id.edit_phrase_sentences_list);
+		vLists.setOnItemClickListener(new OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// Open EditSentence activity
+				Intent intent = new Intent(view.getContext(), EditSentenceActivity.class);
+				intent.putExtra("Sentence", mSentences.get(position));
+				intent.putExtra("position", position);
+				startActivityForResult(intent, 1);
+			}
+		});
+		vLists.setAdapter(mSentenceAdapter);
+		if (mSentences != null && !mSentences.isEmpty()) {
+			
 		}
 	}
 	
 	private void addNewItem() {
 		Sentence newItem = new Sentence();
-		sentences.add(newItem);
+		mSentences.add(newItem);
+		mSentenceAdapter.notifyDataSetChanged();
 	}
 	
 	public void save(View v) {
 		Log.i(TAG, "Saving Phrase.");
 		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
 		phraseNative = (EditText) findViewById(R.id.edit_phrase_native_value);
-		phrase.setPhraseNative(phraseNative.getText().toString());
+		mPhrase.setPhraseNative(phraseNative.getText().toString());
 		phrasePhonetic = (EditText) findViewById(R.id.edit_phrase_phonetic_value);
-		phrase.setPhrasePhonetic(phrasePhonetic.getText().toString());
+		mPhrase.setPhrasePhonetic(phrasePhonetic.getText().toString());
 		phraseRomanized = (EditText) findViewById(R.id.edit_phrase_romanized_value);
-		phrase.setPhraseRomanized(phraseRomanized.getText().toString());
+		mPhrase.setPhraseRomanized(phraseRomanized.getText().toString());
 		phraseTranslated = (EditText) findViewById(R.id.edit_phrase_translated_value);
-		phrase.setPhraseTranslated(phraseTranslated.getText().toString());
+		mPhrase.setPhraseTranslated(phraseTranslated.getText().toString());
 		
 		Intent returnIntent = new Intent();
-		returnIntent.putExtra("Phrase", phrase);
+		returnIntent.putExtra("Phrase", mPhrase);
 		returnIntent.putExtra("position", mPosition);
 		setResult(1, returnIntent);
 		finish();
@@ -123,7 +125,7 @@ public class EditPhraseActivity extends Activity {
     		if (resultCode == 1) {
     			Bundle extras = data.getExtras();
     			if (extras.containsKey("Sentence")) {
-					sentences.set(extras.getInt("position"), (Sentence) extras.getParcelable("Sentence"));
+					mSentences.set(extras.getInt("position"), (Sentence) extras.getParcelable("Sentence"));
     			}
     		}
     	}
@@ -139,11 +141,11 @@ public class EditPhraseActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_add_new:
-			addNewItem();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.action_add_new:
+				addNewItem();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }

@@ -131,7 +131,7 @@ public class QuizNativePhonetic extends Activity {
 	
 	private int getQuizAnswerDelay() {
 		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-		String quizAnswerDelay = sharedPref.getString("pref_quizAnswerDelay", "750");
+		String quizAnswerDelay = sharedPref.getString("pref_quizAnswerDelay", "750"); // TODO Fix this default value
 		return Integer.parseInt(quizAnswerDelay);
 	}
 	

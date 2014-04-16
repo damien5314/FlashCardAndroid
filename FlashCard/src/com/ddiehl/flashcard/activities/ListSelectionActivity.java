@@ -28,8 +28,8 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionActivity extends Activity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
-	private ArrayList<PhraseCollection> vocabularyLists = new ArrayList<PhraseCollection>();
-	private ListSelectionAdapter adapter;
+	private ArrayList<PhraseCollection> mVocabularyLists = new ArrayList<PhraseCollection>();
+	private ListSelectionAdapter mListAdapter;
 	private ListView mListView;
 
 	@Override
@@ -75,31 +75,31 @@ public class ListSelectionActivity extends Activity {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-			vocabularyLists.add(new PhraseCollection(thisList, filename));
+			mVocabularyLists.add(new PhraseCollection(thisList, filename));
 		}
 
-		adapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, vocabularyLists);
+		mListAdapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, mVocabularyLists);
 
 		mListView = (ListView) findViewById(R.id.vocabulary_lists);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
-				intent.putExtra("PhraseCollection", vocabularyLists.get(position));
+				intent.putExtra("PhraseCollection", mVocabularyLists.get(position));
 				intent.putExtra("position", position);
 				view.getContext().startActivity(intent);
 			}
 		});
-		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, adapter));
-		mListView.setAdapter(adapter);
+		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
+		mListView.setAdapter(mListAdapter);
 	}
 
 	public void addNewItem() {
 		PhraseCollection newPc = new PhraseCollection();
 		newPc.setTitle("New List");
 		newPc.save(this);
-		vocabularyLists.add(0, newPc);
-		adapter.notifyDataSetChanged();
+		mVocabularyLists.add(0, newPc);
+		mListAdapter.notifyDataSetChanged();
 	}
 
 	public void editList(View v) {
@@ -134,8 +134,8 @@ public class ListSelectionActivity extends Activity {
 					&& extras.containsKey("position")) {
 				PhraseCollection thisCollection = (PhraseCollection) extras
 						.getParcelable("PhraseCollection");
-				vocabularyLists.set(extras.getInt("position"), thisCollection);
-				adapter.notifyDataSetChanged();
+				mVocabularyLists.set(extras.getInt("position"), thisCollection);
+				mListAdapter.notifyDataSetChanged();
 			}
 		}
 	}

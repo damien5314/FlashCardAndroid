@@ -22,8 +22,9 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
 	private static final String TAG = EditListActivity.class.getSimpleName();
-	private PhraseCollection pc;
+	private PhraseCollection mPhraseCollection;
 	private int mPosition;
+	private EditListPhrasesAdapter mPhraseAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +42,33 @@ public class EditListActivity extends Activity {
 	}
 	
 	private void populateContentView(PhraseCollection in) {
-		pc = in;
+		mPhraseCollection = in;
 		TextView tv = (TextView) findViewById(R.id.edit_list_title);
-		tv.setText(pc.getTitle());
+		tv.setText(mPhraseCollection.getTitle());
 		TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
-		vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
-		EditListPhrasesAdapter adapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_phrase, pc);
+		vPhrasesTotal.setText(String.valueOf(mPhraseCollection.getPhrasesTotal()));
+		mPhraseAdapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_phrase, mPhraseCollection);
 		ListView vLists = (ListView) findViewById(R.id.editList_phraseList);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent i = new Intent(view.getContext(), EditPhraseActivity.class);
-				i.putExtra("Phrase", pc.get(position));
+				i.putExtra("Phrase", mPhraseCollection.get(position));
 				i.putExtra("position", position);
 				startActivityForResult(i, 1);
 			}
 		});
-		vLists.setAdapter(adapter);
+		vLists.setAdapter(mPhraseAdapter);
 	}
 	
 	private void refreshContentView() {
-    	populateContentView(pc);
+    	populateContentView(mPhraseCollection);
 	}
 	
 	public void addNewItem() {
 		Phrase newPhrase = new Phrase();
-		pc.add(newPhrase);
+		mPhraseCollection.add(newPhrase);
+		mPhraseAdapter.notifyDataSetChanged();
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -74,7 +76,7 @@ public class EditListActivity extends Activity {
     		if (resultCode == 1) {
     			Bundle extras = data.getExtras();
     			if (extras.containsKey("Phrase")) {
-					pc.set(extras.getInt("position"), (Phrase) extras.getParcelable("Phrase"));
+					mPhraseCollection.set(extras.getInt("position"), (Phrase) extras.getParcelable("Phrase"));
     			}
     		}
     	}
@@ -82,9 +84,9 @@ public class EditListActivity extends Activity {
     }
 	
 	public void save(View v) {
-		pc.save(v.getContext());
+		mPhraseCollection.save(v.getContext());
 		Intent rIntent = new Intent();
-		rIntent.putExtra("PhraseCollection", pc);
+		rIntent.putExtra("PhraseCollection", mPhraseCollection);
 		rIntent.putExtra("position", mPosition);
 		setResult(1, rIntent);
 		finish();
