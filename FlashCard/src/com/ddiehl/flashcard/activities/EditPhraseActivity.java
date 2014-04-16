@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -73,6 +75,11 @@ public class EditPhraseActivity extends Activity {
 		}
 	}
 	
+	private void addNewItem() {
+		Sentence newItem = new Sentence();
+		sentences.add(newItem);
+	}
+	
 	public void save(View v) {
 		Log.i(TAG, "Saving Phrase.");
 		EditText phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
@@ -122,4 +129,21 @@ public class EditPhraseActivity extends Activity {
     	}
     	populateSentencesView();
     }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.edit_item, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add_new:
+			addNewItem();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

@@ -94,7 +94,7 @@ public class ListSelectionActivity extends Activity {
 		mListView.setAdapter(adapter);
 	}
 
-	public void addNewList() {
+	public void addNewItem() {
 		PhraseCollection newPc = new PhraseCollection();
 		newPc.setTitle("New List");
 		newPc.save(this);
@@ -149,15 +149,11 @@ public class ListSelectionActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_settings:
-			Intent intent = new Intent(this, SettingsActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.action_add_new:
-			addNewList();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.action_add_new:
+				addNewItem();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }

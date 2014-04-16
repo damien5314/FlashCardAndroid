@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -62,8 +64,9 @@ public class EditListActivity extends Activity {
     	populateContentView(pc);
 	}
 	
-	public void addNew() {
-		
+	public void addNewItem() {
+		Phrase newPhrase = new Phrase();
+		pc.add(newPhrase);
 	}
 	
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -104,5 +107,22 @@ public class EditListActivity extends Activity {
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.edit_item, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_add_new:
+			addNewItem();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 }
