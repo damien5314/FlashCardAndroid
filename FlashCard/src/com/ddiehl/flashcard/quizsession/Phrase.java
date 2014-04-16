@@ -8,12 +8,17 @@ import android.os.Parcelable;
 public class Phrase implements Parcelable {
 	private static final String TAG = Phrase.class.getSimpleName();
 	private String phraseNative, phrasePhonetic, phraseRomanized, phraseTranslated;
-	private ArrayList<Sentence> sentences;
+	private ArrayList<Sentence> phraseSentences;
 	private boolean isIncludedInSession;
 	private boolean hasNativeText;
 	
 	public Phrase() {
-		
+		setPhraseNative("");
+		setPhrasePhonetic("");
+		setPhraseRomanized("");
+		setPhraseTranslated("");
+		setPhraseSentences(new ArrayList<Sentence>());
+		hasNativeText(!nativeIsEmpty());
 	}
 	
 	public Phrase(String p_kanji, String p_kana, String p_romaji, String p_english, 
@@ -80,17 +85,17 @@ public class Phrase implements Parcelable {
 		s.setSentencePhonetic(s_kana);
 		s.setSentenceRomanized(s_romaji);
 		s.setSentenceTranslated(s_english);
-		sentences.add(s);
-		return sentences;
+		phraseSentences.add(s);
+		return phraseSentences;
 	}
 	
 	public ArrayList<Sentence> setPhraseSentences(ArrayList<Sentence> s) {
-		sentences = s;
-		return sentences;
+		phraseSentences = s;
+		return phraseSentences;
 	}
 	
 	public ArrayList<Sentence> getPhraseSentences() {
-		return sentences;
+		return phraseSentences;
 	}
 
 	public boolean isIncludedInSession() {
@@ -124,7 +129,7 @@ public class Phrase implements Parcelable {
 		arg0.writeString(getPhrasePhonetic());
 		arg0.writeString(getPhraseRomanized());
 		arg0.writeString(getPhraseTranslated());
-		arg0.writeList(sentences);
+		arg0.writeList(phraseSentences);
 		arg0.writeByte((byte) (isIncludedInSession() ? 1 : 0));
 		arg0.writeByte((byte) (hasNativeText() ? 1 : 0));
 	}

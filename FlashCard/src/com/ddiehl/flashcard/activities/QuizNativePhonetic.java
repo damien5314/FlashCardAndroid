@@ -48,9 +48,9 @@ public class QuizNativePhonetic extends Activity {
 		Log.d(TAG, "Phrase Phonetic = " + q.getQuizPhrase().getPhrasePhonetic());
 		
 		try {
-			String kanji = q.getQuizPhrase().getPhraseNative();
+			String question = q.getQuizPhrase().getPhraseNative();
 			TextView tvQuestion = (TextView) findViewById(R.id.quizNative);
-			tvQuestion.setText(kanji);
+			tvQuestion.setText(question);
 		} catch (Exception e) {
 			Log.e(TAG, "Error setting question TextView");
 			e.printStackTrace();
@@ -59,10 +59,13 @@ public class QuizNativePhonetic extends Activity {
 		Phrase randomPhrase = null;
 		if (extras.containsKey("QuizCollection")) {
 			QuizCollection qc = extras.getParcelable("QuizCollection");
+			int loop = 0;
 			do { // Perform until you get a random that isn't the same as the current word
 				int randomIndex = (int) (Math.random()*qc.size());
 				randomPhrase = qc.get(randomIndex).getQuizPhrase();
-			} while (q.getQuizPhrase().getPhraseNative().equals(randomPhrase.getPhraseNative()));
+				loop++; // Prevents app from hanging when starting a quiz with empty phrases
+			} while (q.getQuizPhrase().getPhraseNative().equals(randomPhrase.getPhraseNative())
+						&& loop < 1000);
 		}
 		
 		int rand = (int) Math.floor(Math.random() + 0.5); // Will = 0 or 1 with equal probability

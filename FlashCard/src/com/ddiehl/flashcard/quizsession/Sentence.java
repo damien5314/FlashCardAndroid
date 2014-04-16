@@ -8,7 +8,10 @@ public class Sentence implements Parcelable {
 	private String sentenceNative, sentencePhonetic, sentenceRomanized, sentenceTranslated;
 	
 	public Sentence() {
-		
+		setSentenceNative("");
+		setSentencePhonetic("");
+		setSentenceRomanized("");
+		setSentenceTranslated("");
 	}
 	
 	public Sentence(String s_kanji, String s_kana, String s_romaji, String s_english) {
