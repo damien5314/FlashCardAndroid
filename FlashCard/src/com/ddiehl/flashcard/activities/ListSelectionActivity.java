@@ -90,8 +90,6 @@ public class ListSelectionActivity extends Activity {
 				view.getContext().startActivity(intent);
 			}
 		});
-//		mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-//		mListView.setSelector(android.R.color.darker_gray);
 		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, adapter));
 		mListView.setAdapter(adapter);
 	}
@@ -99,12 +97,8 @@ public class ListSelectionActivity extends Activity {
 	public void addNewList() {
 		PhraseCollection newPc = new PhraseCollection();
 		newPc.setTitle("New List");
+		newPc.save(this);
 		vocabularyLists.add(0, newPc);
-		adapter.notifyDataSetChanged();
-	}
-
-	public void deleteList(int position) {
-		vocabularyLists.remove(position);
 		adapter.notifyDataSetChanged();
 	}
 

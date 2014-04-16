@@ -1,5 +1,6 @@
 package com.ddiehl.flashcard.quizsession;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -216,15 +217,14 @@ public class PhraseCollection implements Parcelable {
 		    Log.e(TAG, "Caught IOException: " + e.getMessage());
 		}
 	}
-/* Don't think we need these functions anymore
-	public OnClickListener getEditListener() {
-		return editListener;
-	}
 
-	public void setEditListener(OnClickListener listener) {
-		this.editListener = listener;
+	public boolean delete(Context ctx) {
+		Log.d(TAG, "Deleting file: " + mFilename);
+		File dir = ctx.getFilesDir();
+		File file = new File(dir, mFilename);
+		return file.delete();
 	}
-*/
+	
 	public List<Phrase> add(Phrase q) {
 		list.add(q);
 		return list;

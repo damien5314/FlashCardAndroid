@@ -17,9 +17,9 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
 	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
-	Context context; 
-    int layoutResourceId;
-    ArrayList<PhraseCollection> data = null;
+	private Context context;
+    private int layoutResourceId;
+    private ArrayList<PhraseCollection> data = null;
     private SparseBooleanArray mSelectedItemsIds;
     
     public ListSelectionAdapter(Context context, int id, ArrayList<PhraseCollection> data) {

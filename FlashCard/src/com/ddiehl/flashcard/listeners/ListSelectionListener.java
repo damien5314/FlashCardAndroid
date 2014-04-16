@@ -30,8 +30,9 @@ public class ListSelectionListener implements MultiChoiceModeListener {
             SparseBooleanArray selected = mAdapter.getSelectedIds();
             for (int i = (selected.size() - 1); i >= 0; i--) {
                 if (selected.valueAt(i)) {
-                    PhraseCollection selecteditem = mAdapter.getItem(selected.keyAt(i));
-                    mAdapter.remove(selecteditem);
+                    PhraseCollection selectedList = mAdapter.getItem(selected.keyAt(i));
+                    selectedList.delete(mAdapter.getContext());
+                    mAdapter.remove(selectedList);
                 }
             }
             mode.finish();
