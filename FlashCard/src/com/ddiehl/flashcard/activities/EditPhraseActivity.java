@@ -28,6 +28,7 @@ public class EditPhraseActivity extends Activity {
 	private ArrayList<Sentence> mSentences;
 	private int mPosition;
 	private EditPhraseSentenceAdapter mSentenceAdapter;
+	private boolean isAltered;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,6 @@ public class EditPhraseActivity extends Activity {
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				// Open EditSentence activity
 				Intent intent = new Intent(view.getContext(), EditSentenceActivity.class);
 				intent.putExtra("Sentence", mSentences.get(position));
 				intent.putExtra("position", position);
@@ -78,6 +78,7 @@ public class EditPhraseActivity extends Activity {
 	}
 	
 	private void addNewItem() {
+		isAltered = true;
 		Sentence newItem = new Sentence();
 		mSentences.add(newItem);
 		mSentenceAdapter.notifyDataSetChanged();
@@ -102,6 +103,23 @@ public class EditPhraseActivity extends Activity {
 		finish();
 	}
 	
+	private boolean checkIfAltered() {
+		if (!mPhrase.getPhraseNative().equals( ( (EditText) findViewById(R.id.edit_phrase_native_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!mPhrase.getPhrasePhonetic().equals( ( (EditText) findViewById(R.id.edit_phrase_phonetic_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!mPhrase.getPhraseRomanized().equals( ( (EditText) findViewById(R.id.edit_phrase_romanized_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!mPhrase.getPhraseTranslated().equals( ( (EditText) findViewById(R.id.edit_phrase_translated_value)).getText().toString() ) ) {
+			isAltered = true;
+		}
+		
+		if (isAltered)
+			return true;
+		
+		return false;
+	}
+	
 	public void quitAndSave(View v) {
 		save(v);
 	}
@@ -113,9 +131,13 @@ public class EditPhraseActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	FragmentManager fm = getFragmentManager();
-	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
-	        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	if (checkIfAltered()) {
+		    	FragmentManager fm = getFragmentManager();
+		        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+		        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	} else {
+	    		finish();
+	    	}
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -124,13 +146,14 @@ public class EditPhraseActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	if (requestCode == 1) {
     		if (resultCode == 1) {
+				isAltered = true;
     			Bundle extras = data.getExtras();
     			if (extras.containsKey("Sentence")) {
 					mSentences.set(extras.getInt("position"), (Sentence) extras.getParcelable("Sentence"));
     			}
+    	    	populateSentencesView();
     		}
     	}
-    	populateSentencesView();
     }
 
 	@Override

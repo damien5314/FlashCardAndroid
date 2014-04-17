@@ -25,6 +25,7 @@ public class EditListActivity extends Activity {
 	private PhraseCollection mPhraseCollection;
 	private int mPosition;
 	private EditListPhrasesAdapter mPhraseAdapter;
+	private boolean isAltered = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,22 +67,11 @@ public class EditListActivity extends Activity {
 	}
 	
 	public void addNewItem() {
+		isAltered = true;
 		Phrase newPhrase = new Phrase();
 		mPhraseCollection.add(newPhrase);
 		mPhraseAdapter.notifyDataSetChanged();
 	}
-	
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	if (requestCode == 1) {
-    		if (resultCode == 1) {
-    			Bundle extras = data.getExtras();
-    			if (extras.containsKey("Phrase")) {
-					mPhraseCollection.set(extras.getInt("position"), (Phrase) extras.getParcelable("Phrase"));
-    			}
-    		}
-    	}
-    	refreshContentView();
-    }
 	
 	public void save(View v) {
 		mPhraseCollection.save(v.getContext());
@@ -90,6 +80,13 @@ public class EditListActivity extends Activity {
 		rIntent.putExtra("position", mPosition);
 		setResult(1, rIntent);
 		finish();
+	}
+	
+	private boolean checkIfAltered() {
+		if (isAltered)
+			return true;
+		
+		return false;
 	}
 	
 	public void quitAndSave(View v) {
@@ -103,13 +100,29 @@ public class EditListActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	FragmentManager fm = getFragmentManager();
-	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
-	        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	if (checkIfAltered()) {
+		    	FragmentManager fm = getFragmentManager();
+		        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+		        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	} else {
+	    		finish();
+	    	}
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
+	
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	if (requestCode == 1) {
+    		if (resultCode == 1) {
+    			Bundle extras = data.getExtras();
+    			if (extras.containsKey("Phrase")) {
+					mPhraseCollection.set(extras.getInt("position"), (Phrase) extras.getParcelable("Phrase"));
+    			}
+    		}
+    	}
+    	refreshContentView();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

@@ -17,6 +17,7 @@ public class EditSentenceActivity extends Activity {
 	private static final String TAG = EditSentenceActivity.class.getSimpleName();
 	private Sentence sentence;
 	private int mPosition;
+	private boolean isAltered;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,23 @@ public class EditSentenceActivity extends Activity {
 		finish();
 	}
 	
+	private boolean checkIfAltered() {
+		if (!sentence.getSentenceNative().equals( ( (EditText) findViewById(R.id.edit_sentence_native_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!sentence.getSentencePhonetic().equals( ( (EditText) findViewById(R.id.edit_sentence_phonetic_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!sentence.getSentenceRomanized().equals( ( (EditText) findViewById(R.id.edit_sentence_romanized_value)).getText().toString() ) ) {
+			isAltered = true;
+		} else if (!sentence.getSentenceTranslated().equals( ( (EditText) findViewById(R.id.edit_sentence_translated_value)).getText().toString() ) ) {
+			isAltered = true;
+		}
+		
+		if (isAltered)
+			return true;
+		
+		return false;
+	}
+	
 	public void quitAndSave(View v) {
 		save(v);
 	}
@@ -74,9 +92,13 @@ public class EditSentenceActivity extends Activity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	    	FragmentManager fm = getFragmentManager();
-	        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
-	        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	if (checkIfAltered()) {
+		    	FragmentManager fm = getFragmentManager();
+		        final DiscardChangedPhraseDialog dialog = DiscardChangedPhraseDialog.newInstance();
+		        dialog.show(fm, "dialog_discard_changed_phrase");
+	    	} else {
+	    		finish();
+	    	}
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
