@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -168,10 +169,13 @@ public class LoadListDataActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 	    switch(item.getItemId()){
-	    case R.id.action_settings:
-	        Intent intent = new Intent(this, SettingsActivity.class);
-	        startActivity(intent);
-	        return true;
+			case android.R.id.home:
+				NavUtils.navigateUpFromSameTask(this);
+		        return true;
+		    case R.id.action_settings:
+		        Intent intent = new Intent(this, SettingsActivity.class);
+		        startActivity(intent);
+		        return true;
 	    }
 	    return false;
 	}

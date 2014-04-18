@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.LoadListDataActivity"
-            android:label="@string/title_activity_load_list_data" >
+            android:label="@string/title_activity_load_list_data"
+            android:parentActivityName="com.ddiehl.flashcard.activities.ListSelectionActivity" >
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.QuizSessionController"
