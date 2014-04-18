@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="apptheme_color">#a0e1f9</color>
+    <color name="apptheme_color_dimmed">#50a0e1f9</color>
+    <color name="default_activity_color">#00000000</color>
 </resources>

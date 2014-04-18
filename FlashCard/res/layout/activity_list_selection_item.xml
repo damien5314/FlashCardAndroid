@@ -5,9 +5,6 @@
 	android:background="@drawable/activity_list_selection_item_state"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal" >
-
-    <!-- 
-    android:background="?android:attr/activatedBackgroundIndicator" -->
     
     <TextView
         android:id="@+id/itemText"

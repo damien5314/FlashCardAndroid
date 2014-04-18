@@ -39,6 +39,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_selection);
+//		getWindow().getDecorView().setBackgroundResource(android.R.color.white);
 		refreshContentView();
 	}
 
