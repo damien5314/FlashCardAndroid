@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -25,8 +24,9 @@ import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
 
-public class ListSelectionActivity extends Activity {
+public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
 	private ArrayList<PhraseCollection> mVocabularyLists = new ArrayList<PhraseCollection>();
 	private ListSelectionAdapter mListAdapter;
@@ -142,13 +142,16 @@ public class ListSelectionActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.edit_item, menu);
+		getMenuInflater().inflate(R.menu.edit_item_sync, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_sync_to_drive:
+				syncListsToDrive();
+				return true;
 			case R.id.action_add_new:
 				addNewItem();
 				return true;

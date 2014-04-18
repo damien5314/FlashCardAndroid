@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <item
+        android:id="@+id/action_sync_to_drive"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_sync_to_drive"
+        android:icon="@drawable/ic_action_av_upload" />
+
+    <item
+        android:id="@+id/action_add_new"
+        android:orderInCategory="200"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_add_new"
+        android:icon="@drawable/ic_action_content_new" />
+
+</menu>

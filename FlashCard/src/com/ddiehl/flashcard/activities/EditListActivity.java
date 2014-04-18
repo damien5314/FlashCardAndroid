@@ -133,11 +133,11 @@ public class EditListActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_add_new:
-			addNewItem();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.action_add_new:
+				addNewItem();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 }
