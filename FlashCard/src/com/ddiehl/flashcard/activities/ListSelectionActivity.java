@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
+import com.ddiehl.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
@@ -138,6 +141,21 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				mListAdapter.notifyDataSetChanged();
 			}
 		}
+	}
+	
+	public void quit(View v) {
+		finish();
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	    	FragmentManager fm = getFragmentManager();
+	        final ExitAppDialog dialog = ExitAppDialog.newInstance();
+	        dialog.show(fm, "dialog_exit_app");
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

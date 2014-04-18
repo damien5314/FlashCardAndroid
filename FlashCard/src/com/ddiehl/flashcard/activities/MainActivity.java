@@ -25,4 +25,10 @@ public class MainActivity extends Activity {
     	startActivity(i);
     }
     
+    @Override
+    public void onStop() {
+    	super.onStop();
+    	finish();
+    }
+    
 }

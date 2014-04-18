@@ -13,6 +13,9 @@
     <string name="title_activity_main">FlashCard</string>
     <string name="main_header">FlashCard</string>
     <string name="button_start">Start</string>
+    <string name="dialog_exit_app_message_text">Exit app?</string>
+    <string name="dialog_exit_app_quit">Quit</string>
+    <string name="dialog_exit_app_cancel">Cancel</string>
     <string name="title_activity_list_selection">Select List</string>
     <string name="list_selection_item_default">Vocabulary List</string>
     <string name="list_selection_item_edit_text">Edit</string>
