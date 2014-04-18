@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.NavUtils;
@@ -66,10 +65,10 @@ public class LoadListDataActivity extends Activity {
 					// Remove color filter of all other buttons 
 					for (int k = 0; k < numOptions; k++) {
 						Button b2 = (Button) ((LinearLayout)v.getParent()).getChildAt(k);
-						b2.getBackground().setColorFilter(null);
+						b2.setTextColor(Color.argb(64, 0, 0, 0));
 					}
 					// Set color filter on button pressed
-					v.getBackground().setColorFilter(Color.CYAN,PorterDuff.Mode.MULTIPLY);
+					((Button)v).setTextColor(Color.argb(255, 0, 0, 0));
 					// Set global variable tracking number of phrases to study
 					setNumPhrasesToStudy(Integer.parseInt(((Button)v).getText().toString()));
 					// Refresh ListView to display correct icons

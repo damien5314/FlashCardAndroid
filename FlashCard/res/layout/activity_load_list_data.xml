@@ -87,9 +87,10 @@
 	            android:text="@string/list_data_sessionOptions_label" />
 	        
 	        <LinearLayout
+	            style="?android:attr/buttonBarStyle"
 	            android:id="@+id/list_data_sessionOptions_buttons"
 	            android:orientation="horizontal"
-	            android:layout_width="wrap_content"
+	            android:layout_width="200dp"
 	            android:layout_height="wrap_content" >
 	            
 	            <Button
