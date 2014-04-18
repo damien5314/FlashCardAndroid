@@ -25,6 +25,7 @@
         android:layout_height="48dp"
         android:layout_gravity="center"
         android:layout_marginRight="10dp"
+        android:background="#00ffffff"
         android:onClick="editList"
         android:src="@drawable/ic_content_edit" />
 

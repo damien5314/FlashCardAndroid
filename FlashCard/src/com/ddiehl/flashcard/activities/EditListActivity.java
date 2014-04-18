@@ -48,7 +48,7 @@ public class EditListActivity extends Activity {
 		tv.setText(mPhraseCollection.getTitle());
 		TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
 		vPhrasesTotal.setText(String.valueOf(mPhraseCollection.getPhrasesTotal()));
-		mPhraseAdapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_phrase, mPhraseCollection);
+		mPhraseAdapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_item, mPhraseCollection);
 		ListView vLists = (ListView) findViewById(R.id.editList_phraseList);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override

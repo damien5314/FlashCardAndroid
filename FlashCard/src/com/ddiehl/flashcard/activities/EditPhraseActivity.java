@@ -60,7 +60,7 @@ public class EditPhraseActivity extends Activity {
 	}
 	
 	private void populateSentencesView() {
-		mSentenceAdapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_sentence, mSentences);
+		mSentenceAdapter = new EditPhraseSentenceAdapter(this, R.layout.activity_edit_phrase_item, mSentences);
 		ListView vLists = (ListView) findViewById(R.id.edit_phrase_sentences_list);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
 			@Override
