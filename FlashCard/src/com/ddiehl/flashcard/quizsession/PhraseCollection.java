@@ -138,7 +138,7 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public void save(Context ctx) {
-		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);
+		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);		
 		try {
 			// Write PhraseCollection to XML
 //	        File file = new File(ctx.getFilesDir(), filename); // Why can't I pass this below?

@@ -1,61 +1,61 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditListActivity" >
-    
-    <TextView
+
+    <EditText
         android:id="@+id/edit_list_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="30sp"
         android:fontFamily="sans-serif-light"
-        android:text="@string/list_data_title_default" />
-    
+        android:gravity="center"
+        android:inputType="text"
+        android:text="@string/list_data_title_default"
+        android:textSize="30sp" />
+
     <LinearLayout
         android:id="@+id/edit_list_data"
-        android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-        
-	    <TextView 
-	        android:id="@+id/editList_listPhrases_total_label"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:paddingRight="5dp"
-	        android:gravity="right"
-	        android:textStyle="bold"
-	        android:text="@string/editList_listPhrases_total_label" />
-        
-	    <TextView 
-	        android:id="@+id/editList_listPhrases_total_value"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:paddingLeft="5dp"
-	        android:gravity="left"
-	        android:text="@string/editList_listPhrases_total_default" />
-        
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/editList_listPhrases_total_label"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right"
+            android:paddingRight="5dp"
+            android:text="@string/editList_listPhrases_total_label"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/editList_listPhrases_total_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left"
+            android:paddingLeft="5dp"
+            android:text="@string/editList_listPhrases_total_default" />
     </LinearLayout>
-    
+
     <ListView
         android:id="@+id/editList_phraseList"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-		android:choiceMode="multipleChoiceModal"
+        android:choiceMode="multipleChoiceModal"
         android:gravity="center" />
-        
-   <Button 
-       style="@style/CallToActionButton"
-       android:text="@string/edit_list_cta_text"
-       android:onClick="save" />
+
+    <Button
+        style="@style/CallToActionButton"
+        android:onClick="save"
+        android:text="@string/edit_list_cta_text" />
 
 </LinearLayout>

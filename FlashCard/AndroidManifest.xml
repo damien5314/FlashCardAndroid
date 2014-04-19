@@ -55,7 +55,8 @@
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.EditListActivity"
-            android:label="@string/title_activity_edit_list" >
+            android:label="@string/title_activity_edit_list"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.EditPhraseActivity"
@@ -64,7 +65,8 @@
         </activity>
         <activity
             android:name="com.ddiehl.flashcard.activities.EditSentenceActivity"
-            android:label="@string/title_activity_edit_sentence" >
+            android:label="@string/title_activity_edit_sentence"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
     </application>
 

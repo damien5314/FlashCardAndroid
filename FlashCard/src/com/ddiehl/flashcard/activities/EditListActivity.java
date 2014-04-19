@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,7 +46,7 @@ public class EditListActivity extends Activity {
 	
 	private void populateContentView(PhraseCollection in) {
 		mPhraseCollection = in;
-		TextView tv = (TextView) findViewById(R.id.edit_list_title);
+		EditText tv = (EditText) findViewById(R.id.edit_list_title);
 		tv.setText(mPhraseCollection.getTitle());
 		TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
 		vPhrasesTotal.setText(String.valueOf(mPhraseCollection.getPhrasesTotal()));
@@ -76,6 +77,8 @@ public class EditListActivity extends Activity {
 	}
 	
 	public void save(View v) {
+		EditText vTitle = (EditText) findViewById(R.id.edit_list_title);
+		mPhraseCollection.setTitle(vTitle.getText().toString());
 		mPhraseCollection.save(v.getContext());
 		Intent rIntent = new Intent();
 		rIntent.putExtra("PhraseCollection", mPhraseCollection);
