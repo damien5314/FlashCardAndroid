@@ -19,6 +19,7 @@ import android.widget.ListView;
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditPhraseSentenceAdapter;
 import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
+import com.ddiehl.flashcard.listeners.SentenceSelectionListener;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Sentence;
 
@@ -71,6 +72,7 @@ public class EditPhraseActivity extends Activity {
 				startActivityForResult(intent, 1);
 			}
 		});
+		vLists.setMultiChoiceModeListener(new SentenceSelectionListener(vLists, mSentenceAdapter));
 		vLists.setAdapter(mSentenceAdapter);
 		if (mSentences != null && !mSentences.isEmpty()) {
 			

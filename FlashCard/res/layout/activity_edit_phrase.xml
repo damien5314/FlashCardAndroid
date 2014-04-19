@@ -85,7 +85,8 @@
         <ListView
             android:id="@+id/edit_phrase_sentences_list"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+			android:choiceMode="multipleChoiceModal" />
         
     </LinearLayout>
     
