@@ -1,99 +1,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".EditPhraseActivity" >
-    
-    <LinearLayout
-        style="@style/EditPhraseItem" >
-        
-	    <TextView
-	        style="@style/EditPhraseLabel"
-	        android:id="@+id/edit_phrase_native_label"
-	        android:text="@string/edit_phrase_native_label" />
-	    
-	    <EditText
-	        style="@style/EditPhraseValue"
-	        android:id="@+id/edit_phrase_native_value"
-	        android:hint="@string/edit_phrase_native_default" />
-        
+
+    <LinearLayout style="@style/EditPhraseItem" >
+
+        <TextView
+            android:id="@+id/edit_phrase_native_label"
+            style="@style/EditPhraseLabel"
+            android:text="@string/edit_phrase_native_label" />
+
+        <EditText
+            android:id="@+id/edit_phrase_native_value"
+            style="@style/EditPhraseValue"
+            android:hint="@string/edit_phrase_native_default" />
     </LinearLayout>
-    
-    <LinearLayout
-        style="@style/EditPhraseItem" >
-        
-	    <TextView
-	        style="@style/EditPhraseLabel"
-	        android:id="@+id/edit_phrase_phonetic_label"
-	        android:text="@string/edit_phrase_phonetic_label" />
-	    
-	    <EditText
-	        style="@style/EditPhraseValue"
-	        android:id="@+id/edit_phrase_phonetic_value"
-	        android:hint="@string/edit_phrase_phonetic_default" />
-        
+
+    <LinearLayout style="@style/EditPhraseItem" >
+
+        <TextView
+            android:id="@+id/edit_phrase_phonetic_label"
+            style="@style/EditPhraseLabel"
+            android:text="@string/edit_phrase_phonetic_label" />
+
+        <EditText
+            android:id="@+id/edit_phrase_phonetic_value"
+            style="@style/EditPhraseValue"
+            android:hint="@string/edit_phrase_phonetic_default" />
     </LinearLayout>
-    
-    <LinearLayout
-        style="@style/EditPhraseItem" >
-        
-	    <TextView
-	        style="@style/EditPhraseLabel"
-	        android:id="@+id/edit_phrase_romanized_label"
-	        android:text="@string/edit_phrase_romanized_label" />
-	    
-	    <EditText
-	        style="@style/EditPhraseValue"
-	        android:id="@+id/edit_phrase_romanized_value"
-	        android:hint="@string/edit_phrase_romanized_default" />
-        
+
+    <LinearLayout style="@style/EditPhraseItem" >
+
+        <TextView
+            android:id="@+id/edit_phrase_romanized_label"
+            style="@style/EditPhraseLabel"
+            android:text="@string/edit_phrase_romanized_label" />
+
+        <EditText
+            android:id="@+id/edit_phrase_romanized_value"
+            style="@style/EditPhraseValue"
+            android:hint="@string/edit_phrase_romanized_default" />
     </LinearLayout>
-    
-    <LinearLayout
-        style="@style/EditPhraseItem" >
-        
-	    <TextView
-	        style="@style/EditPhraseLabel"
-	        android:id="@+id/edit_phrase_translated_label"
-	        android:text="@string/edit_phrase_translated_label" />
-	    
-	    <EditText
-	        style="@style/EditPhraseValue"
-	        android:id="@+id/edit_phrase_translated_value"
-	        android:hint="@string/edit_phrase_translated_default" />
-        
+
+    <LinearLayout style="@style/EditPhraseItem" >
+
+        <TextView
+            android:id="@+id/edit_phrase_translated_label"
+            style="@style/EditPhraseLabel"
+            android:text="@string/edit_phrase_translated_label" />
+
+        <EditText
+            android:id="@+id/edit_phrase_translated_value"
+            style="@style/EditPhraseValue"
+            android:hint="@string/edit_phrase_translated_default" />
     </LinearLayout>
-    
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
         <TextView
             android:id="@+id/edit_phrase_sentences_label"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_phrase_sentences_label"
-            android:textSize="12sp" />
-        
+            style="@style/EditPhraseLabel"
+            android:text="@string/edit_phrase_sentences_label" />
+
         <ListView
             android:id="@+id/edit_phrase_sentences_list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-			android:choiceMode="multipleChoiceModal" />
-        
+            android:choiceMode="multipleChoiceModal" />
     </LinearLayout>
-    
+
     <Button
-        style="@style/CallToActionButton"
         android:id="@+id/edit_phrase_save"
-        android:text="@string/edit_phrase_save_button_text"
-        android:onClick="save" />
+        style="@style/CallToActionButton"
+        android:onClick="save"
+        android:text="@string/edit_phrase_save_button_text" />
 
 </LinearLayout>
