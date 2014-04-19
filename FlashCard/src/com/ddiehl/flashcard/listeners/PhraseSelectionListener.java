@@ -5,8 +5,10 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
@@ -51,6 +53,9 @@ public class PhraseSelectionListener implements MultiChoiceModeListener {
 	@Override
 	public void onDestroyActionMode(ActionMode arg0) {
 		mAdapter.removeSelection();
+		View parent = (View) mListView.getParent();
+		TextView vPhrasesTotal = (TextView) parent.findViewById(R.id.editList_listPhrases_total_value);
+		vPhrasesTotal.setText(String.valueOf(mAdapter.getCount()));
 	}
 
 	@Override

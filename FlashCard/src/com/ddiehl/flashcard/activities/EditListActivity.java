@@ -48,8 +48,7 @@ public class EditListActivity extends Activity {
 		mPhraseCollection = in;
 		EditText tv = (EditText) findViewById(R.id.edit_list_title);
 		tv.setText(mPhraseCollection.getTitle());
-		TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
-		vPhrasesTotal.setText(String.valueOf(mPhraseCollection.getPhrasesTotal()));
+		updateTotalPhrases();
 		mPhraseAdapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_item, mPhraseCollection);
 		ListView vLists = (ListView) findViewById(R.id.editList_phraseList);
 		vLists.setOnItemClickListener(new OnItemClickListener(){
@@ -69,10 +68,16 @@ public class EditListActivity extends Activity {
     	populateContentView(mPhraseCollection);
 	}
 	
+	private void updateTotalPhrases() {
+		TextView vPhrasesTotal = (TextView) findViewById(R.id.editList_listPhrases_total_value);
+		vPhrasesTotal.setText(String.valueOf(mPhraseCollection.size()));
+	}
+	
 	public void addNewItem() {
 		isAltered = true;
 		Phrase newPhrase = new Phrase();
 		mPhraseCollection.add(newPhrase);
+		updateTotalPhrases();
 		mPhraseAdapter.notifyDataSetChanged();
 	}
 	
