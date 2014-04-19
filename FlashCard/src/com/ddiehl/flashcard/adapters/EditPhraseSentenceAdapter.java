@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +17,17 @@ import com.ddiehl.flashcard.quizsession.Sentence;
 
 public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
 	private static final String TAG = EditPhraseSentenceAdapter.class.getSimpleName();
-	Context context; 
-    int layoutResourceId;
-    ArrayList<Sentence> data = null;
+	private Context context; 
+    private int layoutResourceId;
+    private ArrayList<Sentence> data = null;
+    private SparseBooleanArray mSelectedItemsIds;
 
     public EditPhraseSentenceAdapter(Context context, int layoutResourceId, ArrayList<Sentence> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.mSelectedItemsIds = new SparseBooleanArray();
     }
 
     @Override
@@ -52,6 +55,32 @@ public class EditPhraseSentenceAdapter extends ArrayAdapter<Sentence> {
         holder.itemText.setText(s.getSentenceNative());
         
         return row;
+    }
+ 
+    public void toggleSelection(int position) {
+        selectView(position, !mSelectedItemsIds.get(position));
+    }
+ 
+    public void removeSelection() {
+        mSelectedItemsIds = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
+ 
+    public void selectView(int position, boolean value) {
+        if (value) {
+            mSelectedItemsIds.put(position, value);
+        } else {
+            mSelectedItemsIds.delete(position);
+        }
+        notifyDataSetChanged();
+    }
+ 
+    public int getSelectedCount() {
+        return mSelectedItemsIds.size();
+    }
+    
+    public SparseBooleanArray getSelectedIds() {
+    	return this.mSelectedItemsIds;
     }
     
     static class ItemHolder

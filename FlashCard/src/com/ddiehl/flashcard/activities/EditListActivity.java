@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
 import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
+import com.ddiehl.flashcard.listeners.PhraseSelectionListener;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
@@ -59,6 +60,7 @@ public class EditListActivity extends Activity {
 				startActivityForResult(i, 1);
 			}
 		});
+		vLists.setMultiChoiceModeListener(new PhraseSelectionListener(vLists, mPhraseAdapter));
 		vLists.setAdapter(mPhraseAdapter);
 	}
 	

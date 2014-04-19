@@ -9,15 +9,15 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.ListView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
-import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.adapters.EditListPhrasesAdapter;
+import com.ddiehl.flashcard.quizsession.Phrase;
 
-public class ListSelectionListener implements MultiChoiceModeListener {
-	private static final String TAG = ListSelectionListener.class.getSimpleName();
-	private ListSelectionAdapter mAdapter;
+public class PhraseSelectionListener implements MultiChoiceModeListener {
+	private static final String TAG = PhraseSelectionListener.class.getSimpleName();
+	private EditListPhrasesAdapter mAdapter;
 	private ListView mListView;
 	
-	public ListSelectionListener(ListView view, ListSelectionAdapter adapter) {
+	public PhraseSelectionListener(ListView view, EditListPhrasesAdapter adapter) {
 		super();
 		mListView = view;
 		mAdapter = adapter;
@@ -30,8 +30,7 @@ public class ListSelectionListener implements MultiChoiceModeListener {
             SparseBooleanArray selected = mAdapter.getSelectedIds();
             for (int i = (selected.size() - 1); i >= 0; i--) {
                 if (selected.valueAt(i)) {
-                    PhraseCollection selectedItem = mAdapter.getItem(selected.keyAt(i));
-                    selectedItem.delete(mAdapter.getContext());
+                    Phrase selectedItem = mAdapter.getItem(selected.keyAt(i));
                     mAdapter.remove(selectedItem);
                 }
             }
