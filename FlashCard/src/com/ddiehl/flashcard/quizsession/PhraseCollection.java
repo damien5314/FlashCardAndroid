@@ -141,7 +141,6 @@ public class PhraseCollection implements Parcelable {
 		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);		
 		try {
 			// Write PhraseCollection to XML
-//	        File file = new File(ctx.getFilesDir(), filename); // Why can't I pass this below?
 	        FileOutputStream myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
@@ -259,6 +258,14 @@ public class PhraseCollection implements Parcelable {
 	
 	public void setList(List<Phrase> in) {
 		this.list = in;
+	}
+
+	public String getFilename() {
+		return mFilename;
+	}
+
+	public void setFilename(String mFilename) {
+		this.mFilename = mFilename;
 	}
 
 	public String getTitle() {

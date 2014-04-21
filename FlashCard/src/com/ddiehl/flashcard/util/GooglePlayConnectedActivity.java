@@ -18,32 +18,30 @@ import com.google.android.gms.drive.Drive;
 
 public abstract class GooglePlayConnectedActivity extends Activity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
-	private static final String TAG = GooglePlayConnectedActivity.class.getSimpleName();
-    private static final int REQUEST_RESOLVE_ERROR = 1001;
+	private static final String TAG = GooglePlayConnectedActivity.class
+			.getSimpleName();
+	private static final int REQUEST_RESOLVE_ERROR = 1001;
 	private static final String STATE_RESOLVING_ERROR = "resolving_error";
-    private static final String DIALOG_ERROR = "dialog_error";
-    private boolean mResolvingError = false;
-	private GoogleApiClient mClient;
+	private static final String DIALOG_ERROR = "dialog_error";
+	private boolean mResolvingError = false;
+	protected GoogleApiClient mClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mClient = new GoogleApiClient.Builder(this).addApi(Drive.API)
-				.addScope(Drive.SCOPE_FILE).addConnectionCallbacks(this)
+				.addScope(Drive.SCOPE_APPFOLDER).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
 		mResolvingError = savedInstanceState != null
-	            && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-	}
-
-	public void syncListsToDrive() {
-		if (!mResolvingError) { // more about this later
-			mClient.connect();
-		}
+				&& savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
+		if (!mResolvingError) { // more about this later
+			mClient.connect();
+		}
 	}
 
 	@Override
@@ -51,12 +49,11 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 		mClient.disconnect();
 		super.onStop();
 	}
-	
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-	    super.onSaveInstanceState(outState);
-	    outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(STATE_RESOLVING_ERROR, mResolvingError);
 	}
 
 	@Override
@@ -112,7 +109,7 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 	/* A fragment to display an error dialog */
 	public static class ErrorDialogFragment extends DialogFragment {
 		public ErrorDialogFragment() {
-			
+
 		}
 
 		@Override
@@ -128,18 +125,69 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 			((GooglePlayConnectedActivity) getActivity()).onDialogDismissed();
 		}
 	}
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if (requestCode == REQUEST_RESOLVE_ERROR) {
-	        mResolvingError = false;
-	        if (resultCode == RESULT_OK) {
-	            // Make sure the app is not already connected or attempting to connect
-	            if (!mClient.isConnecting() &&
-	                    !mClient.isConnected()) {
-	            	mClient.connect();
-	            }
-	        }
-	    }
+		if (requestCode == REQUEST_RESOLVE_ERROR) {
+			mResolvingError = false;
+			if (resultCode == RESULT_OK) {
+				// Make sure the app is not already connected or attempting to
+				// connect
+				if (!mClient.isConnecting() && !mClient.isConnected()) {
+					mClient.connect();
+				}
+			}
+		}
 	}
+
+	public GoogleApiClient getGoogleApiClient() {
+		return this.mClient;
+	}
+
+	/**
+	 * Insert new file.
+	 * 
+	 * @param service
+	 *            Drive API service instance.
+	 * @param title
+	 *            Title of the file to insert, including the extension.
+	 * @param description
+	 *            Description of the file to insert.
+	 * @param parentId
+	 *            Optional parent folder's ID.
+	 * @param mimeType
+	 *            MIME type of the file to insert.
+	 * @param filename
+	 *            Filename of the file to insert.
+	 * @return Inserted file metadata if successful, {@code null} otherwise.
+	 */
+/*	private static File insertFile(Drive service, String title, String description,
+	      String parentId, String mimeType, String filename) {
+	    // File's metadata.
+	    File body = new File();
+	    body.setTitle(title);
+	    body.setDescription(description);
+	    body.setMimeType(mimeType);
+
+	    // Set the parent folder.
+	    if (parentId != null && parentId.length() > 0) {
+	      body.setParents(
+	          Arrays.asList(new File.ParentReference().setId(parentId));
+	    }
+
+	    // File's content.
+	    java.io.File fileContent = new java.io.File(filename);
+	    FileContent mediaContent = new FileContent(mimeType, fileContent);
+	    try {
+	      File file = service.files().insert(body, mediaContent).execute();
+
+	      // Uncomment the following line to print the File ID.
+	      // System.out.println("File ID: %s" + file.getId());
+
+	      return file;
+	    } catch (IOException e) {
+	      System.out.println("An error occured: " + e);
+	      return null;
+	    }
+	  } */
 }
