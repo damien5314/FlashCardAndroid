@@ -8,10 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,14 +31,26 @@ import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
-import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.internal.is;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 
-public class ListSelectionActivity extends GooglePlayConnectedActivity {
+public class ListSelectionActivity extends Activity {
 	private static final String TAG = ListSelectionActivity.class
 			.getSimpleName();
 	private ArrayList<PhraseCollection> mVocabularyLists = new ArrayList<PhraseCollection>();
 	private ListSelectionAdapter mListAdapter;
 	private ListView mListView;
+	private static final int AUTHORIZATION_REQUEST_CODE = 1001;
+	private String mAuthenticatedEmailId = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,12 +123,21 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 
 	public void syncListsToDrive() {
-		File[] files = getFilesDir().listFiles();
-		for (int i = 0; i < files.length; i++) {
-			File listToUpload = files[i];
-			Log.d(TAG, "Attempting to upload file: " + listToUpload.getName());
-			
+		if (mAuthenticatedEmailId == null) {
+			authenticateUser();
+		} else {
+			File[] files = getFilesDir().listFiles();
+			for (int i = 0; i < files.length; i++) {
+				File listToUpload = files[i];
+				Log.d(TAG, "Attempting to upload file: " + listToUpload.getName());
+			}
 		}
+	}
+	
+	private void authenticateUser() {
+		Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
+		         false, null, null, null, null);
+		startActivityForResult(intent, AUTHORIZATION_REQUEST_CODE);
 	}
 
 	public void addNewItem() {
@@ -150,15 +175,32 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == 1) {
-			Bundle extras = data.getExtras();
-			if (extras.containsKey("PhraseCollection")
-					&& extras.containsKey("position")) {
-				PhraseCollection thisCollection = (PhraseCollection) extras
-						.getParcelable("PhraseCollection");
-				mVocabularyLists.set(extras.getInt("position"), thisCollection);
-				mListAdapter.notifyDataSetChanged();
+		switch (requestCode) {
+		case 1:
+			switch (resultCode) {
+			case 1:
+				Bundle extras = data.getExtras();
+				if (extras.containsKey("PhraseCollection")
+						&& extras.containsKey("position")) {
+					PhraseCollection thisCollection = (PhraseCollection) extras
+							.getParcelable("PhraseCollection");
+					mVocabularyLists.set(extras.getInt("position"), thisCollection);
+					mListAdapter.notifyDataSetChanged();
+				}
+				break;
 			}
+		case AUTHORIZATION_REQUEST_CODE:
+			switch (resultCode) {
+			case RESULT_OK:
+				mAuthenticatedEmailId = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+				getAndUseAuthTokenInAsyncTask();
+				String authenticationToken = GoogleAuthUtil.getToken(this, mAuthenticatedEmailId, DriveScopes.DRIVE);
+				Drive service = new Drive.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(), credential).build();
+				this.syncListsToDrive();
+			}
+			break;
+		default:
+			Log.d(TAG, "Request Code not recognized.");
 		}
 	}
 
@@ -195,5 +237,51 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	// Example of how to use the GoogleAuthUtil in a blocking, non-main thread context
+	private void getAndUseAuthTokenBlocking() {
+	       try {
+	          // Retrieve a token for the given account and scope. It will always return either
+	          // a non-empty String or throw an exception.
+	          final String token = GoogleAuthUtil.getToken(this, this.mAuthenticatedEmailId, DriveScopes.DRIVE_APPDATA);
+	       } catch (GooglePlayServicesAvailabilityException playEx) {
+	         Dialog alert = GooglePlayServicesUtil.getErrorDialog(
+	             playEx.getConnectionStatusCode(),
+	             this,
+	             AUTHORIZATION_REQUEST_CODE);
+	         alert.show();
+	         return;
+	       } catch (UserRecoverableAuthException userAuthEx) {
+	          // Start the user recoverable action using the intent returned by getIntent()
+	          startActivityForResult(
+	                  userAuthEx.getIntent(),
+	                  AUTHORIZATION_REQUEST_CODE);
+	          return;
+	       } catch (IOException transientEx) {
+	          // network or server error, the call is expected to succeed if you try again later.
+	          // Don't attempt to call again immediately - the request is likely to
+	          // fail, you'll hit quotas or back-off.
+	    	   Log.i(TAG, "Transient error encountered: " + transientEx.getMessage());
+	    	   return;
+	       } catch (GoogleAuthException authEx) {
+	          // Failure. The call is not expected to ever succeed so it should not be retried.
+	    	  Log.e(TAG, "Unrecoverable authentication exception: " + authEx.getMessage(), authEx);
+	    	  return;
+	       }
+	       
+	       // Attempt to make test API call here
+	   }
+
+	// Example of how to use AsyncTask to call blocking code on a background thread.
+	void getAndUseAuthTokenInAsyncTask() {
+		AsyncTask task = new AsyncTask() {
+			@Override
+			protected Object doInBackground(Object... params) {
+				getAndUseAuthTokenBlocking();
+				return null;
+			}
+		};
+		task.execute((Void) null);
 	}
 }
