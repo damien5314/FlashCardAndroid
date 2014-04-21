@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -29,17 +28,6 @@ import com.ddiehl.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi.ContentsResult;
-import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.Metadata;
-import com.google.android.gms.drive.MetadataBuffer;
-import com.google.android.gms.drive.MetadataChangeSet;
-import com.google.android.gms.drive.query.Filters;
-import com.google.android.gms.drive.query.Query;
-import com.google.android.gms.drive.query.SearchableField;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class
@@ -118,59 +106,14 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		mListView.setAdapter(mListAdapter);
 	}
 
-	private DriveFolder mAppFolder;
-
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		super.onConnected(connectionHint);
-		mAppFolder = Drive.DriveApi.getAppFolder(getGoogleApiClient());
-		Query query = new Query.Builder().addFilter(
-				Filters.eq(SearchableField.MIME_TYPE, "text/xml")).build();
-		mAppFolder.queryChildren(getGoogleApiClient(), query)
-				.setResultCallback(xmlFileCallback);
-	}
-
-	private ResultCallback<MetadataBufferResult> xmlFileCallback = new ResultCallback<MetadataBufferResult>() {
-		@Override
-		public void onResult(MetadataBufferResult result) {
-			if (!result.getStatus().isSuccess()) {
-				Log.d(TAG, "Error while trying to retrieve application folder.");
-				return;
-			}
-
-			MetadataBuffer data = result.getMetadataBuffer();
-			Iterator<Metadata> iterator = data.iterator();
-			Log.d(TAG, "Number of list files on Drive: " + data.getCount());
-			while (iterator.hasNext()) {
-				Metadata file = iterator.next();
-				String filename = file.getOriginalFilename();
-				Log.d(TAG, "Drive File: " + filename);
-			}
-		}
-	};
-
 	public void syncListsToDrive() {
 		File[] files = getFilesDir().listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File listToUpload = files[i];
 			Log.d(TAG, "Attempting to upload file: " + listToUpload.getName());
-			Drive.DriveApi.newContents(getGoogleApiClient())
-            	.setResultCallback(contentsCallback);
+			
 		}
 	}
-	
-	private ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
-		@Override
-		public void onResult(ContentsResult arg0) {
-			DriveFolder appfolder = Drive.DriveApi.getAppFolder(getGoogleApiClient());
-			MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-					.setTitle(listToUpload.getName()).setMimeType("text/xml")
-					.build();
-			appfolder.createFile(getGoogleApiClient(), changeSet,
-					arg0.getContents());
-		}
-		
-	};
 
 	public void addNewItem() {
 		PhraseCollection newPc = new PhraseCollection();
