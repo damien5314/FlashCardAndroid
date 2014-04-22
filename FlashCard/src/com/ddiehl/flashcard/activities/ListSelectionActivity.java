@@ -8,14 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import android.accounts.AccountManager;
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,26 +27,26 @@ import com.ddiehl.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.AccountPicker;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.internal.is;
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
+import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi.ContentsResult;
+import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
+import com.google.android.gms.drive.DriveFolder;
+import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.MetadataBuffer;
+import com.google.android.gms.drive.MetadataChangeSet;
+import com.google.android.gms.drive.query.Filters;
+import com.google.android.gms.drive.query.Query;
+import com.google.android.gms.drive.query.SearchableField;
 
-public class ListSelectionActivity extends Activity {
+public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class
 			.getSimpleName();
 	private ArrayList<PhraseCollection> mVocabularyLists = new ArrayList<PhraseCollection>();
 	private ListSelectionAdapter mListAdapter;
 	private ListView mListView;
-	private static final int AUTHORIZATION_REQUEST_CODE = 1001;
-	private String mAuthenticatedEmailId = null;
+	private static final int REQUEST_CODE_EDIT_LIST = 1001;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +63,7 @@ public class ListSelectionActivity extends Activity {
 		// If no files are in file directory, port the files from
 		// /assets/vocabulary-lists/
 		if (myFiles.length == 0) {
-			Log.i(TAG,
-					"No previous files detected, copying lists from /assets/ into /data/.");
+			Log.i(TAG, "No previous files detected, copying lists from /assets/ into /data/.");
 			AssetManager assets = getAssets();
 			try {
 				String[] assetFilenames = assets
@@ -123,21 +118,90 @@ public class ListSelectionActivity extends Activity {
 	}
 
 	public void syncListsToDrive() {
-		if (mAuthenticatedEmailId == null) {
-			authenticateUser();
-		} else {
+		if (mClient.isConnected()) {
 			File[] files = getFilesDir().listFiles();
+			final DriveFolder folder = Drive.DriveApi.getAppFolder(mClient);
 			for (int i = 0; i < files.length; i++) {
-				File listToUpload = files[i];
-				Log.d(TAG, "Attempting to upload file: " + listToUpload.getName());
+				final File listToUpload = files[i];
+				folder.queryChildren(
+						mClient,
+						new Query.Builder().addFilter(
+								Filters.eq(SearchableField.TITLE,
+										listToUpload.getName())).build())
+						.setResultCallback(
+								new ResultCallback<MetadataBufferResult>() {
+
+									@Override
+									public void onResult(MetadataBufferResult result) {
+										if (!result.getStatus().isSuccess()) {
+											Log.e(TAG, "Error retrieving Files from Drive app folder.");
+											Log.e(TAG, result.getStatus().toString());
+											return;
+										}
+										MetadataBuffer buffer = result.getMetadataBuffer();
+										switch (buffer.getCount()) {
+										case 0:
+											Log.d(TAG, "0 files on Drive matched, uploading..");
+											uploadFile(folder, listToUpload);
+											break;
+										case 1:
+											Log.d(TAG, "1 file on Drive matched, syncing..");
+											syncFile(folder, listToUpload);
+											break;
+										default:
+											Log.w(TAG, "Results returned from Drive query: " + buffer.getCount());
+											break;
+										}
+									}
+								});
 			}
+			
+		} else {
+			mClient.connect();
 		}
 	}
+
+	private void uploadFile(DriveFolder fol_in, File f_in) {
+		final DriveFolder appFolder = fol_in;
+		final File fileToUpload = f_in;
+		
+		final ResultCallback<DriveFileResult> fileCallback = new
+	            ResultCallback<DriveFileResult>() {
+	        @Override
+	        public void onResult(DriveFileResult result) {
+	            if (!result.getStatus().isSuccess()) {
+	                Log.d(TAG, "Error while trying to create the file");
+	                return;
+	            }
+	            Log.d(TAG, "Created a file: " + result.getDriveFile().getDriveId());
+	        }
+	    };
+
+		ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
+			@Override
+			public void onResult(ContentsResult result) {
+				if (!result.getStatus().isSuccess()) {
+					Log.d(TAG, "Error while trying to create new file contents");
+					return;
+				}
+
+				MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+						.setTitle(fileToUpload.getName()).setMimeType("text/xml")
+						.setStarred(true).build();
+				// create a file on root folder
+				appFolder.createFile(getGoogleApiClient(), changeSet,
+								result.getContents())
+						.setResultCallback(fileCallback);
+			}
+		};
+
+		Drive.DriveApi.newContents(getGoogleApiClient()).setResultCallback(
+				contentsCallback);
+
+	}
 	
-	private void authenticateUser() {
-		Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"},
-		         false, null, null, null, null);
-		startActivityForResult(intent, AUTHORIZATION_REQUEST_CODE);
+	private void syncFile(DriveFolder fol_in, File f_in) {
+		
 	}
 
 	public void addNewItem() {
@@ -155,7 +219,7 @@ public class ListSelectionActivity extends Activity {
 		ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
 		int position = lv.getPositionForView(v);
 		intent.putExtra("position", position);
-		startActivityForResult(intent, 1);
+		startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
 	}
 
 	private void copyAssetToData(String filename) throws IOException {
@@ -175,8 +239,9 @@ public class ListSelectionActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
-		case 1:
+		case REQUEST_CODE_EDIT_LIST:
 			switch (resultCode) {
 			case 1:
 				Bundle extras = data.getExtras();
@@ -184,21 +249,12 @@ public class ListSelectionActivity extends Activity {
 						&& extras.containsKey("position")) {
 					PhraseCollection thisCollection = (PhraseCollection) extras
 							.getParcelable("PhraseCollection");
-					mVocabularyLists.set(extras.getInt("position"), thisCollection);
+					mVocabularyLists.set(extras.getInt("position"),
+							thisCollection);
 					mListAdapter.notifyDataSetChanged();
 				}
 				break;
 			}
-		case AUTHORIZATION_REQUEST_CODE:
-			switch (resultCode) {
-			case RESULT_OK:
-				mAuthenticatedEmailId = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-				getAndUseAuthTokenInAsyncTask();
-				String authenticationToken = GoogleAuthUtil.getToken(this, mAuthenticatedEmailId, DriveScopes.DRIVE);
-				Drive service = new Drive.Builder(AndroidHttp.newCompatibleTransport(), new JacksonFactory(), credential).build();
-				this.syncListsToDrive();
-			}
-			break;
 		default:
 			Log.d(TAG, "Request Code not recognized.");
 		}
@@ -238,50 +294,4 @@ public class ListSelectionActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
-	// Example of how to use the GoogleAuthUtil in a blocking, non-main thread context
-	private void getAndUseAuthTokenBlocking() {
-	       try {
-	          // Retrieve a token for the given account and scope. It will always return either
-	          // a non-empty String or throw an exception.
-	          final String token = GoogleAuthUtil.getToken(this, this.mAuthenticatedEmailId, DriveScopes.DRIVE_APPDATA);
-	       } catch (GooglePlayServicesAvailabilityException playEx) {
-	         Dialog alert = GooglePlayServicesUtil.getErrorDialog(
-	             playEx.getConnectionStatusCode(),
-	             this,
-	             AUTHORIZATION_REQUEST_CODE);
-	         alert.show();
-	         return;
-	       } catch (UserRecoverableAuthException userAuthEx) {
-	          // Start the user recoverable action using the intent returned by getIntent()
-	          startActivityForResult(
-	                  userAuthEx.getIntent(),
-	                  AUTHORIZATION_REQUEST_CODE);
-	          return;
-	       } catch (IOException transientEx) {
-	          // network or server error, the call is expected to succeed if you try again later.
-	          // Don't attempt to call again immediately - the request is likely to
-	          // fail, you'll hit quotas or back-off.
-	    	   Log.i(TAG, "Transient error encountered: " + transientEx.getMessage());
-	    	   return;
-	       } catch (GoogleAuthException authEx) {
-	          // Failure. The call is not expected to ever succeed so it should not be retried.
-	    	  Log.e(TAG, "Unrecoverable authentication exception: " + authEx.getMessage(), authEx);
-	    	  return;
-	       }
-	       
-	       // Attempt to make test API call here
-	   }
-
-	// Example of how to use AsyncTask to call blocking code on a background thread.
-	void getAndUseAuthTokenInAsyncTask() {
-		AsyncTask task = new AsyncTask() {
-			@Override
-			protected Object doInBackground(Object... params) {
-				getAndUseAuthTokenBlocking();
-				return null;
-			}
-		};
-		task.execute((Void) null);
-	}
-}
+} 
