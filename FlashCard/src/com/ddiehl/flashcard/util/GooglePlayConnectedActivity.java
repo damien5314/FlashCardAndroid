@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,33 +21,52 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 		ConnectionCallbacks, OnConnectionFailedListener {
 	private static final String TAG = GooglePlayConnectedActivity.class
 			.getSimpleName();
+	private final String PREF_SYNC_TO_DRIVE = "pref_syncFilesToDrive";
 	private static final int REQUEST_RESOLVE_ERROR = 1001;
 	private static final String STATE_RESOLVING_ERROR = "resolving_error";
 	private static final String DIALOG_ERROR = "dialog_error";
 	private boolean mResolvingError = false;
-	protected GoogleApiClient mClient;
+	private boolean playConnectionEnabled;
+	protected GoogleApiClient mClient = null;
+
+	public boolean isPlayConnectionEnabled() {
+		return playConnectionEnabled;
+	}
+
+	public void setPlayConnectionEnabled(boolean playConnectionEnabled) {
+		this.playConnectionEnabled = playConnectionEnabled;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mResolvingError = savedInstanceState != null
+				&& savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 		mClient = new GoogleApiClient.Builder(this).addApi(Drive.API)
 				.addScope(Drive.SCOPE_APPFOLDER).addConnectionCallbacks(this)
 				.addOnConnectionFailedListener(this).build();
-		mResolvingError = savedInstanceState != null
-				&& savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (!mResolvingError) { // more about this later
+
+		// Get preference to sync files to Drive
+		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+		playConnectionEnabled = preferences.getBoolean(PREF_SYNC_TO_DRIVE, false);
+		
+		if (!mResolvingError
+				&& playConnectionEnabled) {
 			mClient.connect();
 		}
 	}
 
 	@Override
 	protected void onStop() {
-		mClient.disconnect();
+		if (playConnectionEnabled) {
+			mClient.disconnect();
+		}
 		super.onStop();
 	}
 
@@ -128,15 +148,17 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_RESOLVE_ERROR) {
+		switch (requestCode) {
+		case REQUEST_RESOLVE_ERROR:
 			mResolvingError = false;
-			if (resultCode == RESULT_OK) {
-				// Make sure the app is not already connected or attempting to
-				// connect
+			switch (resultCode) {
+			case RESULT_OK:
 				if (!mClient.isConnecting() && !mClient.isConnected()) {
 					mClient.connect();
 				}
+				break;
 			}
+			break;
 		}
 	}
 

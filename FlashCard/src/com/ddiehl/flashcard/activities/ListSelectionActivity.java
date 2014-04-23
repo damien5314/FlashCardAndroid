@@ -51,70 +51,78 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_list_selection);
-		// getWindow().getDecorView().setBackgroundResource(android.R.color.white);
+		setContentView(R.layout.activity_list_selection);		
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
 		refreshContentView();
 	}
 
 	private void refreshContentView() {
-		File fileDir = getFilesDir();
-		File[] myFiles = fileDir.listFiles();
+		if (this.isPlayConnectionEnabled()) {
+			
+		} else {
+			File fileDir = getFilesDir();
+			File[] myFiles = fileDir.listFiles();
 
-		// If no files are in file directory, port the files from
-		// /assets/vocabulary-lists/
-		if (myFiles.length == 0) {
-			Log.i(TAG, "No previous files detected, copying lists from /assets/ into /data/.");
-			AssetManager assets = getAssets();
-			try {
-				String[] assetFilenames = assets
-						.list(getString(R.string.assetListGroup));
-				for (int i = 0; i < assetFilenames.length; i++) {
-					copyAssetToData(assetFilenames[i]);
+			// If no files are in file directory, port the files from
+			// /assets/vocabulary-lists/
+			if (myFiles.length == 0) {
+				Log.i(TAG, "No previous files detected, copying lists from /assets/ into /data/.");
+				AssetManager assets = getAssets();
+				try {
+					String[] assetFilenames = assets
+							.list(getString(R.string.assetListGroup));
+					for (int i = 0; i < assetFilenames.length; i++) {
+						copyAssetToData(assetFilenames[i]);
+					}
+				} catch (IOException e) {
+					Log.e(TAG, "Error retrieving assets.");
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				Log.e(TAG, "Error retrieving assets.");
-				e.printStackTrace();
+				myFiles = fileDir.listFiles(); // Refresh file list
 			}
-			myFiles = fileDir.listFiles(); // Refresh file list
-		}
 
-		String[] filenames = new String[myFiles.length];
+			String[] filenames = new String[myFiles.length];
 
-		for (int i = 0; i < myFiles.length; i++) {
-			Log.d(TAG, "Loading: " + myFiles[i].getName());
-			filenames[i] = myFiles[i].getName();
-		}
-
-		for (int i = 0; i < filenames.length; i++) {
-			String filename = filenames[i];
-			FileInputStream thisList = null;
-			try {
-				thisList = openFileInput(filenames[i]);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+			for (int i = 0; i < myFiles.length; i++) {
+				Log.d(TAG, "Loading: " + myFiles[i].getName());
+				filenames[i] = myFiles[i].getName();
 			}
-			mVocabularyLists.add(new PhraseCollection(thisList, filename));
-		}
 
-		mListAdapter = new ListSelectionAdapter(this,
-				R.layout.activity_list_selection_item, mVocabularyLists);
-
-		mListView = (ListView) findViewById(R.id.vocabulary_lists);
-		mListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Intent intent = new Intent(getBaseContext(),
-						LoadListDataActivity.class);
-				intent.putExtra("PhraseCollection",
-						mVocabularyLists.get(position));
-				intent.putExtra("position", position);
-				view.getContext().startActivity(intent);
+			for (int i = 0; i < filenames.length; i++) {
+				String filename = filenames[i];
+				FileInputStream thisList = null;
+				try {
+					thisList = openFileInput(filenames[i]);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				mVocabularyLists.add(new PhraseCollection(thisList, filename));
 			}
-		});
-		mListView.setMultiChoiceModeListener(new ListSelectionListener(
-				mListView, mListAdapter));
-		mListView.setAdapter(mListAdapter);
+
+			mListAdapter = new ListSelectionAdapter(this,
+					R.layout.activity_list_selection_item, mVocabularyLists);
+
+			mListView = (ListView) findViewById(R.id.vocabulary_lists);
+			mListView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Intent intent = new Intent(getBaseContext(),
+							LoadListDataActivity.class);
+					intent.putExtra("PhraseCollection",
+							mVocabularyLists.get(position));
+					intent.putExtra("position", position);
+					view.getContext().startActivity(intent);
+				}
+			});
+			mListView.setMultiChoiceModeListener(new ListSelectionListener(
+					mListView, mListAdapter));
+			mListView.setAdapter(mListAdapter);
+		}		
 	}
 
 	public void syncListsToDrive() {
