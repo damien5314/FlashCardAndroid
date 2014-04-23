@@ -10,6 +10,8 @@
     <string name="settings_category_title_quiz">Quiz Options</string>
     <string name="pref_quizAnswerDelay">Answer Delay</string>
     <string name="pref_quizAnswerDelay_default">750</string>
+    <string name="settings_category_title_lists">List Options</string>
+    <string name="pref_syncFilesToDrive">Sync to Drive</string>
     <string name="title_activity_main">FlashCard</string>
     <string name="main_header">FlashCard</string>
     <string name="button_start">Start</string>

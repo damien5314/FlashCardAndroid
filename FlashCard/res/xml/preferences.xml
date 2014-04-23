@@ -9,5 +9,13 @@
 	        android:entries="@array/pref_quizAnswerDelay_entries"
 	        android:entryValues="@array/pref_quizAnswerDelay_values"
 	        android:defaultValue="600" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/settings_category_title_lists" >
+        <CheckBoxPreference
+            android:key="pref_syncFilesToDrive"
+            android:title="@string/pref_syncFilesToDrive"
+            android:defaultValue="false" />
     </PreferenceCategory>
 </PreferenceScreen>

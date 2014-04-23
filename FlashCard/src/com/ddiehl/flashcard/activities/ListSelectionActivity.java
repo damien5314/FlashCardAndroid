@@ -256,7 +256,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				break;
 			}
 		default:
-			Log.d(TAG, "Request Code not recognized.");
+			Log.d(TAG, "Request Code not recognized: " + requestCode);
 		}
 	}
 
