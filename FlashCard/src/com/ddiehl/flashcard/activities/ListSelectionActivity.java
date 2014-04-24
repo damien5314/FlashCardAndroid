@@ -285,7 +285,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.edit_item_sync, menu);
+		getMenuInflater().inflate(R.menu.select_list, menu);
 		return true;
 	}
 
@@ -297,6 +297,10 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			return true;
 		case R.id.action_add_new:
 			addNewItem();
+			return true;
+		case R.id.action_settings:
+	        Intent intent = new Intent(this, SettingsActivity.class);
+	        startActivity(intent);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
