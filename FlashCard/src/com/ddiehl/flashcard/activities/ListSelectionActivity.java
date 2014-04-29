@@ -62,7 +62,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 
 	private void refreshContentView() {
 		if (this.isPlayConnectionEnabled()) {
-			
+			retrieveDriveFiles();
 		} else {
 			File fileDir = getFilesDir();
 			File[] myFiles = fileDir.listFiles();
@@ -123,6 +123,13 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 					mListView, mListAdapter));
 			mListView.setAdapter(mListAdapter);
 		}		
+	}
+	
+	public void retrieveDriveFiles() {
+		if (mClient.isConnected()) {
+			final DriveFolder folder = Drive.DriveApi.getAppFolder(mClient);
+			folder.listChildren(getGoogleApiClient());
+		}
 	}
 
 	public void syncListsToDrive() {
