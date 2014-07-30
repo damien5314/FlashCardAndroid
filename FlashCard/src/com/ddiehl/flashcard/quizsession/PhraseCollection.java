@@ -35,24 +35,15 @@ public class PhraseCollection implements Parcelable {
 	}
 
 	public PhraseCollection(InputStream vocabulary) {
-		XmlPullParser parser = Xml.newPullParser();
-        try {
-			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-	        parser.setInput(vocabulary, null);
-		} catch (Exception e) {
-			Log.e(TAG, "Error initializing XmlPullParser");
-			e.printStackTrace();
-		}
-        
-		try {
-			parseXML(parser);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		generateXmlPullParser(vocabulary);
 	}
 
 	public PhraseCollection(InputStream vocabulary, String filename) {
 		mFilename = filename;
+		generateXmlPullParser(vocabulary);
+	}
+	
+	public void generateXmlPullParser(InputStream vocabulary) {
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -66,7 +57,7 @@ public class PhraseCollection implements Parcelable {
 			parseXML(parser);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 	}
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException

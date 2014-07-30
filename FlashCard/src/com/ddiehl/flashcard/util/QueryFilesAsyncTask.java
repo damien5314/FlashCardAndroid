@@ -26,6 +26,8 @@ public class QueryFilesAsyncTask extends ApiClientAsyncTask<Void, Void, Metadata
 			// We failed, stop the task and return.
 			return null;
 		}
+		
+		return null;
 	}
 
 	@Override
