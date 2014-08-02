@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,11 +54,10 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 		super.onStart();
 
 		// Get preference to sync files to Drive
-		SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		playConnectionEnabled = preferences.getBoolean(PREF_SYNC_TO_DRIVE, false);
 		
-		if (!mResolvingError
-				&& playConnectionEnabled) {
+		if (!mResolvingError && playConnectionEnabled) {
 			mClient.connect();
 		}
 	}

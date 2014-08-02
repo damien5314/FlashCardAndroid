@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+        android:title="@string/settings_category_title_quiz" >
+	    <ListPreference
+	        android:key="pref_quizAnswerDelay"
+	        android:title="@string/pref_quizAnswerDelay"
+	        android:dialogTitle="@string/pref_quizAnswerDelay"
+	        android:entries="@array/pref_quizAnswerDelay_entries"
+	        android:entryValues="@array/pref_quizAnswerDelay_values"
+	        android:defaultValue="600" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="@string/settings_category_title_lists" >
+        <CheckBoxPreference
+            android:key="pref_syncFilesToDrive"
+            android:title="@string/pref_syncFilesToDrive"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+</PreferenceScreen>
