@@ -5,8 +5,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -30,14 +31,6 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 	private boolean playConnectionEnabled;
 	protected GoogleApiClient mClient = null;
 
-	public boolean isPlayConnectionEnabled() {
-		return playConnectionEnabled;
-	}
-
-	public void setPlayConnectionEnabled(boolean playConnectionEnabled) {
-		this.playConnectionEnabled = playConnectionEnabled;
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,12 +45,22 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-		// Get preference to sync files to Drive
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		playConnectionEnabled = preferences.getBoolean(PREF_SYNC_TO_DRIVE, false);
 		
+		// Get preference to sync files to Drive
+		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+		playConnectionEnabled = preferences.getBoolean(PREF_SYNC_TO_DRIVE, false);
+		preferences.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
+
+			@Override
+			public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+				// TODO Auto-generated method stub
+				playConnectionEnabled = preferences.getBoolean(PREF_SYNC_TO_DRIVE, false);
+			}
+			
+		});
+
 		if (!mResolvingError && playConnectionEnabled) {
+			Log.i(TAG, "Attempting to connect to Google Play services.");
 			mClient.connect();
 		}
 	}
@@ -78,8 +81,6 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		// Connected to Google Play services!
-		// The good stuff goes here.
 		Log.i(TAG, "Connected to Google Play services.");
 	}
 
@@ -164,5 +165,13 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 
 	public GoogleApiClient getGoogleApiClient() {
 		return this.mClient;
+	}
+
+	public boolean isPlayConnectionEnabled() {
+		return playConnectionEnabled;
+	}
+
+	public void setPlayConnectionEnabled(boolean playConnectionEnabled) {
+		this.playConnectionEnabled = playConnectionEnabled;
 	}
 }
