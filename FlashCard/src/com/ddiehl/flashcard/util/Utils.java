@@ -1,9 +1,13 @@
 package com.ddiehl.flashcard.util;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import android.content.Context;
+import android.widget.Toast;
 
 public class Utils {
 	// convert InputStream to String
@@ -35,4 +39,25 @@ public class Utils {
 		return sb.toString();
  
 	}
+
+    /**
+     * Shows a toast with the given message.
+     */
+    private void showToast(Context ctx, int id) {
+        Toast.makeText(ctx, id, Toast.LENGTH_LONG).show();
+    }
+    
+    private String readFile( String file ) throws IOException {
+        BufferedReader reader = new BufferedReader( new FileReader (file));
+        String         line = null;
+        StringBuilder  stringBuilder = new StringBuilder();
+        String         ls = System.getProperty("line.separator");
+
+        while( ( line = reader.readLine() ) != null ) {
+            stringBuilder.append( line );
+            stringBuilder.append( ls );
+        }
+
+        return stringBuilder.toString();
+    }
 }

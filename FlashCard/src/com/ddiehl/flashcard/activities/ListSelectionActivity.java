@@ -12,6 +12,8 @@ import java.util.Iterator;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.content.IntentSender.SendIntentException;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,10 +51,11 @@ import com.google.android.gms.drive.query.SearchableField;
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class
 			.getSimpleName();
-	private ArrayList<PhraseCollection> mVocabularyLists = new ArrayList<PhraseCollection>();
+	private ArrayList<PhraseCollection> mVocabularyLists;
 	private ListSelectionAdapter mListAdapter;
 	private ListView mListView;
 	private static final int REQUEST_CODE_EDIT_LIST = 1001;
+	private static final int REQUEST_CODE_CREATOR = 1002;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +93,9 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 								Log.e(TAG, result.getStatus().toString());
 								return;
 							}
-							MetadataBuffer buffer = result.getMetadataBuffer();
+							MetadataBuffer buffer = result.getMetadataBuffer(); // Do I need to call this multiple times for many files?
 							Iterator<Metadata> i = buffer.iterator();
+							final int expectedDriveFiles = buffer.getCount();
 							while (i.hasNext()) {
 								Log.d(TAG, "Found file, adding to list.");
 								Metadata m = i.next();
@@ -116,6 +120,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 								});
 							}
 							buffer.close();
+							Log.d(TAG, "Size of mVocabularyLists: " + mVocabularyLists.size());
 							refreshContentView();
 						}
 				
@@ -167,8 +172,10 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		refreshContentView();
 	}
 	
+	
 	private void addToFileList(InputStream in_s) {
 		this.mVocabularyLists.add(new PhraseCollection(in_s));
+		mListAdapter.notifyDataSetChanged();
 	}
 	
 	private DriveFile getFileByDriveId(DriveId id) {
@@ -255,6 +262,16 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	                return;
 	            }
 	            Log.d(TAG, "Created a file: " + result.getDriveFile().getDriveId());
+	            // Add file contents here?
+	            result.getDriveFile().openContents(getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, null)
+	            .setResultCallback(new ResultCallback<ContentsResult>() {
+					@Override
+					public void onResult(ContentsResult result) {
+						// TODO Auto-generated method stub
+						Contents contents = result.getContents();
+//						contents.getOutputStream().write(buffer);
+					}
+	            });
 	        }
 	    };
 
@@ -265,9 +282,11 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 					Log.d(TAG, "Error while trying to create new file contents");
 					return;
 				}
-
+				
+				// In this change set we also need to include the content, currently we are only creating a file with the title
 				MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-						.setTitle(fileToUpload.getName()).setMimeType("text/xml")
+						.setTitle(fileToUpload.getName())
+						.setMimeType("text/xml")
 						.build();
 				// create a file on root folder
 				appFolder.createFile(getGoogleApiClient(), changeSet,
