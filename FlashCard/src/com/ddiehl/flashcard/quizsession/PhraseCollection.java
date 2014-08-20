@@ -128,11 +128,12 @@ public class PhraseCollection implements Parcelable {
 
 	}
 	
-	public void save(Context ctx) {
-		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);		
+	public FileOutputStream save(Context ctx) {
+		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);
+		FileOutputStream myFile = null;
 		try {
 			// Write PhraseCollection to XML
-	        FileOutputStream myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
+	        myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
@@ -206,6 +207,7 @@ public class PhraseCollection implements Parcelable {
 		} catch (IOException e) {
 		    Log.e(TAG, "Caught IOException: " + e.getMessage());
 		}
+		return myFile;
 	}
 
 	public boolean delete(Context ctx) {

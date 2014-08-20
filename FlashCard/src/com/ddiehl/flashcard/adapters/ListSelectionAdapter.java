@@ -34,19 +34,19 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ItemHolder holder = null;
-        PhraseCollection pc = data.get(position);
+        PhraseCollection file = data.get(position);
 
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);
         
         holder = new ItemHolder();
-        holder.phraseCollection = pc;
+        holder.file = file;
         holder.itemText = (TextView) row.findViewById(R.id.itemText);
         holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
-        holder.itemEditButton.setTag(holder.phraseCollection);
+        holder.itemEditButton.setTag(holder.file);
         row.setTag(holder);
 
-        holder.itemText.setText(pc.getTitle());
+        holder.itemText.setText(file.getTitle());
         
         return row;
     }
@@ -79,7 +79,7 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     
     static class ItemHolder
     {
-    	PhraseCollection phraseCollection;
+    	PhraseCollection file;
         TextView itemText;
         ImageButton itemEditButton;
     }

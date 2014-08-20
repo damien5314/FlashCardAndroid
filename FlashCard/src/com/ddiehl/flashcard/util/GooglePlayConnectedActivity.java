@@ -37,9 +37,13 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 
 		mResolvingError = savedInstanceState != null
 				&& savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
-		mClient = new GoogleApiClient.Builder(this).addApi(Drive.API)
-				.addScope(Drive.SCOPE_APPFOLDER).addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this).build();
+		mClient = new GoogleApiClient.Builder(this)
+				.addApi(Drive.API)
+				.addScope(Drive.SCOPE_APPFOLDER)
+				.addScope(Drive.SCOPE_FILE)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
 	}
 
 	@Override

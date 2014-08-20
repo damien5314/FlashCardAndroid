@@ -43,11 +43,11 @@ public class Utils {
     /**
      * Shows a toast with the given message.
      */
-    private void showToast(Context ctx, int id) {
-        Toast.makeText(ctx, id, Toast.LENGTH_LONG).show();
+    public static void showToast(Context ctx, String message) {
+        Toast.makeText(ctx, message, Toast.LENGTH_LONG).show();
     }
     
-    private String readFile( String file ) throws IOException {
+    private static String readFile( String file ) throws IOException {
         BufferedReader reader = new BufferedReader( new FileReader (file));
         String         line = null;
         StringBuilder  stringBuilder = new StringBuilder();
@@ -57,7 +57,7 @@ public class Utils {
             stringBuilder.append( line );
             stringBuilder.append( ls );
         }
-
+        reader.close();
         return stringBuilder.toString();
     }
 }

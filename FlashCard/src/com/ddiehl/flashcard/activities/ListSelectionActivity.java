@@ -4,17 +4,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.apache.commons.io.IOUtils;
 
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.content.IntentSender.SendIntentException;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,15 +32,16 @@ import com.ddiehl.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
+import com.ddiehl.flashcard.util.Utils;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
+import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
 import com.google.android.gms.drive.DriveId;
 import com.google.android.gms.drive.Metadata;
 import com.google.android.gms.drive.MetadataBuffer;
@@ -49,26 +51,24 @@ import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
-	private static final String TAG = ListSelectionActivity.class
-			.getSimpleName();
-	private ArrayList<PhraseCollection> mVocabularyLists;
-	private ListSelectionAdapter mListAdapter;
+	private static final String TAG = ListSelectionActivity.class.getSimpleName();
+	private ArrayList<PhraseCollection> mDriveFiles;
+	private ListSelectionAdapter mListAdapter = null;
 	private ListView mListView;
 	private static final int REQUEST_CODE_EDIT_LIST = 1001;
 	private static final int REQUEST_CODE_CREATOR = 1002;
+	private static final String NEW_LIST_TITLE = "New List";
+	private DriveId driveFolderId = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_list_selection);		
+		setContentView(R.layout.activity_list_selection);
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (!mClient.isConnecting()) {
-			generateContentFromLocal();
-		}
 	}
 
 	@Override
@@ -79,102 +79,123 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	
 	// Instantiate the ArrayList mVocabularyLists with PhraseCollection objects
 	private void generateContentFromDrive() {
+		mDriveFiles = new ArrayList<PhraseCollection>();
 		if (getGoogleApiClient().isConnected()) {
-			mVocabularyLists = new ArrayList<PhraseCollection>();
-			final DriveFolder folder = Drive.DriveApi.getAppFolder(getGoogleApiClient());
-			folder.listChildren(getGoogleApiClient()).setResultCallback(
-					new ResultCallback<MetadataBufferResult>() {
-
-						@Override
-						public void onResult(MetadataBufferResult result) {
-							// TODO Auto-generated method stub
-							if (!result.getStatus().isSuccess()) {
-								Log.e(TAG, "Error retrieving Files from Drive app folder.");
-								Log.e(TAG, result.getStatus().toString());
-								return;
-							}
-							MetadataBuffer buffer = result.getMetadataBuffer(); // Do I need to call this multiple times for many files?
-							Iterator<Metadata> i = buffer.iterator();
-							final int expectedDriveFiles = buffer.getCount();
-							while (i.hasNext()) {
-								Log.d(TAG, "Found file, adding to list.");
-								Metadata m = i.next();
-								DriveId id = m.getDriveId();
-								DriveFile f = getFileByDriveId(id);
-								f.openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
-									@Override
-									public void onProgress(long bytesDownloaded, long bytesExpected) {
-										// TODO Implement DownloadProgressListener when retrieving a DriveFile
-										Log.v(TAG, "Bytes downloaded: " + bytesDownloaded + " (Expected " + bytesExpected + ")");
-									}
-								}).setResultCallback(new ResultCallback<DriveApi.ContentsResult>() {
-									@Override
-									public void onResult(ContentsResult result) {
-										// TODO Implement callback for ContentsResult when retrieving a DriveFile
-										Contents contents = result.getContents();
-										InputStream in_s = contents.getInputStream();
-//										Log.v(TAG, "File contents:");
-//										Log.v(TAG, com.ddiehl.flashcard.util.Utils.getStringFromInputStream(in_s));
-										addToFileList(in_s);
-									}
-								});
-							}
-							buffer.close();
-							Log.d(TAG, "Size of mVocabularyLists: " + mVocabularyLists.size());
-							refreshContentView();
-						}
-				
-			});
+			queryFolderInDrive();
 		}
 	}
 	
-	private void generateContentFromLocal() {
+	private void queryFolderInDrive() {
+		final DriveFolder rootFolder = Drive.DriveApi.getRootFolder(getGoogleApiClient());
+	    rootFolder.queryChildren(getGoogleApiClient(), new Query.Builder().addFilter(
+	    		Filters.eq(SearchableField.TITLE, "FlashCard")).build())
+	    .setResultCallback(new ResultCallback<MetadataBufferResult>() {
+			@Override
+			public void onResult(MetadataBufferResult result) {
+				MetadataBuffer buffer = result.getMetadataBuffer();
+				if (buffer.getCount() == 0) { // If folder does not exist
+					Log.i(TAG, "FlashCard folder not found in Drive, creating.");
+					createFolderInDrive(rootFolder);
+				} else { // If folder does exist
+					Log.i(TAG, "FlashCard folder found in Drive.");
+					Metadata data = buffer.get(0);
+					driveFolderId = data.getDriveId();
+					DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
+					queryFilesFromDriveFolder(folder);
+				}
+				buffer.close();
+			}
+	    });
+	}
+	
+	private void createFolderInDrive(DriveFolder pFolder) {
+        MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+    		.setTitle("FlashCard").build();
+        
+	    final ResultCallback<DriveFolderResult> callback = new ResultCallback<DriveFolderResult>() {
+			@Override
+			public void onResult(DriveFolderResult result) {
+				Log.i(TAG, "FlashCard folder created in Drive root folder.");
+				Log.d(TAG, "Drive resource ID: " + result.getDriveFolder().getDriveId());
+				driveFolderId = result.getDriveFolder().getDriveId();
+//				queryFilesFromDriveFolder(result.getDriveFolder());
+			}
+	    };
+	    
+		pFolder.createFolder(getGoogleApiClient(), changeSet)
+			.setResultCallback(callback);
+	}
+	
+	private void queryFilesFromDriveFolder(DriveFolder folder) {
+		folder.listChildren(getGoogleApiClient()).setResultCallback(
+		new ResultCallback<MetadataBufferResult>() {
+			@Override
+			public void onResult(MetadataBufferResult result) {
+				Log.i(TAG, "FlashCard DriveFolder contents retrieved successfully.");
+				MetadataBuffer buffer = result.getMetadataBuffer();
+				Iterator<Metadata> i = buffer.iterator();
+				int filesProcessed = 0;
+				while (i.hasNext()) {
+					Metadata m = i.next();
+					DriveId id = m.getDriveId();
+					DriveFile f = getFileByDriveId(id);
+					addDriveFileToVocabularyListCollection(f);
+					filesProcessed++;
+				}
+				buffer.close();
+				Utils.showToast(getBaseContext(), "Files processed from Drive folder: " + filesProcessed);
+			}
+		});
+	}
+	
+	private void addDriveFileToVocabularyListCollection(DriveFile file) {
+		Log.d(TAG, "Adding DriveFile to list collection: " + file.getDriveId());
+		file.openContents(getGoogleApiClient(), DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
+			@Override
+			public void onProgress(long bytesDownloaded, long bytesExpected) {
+				// TODO Implement DownloadProgressListener when retrieving a DriveFile
+				Log.v(TAG, "Bytes downloaded: " + bytesDownloaded + " (Expected " + bytesExpected + ")");
+			}
+		}).setResultCallback(
+			new ResultCallback<ContentsResult>() {
+				@Override
+				public void onResult(ContentsResult result) {
+					Contents contents = result.getContents();
+					InputStream in_s = contents.getInputStream();
+					addToFileList(in_s);
+				}
+		});
+	}
+
+	public void addNewItem() {
+		if (driveFolderId == null) {
+			createFolderInDrive(Drive.DriveApi.getRootFolder(getGoogleApiClient()));
+		}
+		String title = NEW_LIST_TITLE;
+		PhraseCollection newPc = new PhraseCollection();
+		newPc.setTitle(title);
+		newPc.save(this);
+		final File file = getFile(title);
+		uploadFile(title, file);
+		mDriveFiles.add(0, newPc);
+		refreshContentView();
+		mListAdapter.notifyDataSetChanged();
+	}
+	
+	private File getFile(String name) {
 		File fileDir = getFilesDir();
 		File[] myFiles = fileDir.listFiles();
-
-		// If no files are in file directory, port the files from
-		// /assets/vocabulary-lists/
-		if (myFiles.length == 0) {
-			Log.i(TAG, "No previous files detected, copying lists from /assets/ into /data/.");
-			AssetManager assets = getAssets();
-			try {
-				String[] assetFilenames = assets
-						.list(getString(R.string.assetListGroup));
-				for (int i = 0; i < assetFilenames.length; i++) {
-					copyAssetToData(assetFilenames[i]);
-				}
-			} catch (IOException e) {
-				Log.e(TAG, "Error retrieving assets.");
-				e.printStackTrace();
-			}
-			myFiles = fileDir.listFiles(); // Refresh file list
-		}
-		
-		// Store filenames for displaying in content view
-		String[] filenames = new String[myFiles.length];
-		mVocabularyLists = new ArrayList<PhraseCollection>();
-
 		for (int i = 0; i < myFiles.length; i++) {
-			Log.d(TAG, "Loading: " + myFiles[i].getName());
-			filenames[i] = myFiles[i].getName();
-		}
-
-		for (int i = 0; i < filenames.length; i++) {
-			String filename = filenames[i];
-			FileInputStream thisList = null;
-			try {
-				thisList = openFileInput(filenames[i]);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
+			if (myFiles[i].getName().equals(name)) {
+				return myFiles[i];
 			}
-			mVocabularyLists.add(new PhraseCollection(thisList, filename));
 		}
-		refreshContentView();
+		return null;
 	}
 	
-	
 	private void addToFileList(InputStream in_s) {
-		this.mVocabularyLists.add(new PhraseCollection(in_s));
+		this.mDriveFiles.add(new PhraseCollection(in_s));
+		refreshContentView();
 		mListAdapter.notifyDataSetChanged();
 	}
 	
@@ -183,8 +204,8 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 	
 	private void refreshContentView() {
-		mListAdapter = new ListSelectionAdapter(this,
-				R.layout.activity_list_selection_item, mVocabularyLists);
+		if (mListAdapter == null)
+			mListAdapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, mDriveFiles);
 
 		mListView = (ListView) findViewById(R.id.vocabulary_lists);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
@@ -194,121 +215,56 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				Intent intent = new Intent(getBaseContext(),
 						LoadListDataActivity.class);
 				intent.putExtra("PhraseCollection",
-						mVocabularyLists.get(position));
+						mDriveFiles.get(position));
 				intent.putExtra("position", position);
 				view.getContext().startActivity(intent);
 			}
 		});
-		mListView.setMultiChoiceModeListener(new ListSelectionListener(
-				mListView, mListAdapter));
+		mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
 		mListView.setAdapter(mListAdapter);
 	}
 
 	public void syncListsToDrive() {
-		if (getGoogleApiClient().isConnected()) {
-			File[] files = getFilesDir().listFiles();
-			final DriveFolder folder = Drive.DriveApi.getAppFolder(getGoogleApiClient());
-			for (int i = 0; i < files.length; i++) {
-				final File listToUpload = files[i];
-				folder.queryChildren(
-						getGoogleApiClient(),
-						new Query.Builder().addFilter(
-								Filters.eq(SearchableField.TITLE,
-										listToUpload.getName())).build())
-						.setResultCallback(
-								new ResultCallback<MetadataBufferResult>() {
-									@Override
-									public void onResult(MetadataBufferResult result) {
-										if (!result.getStatus().isSuccess()) {
-											Log.e(TAG, "Error retrieving Files from Drive app folder.");
-											Log.e(TAG, result.getStatus().toString());
-											return;
-										}
-										MetadataBuffer buffer = result.getMetadataBuffer();
-										switch (buffer.getCount()) {
-										case 0:
-											Log.d(TAG, "0 files on Drive matched, uploading..");
-											Log.d(TAG, listToUpload.getName());
-											uploadFile(folder, listToUpload);
-											break;
-										case 1:
-											Log.d(TAG, "1 file on Drive matched, syncing..");
-											Log.d(TAG, listToUpload.getName());
-											syncFile(folder, listToUpload);
-											break;
-										default:
-											Log.w(TAG, "Results returned from Drive query: " + buffer.getCount());
-											break;
-										}
-										buffer.close();
-									}
-								});
-			}
-		} else {
-			getGoogleApiClient().connect();
-		}
-	}
 
-	private void uploadFile(DriveFolder fol_in, File f_in) {
-		final DriveFolder appFolder = fol_in;
-		final File fileToUpload = f_in;
-		
-		final ResultCallback<DriveFileResult> fileCallback = new
-	            ResultCallback<DriveFileResult>() {
-	        @Override
-	        public void onResult(DriveFileResult result) {
-	            if (!result.getStatus().isSuccess()) {
-	                Log.d(TAG, "Error while trying to create the file");
-	                return;
-	            }
-	            Log.d(TAG, "Created a file: " + result.getDriveFile().getDriveId());
-	            // Add file contents here?
-	            result.getDriveFile().openContents(getGoogleApiClient(), DriveFile.MODE_WRITE_ONLY, null)
-	            .setResultCallback(new ResultCallback<ContentsResult>() {
-					@Override
-					public void onResult(ContentsResult result) {
-						// TODO Auto-generated method stub
-						Contents contents = result.getContents();
-//						contents.getOutputStream().write(buffer);
-					}
-	            });
-	        }
-	    };
-
-		ResultCallback<ContentsResult> contentsCallback = new ResultCallback<ContentsResult>() {
-			@Override
-			public void onResult(ContentsResult result) {
-				if (!result.getStatus().isSuccess()) {
-					Log.d(TAG, "Error while trying to create new file contents");
-					return;
-				}
-				
-				// In this change set we also need to include the content, currently we are only creating a file with the title
-				MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-						.setTitle(fileToUpload.getName())
-						.setMimeType("text/xml")
-						.build();
-				// create a file on root folder
-				appFolder.createFile(getGoogleApiClient(), changeSet,
-								result.getContents())
-						.setResultCallback(fileCallback);
-			}
-		};
-
-		Drive.DriveApi.newContents(getGoogleApiClient()).setResultCallback(contentsCallback);
 	}
 	
-	// TODO Implement method for overwriting file on Drive
-	private void syncFile(DriveFolder fol_in, File f_in) {
-		
+	private void uploadFile(String title, final File file) {
+		Drive.DriveApi.newContents(getGoogleApiClient())
+				.setResultCallback(getNewContentsCallback(title, file));
 	}
-
-	public void addNewItem() {
-		PhraseCollection newPc = new PhraseCollection();
-		newPc.setTitle("New List");
-		newPc.save(this);
-		mVocabularyLists.add(0, newPc);
-		mListAdapter.notifyDataSetChanged();
+	
+	private ResultCallback<ContentsResult> getNewContentsCallback(final String title, final File file) {
+		return new ResultCallback<ContentsResult>() {
+			@Override
+			public void onResult(ContentsResult result) {
+				DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
+				MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+						.setTitle(title)
+						.setMimeType("text/xml")
+						.build();
+				Contents contents = result.getContents();
+				try {
+					FileInputStream f_in = openFileInput(file.getName());
+					OutputStream op_s = contents.getOutputStream();
+					IOUtils.copy(f_in, op_s);
+					f_in.close();
+					op_s.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				folder.createFile(getGoogleApiClient(), changeSet, contents)
+						.setResultCallback(getFileCreatedCallback());
+			}
+		};
+	}
+	
+	private ResultCallback<DriveFileResult> getFileCreatedCallback() {
+		return new ResultCallback<DriveFileResult>() {
+			@Override
+			public void onResult(DriveFileResult result) {
+				Log.i(TAG, "Drive file created: " + result.getDriveFile().getDriveId());
+			}
+		};
 	}
 
 	public void editList(View v) {
@@ -321,20 +277,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
 	}
 
-	private void copyAssetToData(String filename) throws IOException {
-		InputStream myInput = getAssets().open("vocabulary-lists/" + filename);
-		String outFilename = filename;
-		FileOutputStream myFile = openFileOutput(outFilename, Context.MODE_PRIVATE);
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = myInput.read(buffer)) > 0) {
-			myFile.write(buffer, 0, length);
-		}
-		myFile.flush();
-		myFile.close();
-		myInput.close();
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -342,15 +284,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		case REQUEST_CODE_EDIT_LIST:
 			switch (resultCode) {
 			case 1:
-				Bundle extras = data.getExtras();
-				if (extras.containsKey("PhraseCollection")
-						&& extras.containsKey("position")) {
-					PhraseCollection thisCollection = (PhraseCollection) extras
-							.getParcelable("PhraseCollection");
-					mVocabularyLists.set(extras.getInt("position"),
-							thisCollection);
-					mListAdapter.notifyDataSetChanged();
-				}
+				
 				break;
 			}
 			break;
@@ -385,7 +319,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_sync_to_drive:
-			syncListsToDrive();
+//			syncListsToDrive();
 			return true;
 		case R.id.action_add_new:
 			addNewItem();
