@@ -2,4 +2,5 @@ FlashCard/tests/bin/*
 FlashCard/tests/gen/*
 FlashCard/bin/*
 FlashCard/gen/*
+FlashCard/libs/*
 FlashCard/.settings/*
