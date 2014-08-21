@@ -21,9 +21,16 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
+
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
 	private String mFilename;
+	private DriveId driveId;
+	private String contentsXml = null;
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
@@ -128,17 +135,17 @@ public class PhraseCollection implements Parcelable {
 
 	}
 	
-	public FileOutputStream save(Context ctx) {
-		Log.i(TAG, "Saving PhraseCollection to file: " + mFilename);
-		FileOutputStream myFile = null;
+	public void save() {
+		Log.i(TAG, "Saving PhraseCollection to XML");
+//		FileOutputStream myFile = null;
 		try {
 			// Write PhraseCollection to XML
-	        myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
+//	        myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
 	        
-	        String ns = ""; // namespace
+	        String ns = ""; // Namespace
 	        xmlSerializer.startDocument("UTF-8",true);
 	        xmlSerializer.startTag(ns, "vocabulary");
 	        xmlSerializer.startTag(ns, "information");
@@ -199,15 +206,22 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.endTag(ns, "vocabulary");
 	        xmlSerializer.endDocument();
 	        
-	        String output = writer.toString();
-	        myFile.write(output.getBytes());
-	        myFile.close();
+	        setContents(writer.toString());
+//	        myFile.write(output.getBytes());
+//	        myFile.close();
 		} catch (FileNotFoundException e) {
 		    Log.e(TAG, "FileNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
 		    Log.e(TAG, "Caught IOException: " + e.getMessage());
 		}
-		return myFile;
+	}
+	
+	public void setContents(String contents) {
+		this.contentsXml = contents;
+	}
+	
+	public String getContents() {
+		return contentsXml;
 	}
 
 	public boolean delete(Context ctx) {

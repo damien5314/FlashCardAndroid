@@ -13,16 +13,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.fileio.FlashcardFile;
 
-public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
+public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
 	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
 	private Context context;
     private int layoutResourceId;
-    private ArrayList<PhraseCollection> data = null;
+    private ArrayList<FlashcardFile> data = null;
     private SparseBooleanArray mSelectedItemsIds;
     
-    public ListSelectionAdapter(Context context, int id, ArrayList<PhraseCollection> data) {
+    public ListSelectionAdapter(Context context, int id, ArrayList<FlashcardFile> data) {
         super(context, id, data);
         this.layoutResourceId = id;
         this.context = context;
@@ -34,7 +34,7 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         ItemHolder holder = null;
-        PhraseCollection file = data.get(position);
+        FlashcardFile file = data.get(position);
 
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         row = inflater.inflate(layoutResourceId, parent, false);
@@ -79,7 +79,7 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     
     static class ItemHolder
     {
-    	PhraseCollection file;
+    	FlashcardFile file;
         TextView itemText;
         ImageButton itemEditButton;
     }

@@ -84,7 +84,7 @@ public class EditListActivity extends Activity {
 	public void save(View v) {
 		EditText vTitle = (EditText) findViewById(R.id.edit_list_title);
 		mPhraseCollection.setTitle(vTitle.getText().toString());
-		mPhraseCollection.save(v.getContext());
+		mPhraseCollection.save();
 		Intent rIntent = new Intent();
 		rIntent.putExtra("PhraseCollection", mPhraseCollection);
 		rIntent.putExtra("position", mPosition);
