@@ -1,8 +1,10 @@
 package com.ddiehl.flashcard.fileio;
 
+import java.io.InputStream;
+
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
 
@@ -35,21 +37,16 @@ public class FlashcardFile {
 	public PhraseCollection generatePhraseCollectionFromDriveFile(GoogleApiClient client) {
 		DriveFile driveFile = getDriveFile();
 		// Retrieve Contents from DriveFile
-		driveFile.openContents(client, DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
+		ContentsResult result = driveFile.openContents(client, DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
 			@Override
 			public void onProgress(long arg0, long arg1) {
 				// Report download progress here
 			}
-		}).setResultCallback(new ResultCallback<ContentsResult>() {
-			@Override
-			public void onResult(ContentsResult result) {
-				
-			}
-			
-		});
+		}).await();
+		Contents contents = result.getContents();
 		// Return new PhraseCollection created from Contents
-		
-		return null;
+		InputStream f_in = contents.getInputStream();
+		return new PhraseCollection(f_in);
 	}
 
 	public String getTitle() {

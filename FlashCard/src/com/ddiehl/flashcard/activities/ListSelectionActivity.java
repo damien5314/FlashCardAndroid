@@ -1,6 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,7 +24,6 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
 import com.ddiehl.flashcard.util.Utils;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
@@ -203,13 +201,18 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			mListView = (ListView) findViewById(R.id.vocabulary_lists);
 			mListView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
-					FlashcardFile file = mFiles.get(position);
-					PhraseCollection pc = getPhraseCollectionFromFile(file);
-					intent.putExtra("PhraseCollection", pc);
-					intent.putExtra("position", position);
-					view.getContext().startActivity(intent);
+				public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+					final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
+					final FlashcardFile file = mFiles.get(position);
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							PhraseCollection pc = file.generatePhraseCollectionFromDriveFile(getGoogleApiClient());
+							intent.putExtra("PhraseCollection", pc);
+							intent.putExtra("position", position);
+							view.getContext().startActivity(intent);
+						}
+					}).start();
 				}
 			});
 			mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
@@ -223,14 +226,20 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 
 	}
 
-	public void editList(View v) {
-		PhraseCollection pc = (PhraseCollection) v.getTag();
-		Intent intent = new Intent(this, EditListActivity.class);
-		intent.putExtra("PhraseCollection", pc);
-		ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
-		int position = lv.getPositionForView(v);
-		intent.putExtra("position", position);
-		startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
+	public void editList(final View v) {
+		final FlashcardFile file = (FlashcardFile) v.getTag();
+		final Intent intent = new Intent(this, EditListActivity.class);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				PhraseCollection pc = file.generatePhraseCollectionFromDriveFile(getGoogleApiClient());
+				intent.putExtra("PhraseCollection", pc);
+				ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
+				int position = lv.getPositionForView(v);
+				intent.putExtra("position", position);
+				startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
+			}
+		}).start();
 	}
 
 	@Override
