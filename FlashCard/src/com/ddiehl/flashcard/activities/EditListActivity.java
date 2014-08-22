@@ -24,6 +24,7 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 
 public class EditListActivity extends Activity {
 	private static final String TAG = EditListActivity.class.getSimpleName();
+	public static final int RESULT_CODE_SAVE = 1001;
 	private PhraseCollection mPhraseCollection;
 	private int mPosition;
 	private EditListPhrasesAdapter mPhraseAdapter;
@@ -88,7 +89,7 @@ public class EditListActivity extends Activity {
 		Intent rIntent = new Intent();
 		rIntent.putExtra("PhraseCollection", mPhraseCollection);
 		rIntent.putExtra("position", mPosition);
-		setResult(1, rIntent);
+		setResult(RESULT_CODE_SAVE, rIntent);
 		finish();
 	}
 	

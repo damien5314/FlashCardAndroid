@@ -245,11 +245,15 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Bundle extras = data.getExtras();
 		switch (requestCode) {
 		case REQUEST_CODE_EDIT_LIST:
 			switch (resultCode) {
-			case 1:
-				
+			case EditListActivity.RESULT_CODE_SAVE:
+				int position = extras.getInt("position");
+				PhraseCollection list = extras.getParcelable("PhraseCollection");
+				FlashcardFile file = mFiles.get(position);
+				file.updateContents(list);
 				break;
 			}
 			break;

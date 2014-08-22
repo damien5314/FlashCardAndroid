@@ -34,6 +34,10 @@ public class FlashcardFile {
 		setDriveFile(file);
 	}
 	
+	public void updateContents(PhraseCollection list) {
+		
+	}
+	
 	public PhraseCollection generatePhraseCollectionFromDriveFile(GoogleApiClient client) {
 		DriveFile driveFile = getDriveFile();
 		// Retrieve Contents from DriveFile
