@@ -2,7 +2,6 @@ package com.ddiehl.flashcard.quizsession;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -21,15 +20,9 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveFile;
-import com.google.android.gms.drive.DriveId;
-
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
 	private String mFilename;
-	private DriveId driveId;
 	private String contentsXml = null;
 	private List<Phrase> list = new ArrayList<Phrase>();
 	private String title;
@@ -137,10 +130,7 @@ public class PhraseCollection implements Parcelable {
 	
 	public void save() {
 		Log.i(TAG, "Saving PhraseCollection to XML");
-//		FileOutputStream myFile = null;
 		try {
-			// Write PhraseCollection to XML
-//	        myFile = ctx.openFileOutput(mFilename, Context.MODE_PRIVATE);
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
@@ -206,9 +196,10 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.endTag(ns, "vocabulary");
 	        xmlSerializer.endDocument();
 	        
-	        setContents(writer.toString());
-//	        myFile.write(output.getBytes());
-//	        myFile.close();
+	        Log.d(TAG, "Generated XML: ");
+	        Log.d(TAG, writer.toString());
+	        this.setContents(writer.toString());
+	        
 		} catch (FileNotFoundException e) {
 		    Log.e(TAG, "FileNotFoundException: " + e.getMessage());
 		} catch (IOException e) {
@@ -216,11 +207,13 @@ public class PhraseCollection implements Parcelable {
 		}
 	}
 	
-	public void setContents(String contents) {
+	private void setContents(String contents) {
+		Log.d(TAG, "setContents() = " + contents);
 		this.contentsXml = contents;
 	}
 	
 	public String getContents() {
+		Log.d(TAG, "getContents() = " + contentsXml);
 		return contentsXml;
 	}
 
@@ -318,6 +311,7 @@ public class PhraseCollection implements Parcelable {
 	
 	public PhraseCollection(Parcel in) {
 		mFilename = in.readString();
+		this.contentsXml = in.readString(); // String contentsXml
 		in.readTypedList(list, Phrase.CREATOR);
 		this.setTitle(in.readString());
 		this.setPhrasesTotal(in.readInt());
@@ -328,6 +322,7 @@ public class PhraseCollection implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
 		arg0.writeString(mFilename);
+		arg0.writeString(contentsXml); // String contentsXml
 		arg0.writeTypedList(list);
 		arg0.writeString(getTitle());
 		arg0.writeInt(getPhrasesTotal());

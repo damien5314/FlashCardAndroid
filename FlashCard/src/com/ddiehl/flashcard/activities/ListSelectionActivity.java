@@ -45,8 +45,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private ListSelectionAdapter mListAdapter = null;
 	private ListView mListView;
 	private static final int REQUEST_CODE_EDIT_LIST = 1001;
-	private static final int REQUEST_CODE_CREATOR = 1002;
-	private static final String NEW_LIST_TITLE = "New List";
 	private DriveId driveFolderId = null;
 
 	@Override
@@ -100,19 +98,20 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private void createFolderInDrive(DriveFolder pFolder) {
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
     		.setTitle("FlashCard").build();
-        
-	    final ResultCallback<DriveFolderResult> callback = new ResultCallback<DriveFolderResult>() {
+	    
+		pFolder.createFolder(getGoogleApiClient(), changeSet)
+			.setResultCallback(getFolderCreatedCallback());
+	}
+	
+	private ResultCallback<DriveFolderResult> getFolderCreatedCallback() {
+		return new ResultCallback<DriveFolderResult>() {
 			@Override
 			public void onResult(DriveFolderResult result) {
 				Log.i(TAG, "FlashCard folder created in Drive root folder.");
 				Log.d(TAG, "Drive resource ID: " + result.getDriveFolder().getDriveId());
 				driveFolderId = result.getDriveFolder().getDriveId();
-//				queryFilesFromDriveFolder(result.getDriveFolder());
 			}
 	    };
-	    
-		pFolder.createFolder(getGoogleApiClient(), changeSet)
-			.setResultCallback(callback);
 	}
 	
 	private void listFilesFromDrive(DriveFolder folder) {
@@ -147,7 +146,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			createFolderInDrive(Drive.DriveApi.getRootFolder(getGoogleApiClient()));
 		}
 		FlashcardFile newFile = new FlashcardFile();
-		newFile.setTitle(NEW_LIST_TITLE);
 		Drive.DriveApi.newContents(getGoogleApiClient())
 			.setResultCallback(getNewFileCallback(newFile));
 	}
@@ -188,13 +186,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		return Drive.DriveApi.getFile(this.getGoogleApiClient(), id);
 	}
 	
-	private PhraseCollection getPhraseCollectionFromFile(FlashcardFile file) {
-		
-		
-		
-		return null;
-	}
-	
 	private void refreshContentView() {
 		if (mListAdapter == null) {
 			mListAdapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, mFiles);
@@ -220,10 +211,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		} else {
 			mListAdapter.notifyDataSetChanged();
 		}
-	}
-
-	public void syncListsToDrive() {
-
 	}
 
 	public void editList(final View v) {
@@ -253,7 +240,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				int position = extras.getInt("position");
 				PhraseCollection list = extras.getParcelable("PhraseCollection");
 				FlashcardFile file = mFiles.get(position);
-				file.updateContents(list);
+				file.updateContents(getGoogleApiClient(), list);
 				break;
 			}
 			break;

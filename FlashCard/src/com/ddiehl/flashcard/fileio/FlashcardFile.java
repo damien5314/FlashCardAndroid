@@ -1,6 +1,10 @@
 package com.ddiehl.flashcard.fileio;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+
+import android.util.Log;
 
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -9,7 +13,7 @@ import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
 
 public class FlashcardFile {
-	
+	private static final String TAG = FlashcardFile.class.getSimpleName();
 	private String mTitle;
 	private DriveFile mDriveFile;
 	private static final String NEW_LIST_TITLE = "New List";
@@ -34,7 +38,30 @@ public class FlashcardFile {
 		setDriveFile(file);
 	}
 	
-	public void updateContents(PhraseCollection list) {
+	public void updateContents(final GoogleApiClient client, final PhraseCollection list) {
+		final DriveFile file = getDriveFile();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				Contents contents = file.openContents(client, DriveFile.MODE_WRITE_ONLY, new DriveFile.DownloadProgressListener() {
+					@Override
+					public void onProgress(long arg0, long arg1) {
+						
+					}
+				}).await().getContents();
+				try {
+					OutputStream f_out = contents.getOutputStream();
+					if (list.getContents() != null) {
+						f_out.write(list.getContents().getBytes());
+						file.commitAndCloseContents(client, contents);	
+					} else {
+						Log.e(TAG, "Contents of PhraseCollection are empty, did you save?");
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
 		
 	}
 	
