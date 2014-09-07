@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        applicationId "com.ddiehl.flashcard"
+        minSdkVersion 11
+        targetSdkVersion 19
+
+        testApplicationId "com.ddiehl.flashcard.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:20.0.0'
+    compile 'com.jayway.android.robotium:robotium-solo:5.0.1'
+    compile 'com.google.android.gms:play-services:5.0.89'
+}

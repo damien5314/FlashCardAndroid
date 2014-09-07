@@ -1,8 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -14,6 +11,9 @@ import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.flashcard.quizsession.Quiz;
 import com.ddiehl.flashcard.quizsession.QuizCollection;
 import com.ddiehl.flashcard.quizsession.QuizSession;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class QuizSessionController extends Activity {
 	private static final String TAG = QuizSessionController.class.getSimpleName();

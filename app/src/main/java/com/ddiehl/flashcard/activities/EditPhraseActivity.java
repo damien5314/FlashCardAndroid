@@ -1,7 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -22,6 +20,8 @@ import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.listeners.SentenceSelectionListener;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.Sentence;
+
+import java.util.ArrayList;
 
 public class EditPhraseActivity extends Activity {
 	private static final String TAG = EditPhraseActivity.class.getSimpleName();

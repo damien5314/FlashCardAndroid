@@ -1,8 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +35,9 @@ import com.google.android.gms.drive.MetadataChangeSet;
 import com.google.android.gms.drive.query.Filters;
 import com.google.android.gms.drive.query.Query;
 import com.google.android.gms.drive.query.SearchableField;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
