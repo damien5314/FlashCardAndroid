@@ -1,11 +1,8 @@
 package com.ddiehl.flashcard.adapters;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -14,6 +11,8 @@ import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
 import com.ddiehl.flashcard.fileio.FlashcardFile;
+
+import java.util.ArrayList;
 
 public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
 	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
@@ -33,13 +32,13 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ItemHolder holder = null;
-        FlashcardFile file = data.get(position);
 
-        LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-        row = inflater.inflate(layoutResourceId, parent, false);
-        
-        holder = new ItemHolder();
+        if (row == null) {
+            row = ((Activity)context).getLayoutInflater().inflate(layoutResourceId, parent, false);
+        }
+
+        FlashcardFile file = data.get(position);
+        ItemHolder holder = new ItemHolder();
         holder.file = file;
         holder.itemText = (TextView) row.findViewById(R.id.itemText);
         holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
@@ -47,6 +46,7 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
         row.setTag(holder);
 
         holder.itemText.setText(file.getTitle());
+
         
         return row;
     }

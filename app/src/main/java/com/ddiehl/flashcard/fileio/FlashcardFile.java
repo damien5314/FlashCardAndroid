@@ -1,16 +1,20 @@
 package com.ddiehl.flashcard.fileio;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import android.util.Log;
 
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveResource;
+import com.google.android.gms.drive.MetadataChangeSet;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class FlashcardFile {
 	private static final String TAG = FlashcardFile.class.getSimpleName();
@@ -40,6 +44,15 @@ public class FlashcardFile {
 	
 	public void updateContents(final GoogleApiClient client, final PhraseCollection list) {
 		final DriveFile file = getDriveFile();
+        // Update metadata with correct filename
+        MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(list.getTitle()).build();
+        PendingResult<DriveResource.MetadataResult> result = file.updateMetadata(client, cs);
+        result.setResultCallback(new ResultCallback<DriveResource.MetadataResult>() {
+            @Override
+            public void onResult(DriveResource.MetadataResult metadataResult) {
+                Log.d(TAG, "Updated file metadata successfully.");
+            }
+        });
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
