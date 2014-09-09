@@ -41,13 +41,11 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
         ItemHolder holder = new ItemHolder();
         holder.file = file;
         holder.itemText = (TextView) row.findViewById(R.id.itemText);
+        holder.itemText.setText(file.getTitle());
         holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
         holder.itemEditButton.setTag(holder.file);
         row.setTag(holder);
 
-        holder.itemText.setText(file.getTitle());
-
-        
         return row;
     }
  
