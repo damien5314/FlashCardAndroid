@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.activities.MainActivity;
 import com.ddiehl.android.flashcard.activities.QuizSessionResultsActivity;
 import com.ddiehl.android.flashcard.quizsession.Phrase;
@@ -28,11 +29,11 @@ public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTe
 		super.setUp();
 		Intent intent = new Intent(getActivity().getApplicationContext(), QuizSessionResultsActivity.class);
 		QuizCollection qc = new QuizCollection();
-		qc.setTitle(getInstrumentation().getContext().getString(R.string.results_test_string_1));
+		qc.setTitle("Test Quiz");
 		Phrase p;
 		for (int i = 0; i < 15; i++) {
 			p = new Phrase();
-			String s = getInstrumentation().getContext().getString(com.ddiehl.flashcard.test.R.string.results_test_phrase_1);
+			String s = "Test Phrase";
 			p.setPhraseNative(s);
 			Quiz q = new Quiz(1, p);
 			double chance = Math.random();
@@ -49,15 +50,15 @@ public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTe
 	public void testResultsScreen() {
 		String v;
 		
-		v = ((TextView) solo.getView(com.ddiehl.flashcard.R.id.sessionResults_listTitle_value)).getText().toString();
+		v = ((TextView) solo.getView(R.id.sessionResults_listTitle_value)).getText().toString();
 		assertNotNull(v);
-		assertFalse(v.equals(getActivity().getString(com.ddiehl.flashcard.R.string.sessionResults_listTitle_default)));
+		assertFalse(v.equals(getActivity().getString(R.string.sessionResults_listTitle_default)));
 		
-		v = ((TextView) solo.getView(com.ddiehl.flashcard.R.id.sessionResults_phrasesTotal_value)).getText().toString();
+		v = ((TextView) solo.getView(R.id.sessionResults_phrasesTotal_value)).getText().toString();
 		assertNotNull(v);
-		assertFalse(v.equals(getActivity().getString(com.ddiehl.flashcard.R.string.sessionResults_phrasesTotal_default)));
+		assertFalse(v.equals(getActivity().getString(R.string.sessionResults_phrasesTotal_default)));
 		
-		ListView lv = ((ListView) solo.getView(com.ddiehl.flashcard.R.id.phraseList));
+		ListView lv = ((ListView) solo.getView(R.id.phraseList));
 		assertNotNull(lv);
 		assertFalse(lv.getChildCount() == 0);
 		

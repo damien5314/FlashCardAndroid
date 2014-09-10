@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ddiehl.flashcard.R;
+import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.activities.ListSelectionActivity;
 import com.ddiehl.android.flashcard.activities.LoadListDataActivity;
 import com.robotium.solo.Solo;

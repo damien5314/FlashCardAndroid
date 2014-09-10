@@ -4,7 +4,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.Button;
 
-import com.ddiehl.flashcard.R;
+import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.activities.LoadListDataActivity;
 import com.robotium.solo.Solo;
 
