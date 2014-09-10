@@ -1,6 +1,5 @@
 package com.ddiehl.flashcard.activities;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,12 +20,24 @@ import com.ddiehl.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.flashcard.listeners.PhraseSelectionListener;
 import com.ddiehl.flashcard.quizsession.Phrase;
 import com.ddiehl.flashcard.quizsession.PhraseCollection;
+import com.ddiehl.flashcard.util.GooglePlayConnectedActivity;
+import com.ddiehl.flashcard.util.Utils;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Contents;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.MetadataChangeSet;
 
-public class EditListActivity extends Activity {
+import java.io.IOException;
+import java.io.OutputStream;
+
+public class EditListActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = EditListActivity.class.getSimpleName();
 	public static final int RESULT_CODE_SAVE = 1001;
 	private PhraseCollection mPhraseCollection;
 	private int mPosition;
+	private DriveId mDriveId;
 	private EditListPhrasesAdapter mPhraseAdapter;
 	private boolean isAltered = false;
 
@@ -37,6 +48,9 @@ public class EditListActivity extends Activity {
 		Bundle extras = getIntent().getExtras();
 		if (extras.containsKey("position")) {
 			mPosition = extras.getInt("position");
+		}
+		if (extras.containsKey("DriveId")) {
+			mDriveId = DriveId.decodeFromString(extras.getString("DriveId"));
 		}
 		if (extras.containsKey("PhraseCollection")) {
 			populateContentView((PhraseCollection) extras.getParcelable("PhraseCollection"));
@@ -83,21 +97,66 @@ public class EditListActivity extends Activity {
 	}
 	
 	public void save(View v) {
-		EditText vTitle = (EditText) findViewById(R.id.edit_list_title);
-		mPhraseCollection.setTitle(vTitle.getText().toString());
-		mPhraseCollection.save();
-		Intent rIntent = new Intent();
-		rIntent.putExtra("PhraseCollection", mPhraseCollection);
-		rIntent.putExtra("position", mPosition);
-		setResult(RESULT_CODE_SAVE, rIntent);
-		finish();
+		final GoogleApiClient client = getGoogleApiClient();
+		if (!client.isConnected()) {
+			Utils.showToast(this, "Error: Play services not yet connected.");
+		} else {
+			// Update title of PhraseCollection and call save() to serialize to XML
+			EditText vTitle = (EditText) findViewById(R.id.edit_list_title);
+			mPhraseCollection.setTitle(vTitle.getText().toString());
+			mPhraseCollection.save();
+
+			// Open layout with ProgressBar while we are processing DriveFile
+			setContentView(R.layout.activity_circle);
+
+			// Open new worker thread to synchronously update DriveFile before returning to ListSelectionActivity
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					// Retrieve DriveFile with the DriveId
+					DriveFile dfile = Drive.DriveApi.getFile(getGoogleApiClient(), mDriveId);
+					// Create MetadataChangeSet to update title of DriveFile
+					MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(mPhraseCollection.getTitle()).build();
+
+					// Submit MetadataChangeSet and check result
+					if (dfile.updateMetadata(client, cs).await().getStatus().isSuccess())
+						Log.d(TAG, "Updated file metadata successfully.");
+
+					// Open DriveFile contents
+					Contents contents = dfile.openContents(client, DriveFile.MODE_WRITE_ONLY, new DriveFile.DownloadProgressListener() {
+						@Override
+						public void onProgress(long arg0, long arg1) {
+
+						}
+					}).await().getContents();
+
+					// Write changes to OutputStream generated from DriveFile contents
+					try {
+						OutputStream f_out = contents.getOutputStream();
+						if (mPhraseCollection.getContents() != null) {
+							f_out.write(mPhraseCollection.getContents().getBytes());
+							// Call commitAndCloseContents to write changes to DriveFile
+							dfile.commitAndCloseContents(client, contents);
+						} else {
+							Log.e(TAG, "Contents of PhraseCollection are empty, did you save?");
+						}
+					} catch (IOException e) { e.printStackTrace(); }
+
+					// Open new Intent to create Bundle to pass back to ListSelectionActivity
+					Intent rIntent = new Intent();
+					rIntent.putExtra("PhraseCollection", mPhraseCollection);
+					rIntent.putExtra("position", mPosition);
+					setResult(RESULT_CODE_SAVE, rIntent);
+					finish();
+				}
+			}).start();
+
+		}
+
 	}
 	
 	private boolean checkIfAltered() {
-		if (isAltered)
-			return true;
-		
-		return false;
+		return isAltered;
 	}
 	
 	public void quitAndSave(View v) {

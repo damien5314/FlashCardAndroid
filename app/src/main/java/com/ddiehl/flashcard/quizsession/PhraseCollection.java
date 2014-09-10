@@ -1,5 +1,15 @@
 package com.ddiehl.flashcard.quizsession;
 
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+import android.util.Xml;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlSerializer;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,16 +19,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlSerializer;
-
-import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.util.Log;
-import android.util.Xml;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
@@ -195,9 +195,7 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.endTag(ns, "phrases");
 	        xmlSerializer.endTag(ns, "vocabulary");
 	        xmlSerializer.endDocument();
-	        
-	        Log.d(TAG, "Generated XML: ");
-	        Log.d(TAG, writer.toString());
+
 	        this.setContents(writer.toString());
 	        
 		} catch (FileNotFoundException e) {
@@ -208,17 +206,14 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	private void setContents(String contents) {
-		Log.d(TAG, "setContents() = " + contents);
 		this.contentsXml = contents;
 	}
 	
 	public String getContents() {
-		Log.d(TAG, "getContents() = " + contentsXml);
 		return contentsXml;
 	}
 
 	public boolean delete(Context ctx) {
-		Log.d(TAG, "Deleting file: " + mFilename);
 		File dir = ctx.getFilesDir();
 		File file = new File(dir, mFilename);
 		return file.delete();

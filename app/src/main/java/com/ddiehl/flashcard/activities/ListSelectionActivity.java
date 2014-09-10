@@ -43,7 +43,7 @@ import java.util.Queue;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
-	private ArrayList<FlashcardFile> mFiles;
+	private ArrayList<FlashcardFile> mFiles = null;
     private Queue<UpdatedList> updatedLists;
 	private ListSelectionAdapter mListAdapter = null;
 	private ListView mListView;
@@ -65,8 +65,9 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		super.onConnected(connectionHint);
-        processUpdatedFiles();
-		generateContentFromDrive();
+//        processUpdatedFiles();
+		if (mFiles == null)
+			generateContentFromDrive();
 	}
 
     private void processUpdatedFiles() {
@@ -80,31 +81,34 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private void generateContentFromDrive() {
 		mFiles = new ArrayList<FlashcardFile>();
 		if (getGoogleApiClient().isConnected()) {
-			queryFolderInDrive();
+			if (driveFolderId == null)
+				queryFolderInDrive();
+			else
+				listFilesFromDrive(Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId));
 		}
 	}
 	
 	private void queryFolderInDrive() {
 		final DriveFolder rootFolder = Drive.DriveApi.getRootFolder(getGoogleApiClient());
-	    rootFolder.queryChildren(getGoogleApiClient(), new Query.Builder().addFilter(
-	    		Filters.eq(SearchableField.TITLE, "FlashCard")).build())
-	    .setResultCallback(new ResultCallback<MetadataBufferResult>() {
-			@Override
-			public void onResult(MetadataBufferResult result) {
-				MetadataBuffer buffer = result.getMetadataBuffer();
-				if (buffer.getCount() == 0) { // If folder does not exist
-					Log.i(TAG, "FlashCard folder not found in Drive, creating.");
-					createFolderInDrive(rootFolder);
-				} else { // If folder does exist
-					Log.i(TAG, "FlashCard folder found in Drive.");
-					Metadata data = buffer.get(0);
-					driveFolderId = data.getDriveId();
-					DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
-					listFilesFromDrive(folder);
-				}
-				buffer.close();
-			}
-	    });
+		rootFolder.queryChildren(getGoogleApiClient(), new Query.Builder().addFilter(
+				Filters.eq(SearchableField.TITLE, "FlashCard")).build())
+				.setResultCallback(new ResultCallback<MetadataBufferResult>() {
+					@Override
+					public void onResult(MetadataBufferResult result) {
+						MetadataBuffer buffer = result.getMetadataBuffer();
+						if (buffer.getCount() == 0) { // If folder does not exist
+							Log.i(TAG, "FlashCard folder not found in Drive, creating.");
+							createFolderInDrive(rootFolder);
+						} else { // If folder does exist
+							Log.i(TAG, "FlashCard folder found in Drive.");
+							Metadata data = buffer.get(0);
+							driveFolderId = data.getDriveId();
+							DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
+							listFilesFromDrive(folder);
+						}
+						buffer.close();
+					}
+				});
 	}
 	
 	private void createFolderInDrive(DriveFolder pFolder) {
@@ -128,25 +132,25 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	
 	private void listFilesFromDrive(DriveFolder folder) {
 		folder.listChildren(getGoogleApiClient()).setResultCallback(
-		new ResultCallback<MetadataBufferResult>() {
-			@Override
-			public void onResult(MetadataBufferResult result) {
-				Log.i(TAG, "FlashCard DriveFolder contents retrieved successfully.");
-				MetadataBuffer buffer = result.getMetadataBuffer();
-				Iterator<Metadata> i = buffer.iterator();
-				int filesProcessed = 0;
-				while (i.hasNext()) {
-					Metadata m = i.next();
-					DriveFile df = getFileByDriveId(m.getDriveId());
-					FlashcardFile file = new FlashcardFile(m.getTitle(), df);
-					addFileToCollection(file);
-					filesProcessed++;
+			new ResultCallback<MetadataBufferResult>() {
+				@Override
+				public void onResult(MetadataBufferResult result) {
+					Log.i(TAG, "FlashCard DriveFolder contents retrieved successfully.");
+					MetadataBuffer buffer = result.getMetadataBuffer();
+					Iterator<Metadata> i = buffer.iterator();
+					int filesProcessed = 0;
+					while (i.hasNext()) {
+						Metadata m = i.next();
+						DriveFile df = getFileByDriveId(m.getDriveId());
+						FlashcardFile file = new FlashcardFile(m.getTitle(), df);
+						addFileToCollection(file);
+						filesProcessed++;
+					}
+					buffer.close();
+					refreshContentView();
+					Utils.showToast(getBaseContext(), "Files processed from Drive folder: " + filesProcessed);
 				}
-				buffer.close();
-				refreshContentView();
-				Utils.showToast(getBaseContext(), "Files processed from Drive folder: " + filesProcessed);
-			}
-		});
+			});
 	}
 	
 	private void addFileToCollection(FlashcardFile file) {
@@ -236,6 +240,9 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
 				int position = lv.getPositionForView(v);
 				intent.putExtra("position", position);
+				DriveFile driveFile = file.getDriveFile();
+				DriveId driveId = driveFile.getDriveId();
+				intent.putExtra("DriveId", driveId.encodeToString());
 				startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
 			}
 		}).start();
@@ -252,10 +259,12 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				int position = extras.getInt("position");
 				PhraseCollection list = extras.getParcelable("PhraseCollection");
 				FlashcardFile file = mFiles.get(position);
-                UpdatedList updatedList = new UpdatedList();
-                updatedList.flashcardFile = file;
-                updatedList.phraseCollection = list;
-                updatedLists.add(updatedList);
+				file.setTitle(list.getTitle());
+				mListAdapter.notifyDataSetChanged();
+//                UpdatedList updatedList = new UpdatedList();
+//                updatedList.flashcardFile = file;
+//                updatedList.phraseCollection = list;
+//                updatedLists.add(updatedList);
 				break;
 			}
 			break;
