@@ -1,9 +1,5 @@
 /.gradle/
 /.idea/
 /build/
-/gradle/
 /local.properties
-.DS_Store
-gradlew
-gradlew.bat
 *.iml
