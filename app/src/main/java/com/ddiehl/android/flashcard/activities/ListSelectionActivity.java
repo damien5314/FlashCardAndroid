@@ -282,8 +282,8 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_sync_to_drive:
-//			syncListsToDrive();
+		case R.id.action_refresh:
+            generateContentFromDrive();
 			return true;
 		case R.id.action_add_new:
 			addNewItem();
