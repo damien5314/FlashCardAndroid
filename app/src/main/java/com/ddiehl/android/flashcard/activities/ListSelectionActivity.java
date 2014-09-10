@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.android.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.android.flashcard.fileio.FlashcardFile;
@@ -19,7 +20,6 @@ import com.ddiehl.android.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
 import com.ddiehl.android.flashcard.util.Utils;
-import com.ddiehl.android.flashcard.R;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
@@ -38,13 +38,10 @@ import com.google.android.gms.drive.query.SearchableField;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
 	private ArrayList<FlashcardFile> mFiles = null;
-    private Queue<UpdatedList> updatedLists;
 	private ListSelectionAdapter mListAdapter = null;
 	private ListView mListView;
 	private static final int REQUEST_CODE_EDIT_LIST = 1001;
@@ -54,7 +51,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_selection);
-        updatedLists = new LinkedList<UpdatedList>();
 	}
 	
 	@Override
@@ -65,20 +61,9 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		super.onConnected(connectionHint);
-//        processUpdatedFiles();
 		if (mFiles == null)
 			generateContentFromDrive();
 	}
-
-    private void processUpdatedFiles() {
-        if (!updatedLists.isEmpty()) {
-            while (!updatedLists.isEmpty()) {
-                UpdatedList list = updatedLists.remove();
-                list.flashcardFile.updateContents(getGoogleApiClient(), list.phraseCollection);
-            }
-            refreshContentView();
-        }
-    }
 	
 	// Instantiate the ArrayList mVocabularyLists with PhraseCollection objects
 	private void generateContentFromDrive() {
@@ -264,10 +249,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				FlashcardFile file = mFiles.get(position);
 				file.setTitle(list.getTitle());
 				mListAdapter.notifyDataSetChanged();
-//                UpdatedList updatedList = new UpdatedList();
-//                updatedList.flashcardFile = file;
-//                updatedList.phraseCollection = list;
-//                updatedLists.add(updatedList);
 				break;
 			}
 			break;
@@ -315,9 +296,4 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-    private class UpdatedList {
-        FlashcardFile flashcardFile;
-        PhraseCollection phraseCollection;
-    }
 } 
