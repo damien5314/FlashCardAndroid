@@ -45,6 +45,7 @@ public class FlashcardFile {
 	public void updateContents(final GoogleApiClient client, final PhraseCollection list) {
 		final DriveFile file = getDriveFile();
         // Update metadata with correct filename
+        setTitle(list.getTitle());
         MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(list.getTitle()).build();
         PendingResult<DriveResource.MetadataResult> result = file.updateMetadata(client, cs);
         result.setResultCallback(new ResultCallback<DriveResource.MetadataResult>() {

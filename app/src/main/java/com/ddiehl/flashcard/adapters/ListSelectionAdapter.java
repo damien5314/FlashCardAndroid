@@ -37,14 +37,14 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
             row = ((Activity)context).getLayoutInflater().inflate(layoutResourceId, parent, false);
         }
 
-		FlashcardFile file = data.get(position);
-		ItemHolder holder = new ItemHolder();
-		holder.file = file;
-		holder.itemText = (TextView) row.findViewById(R.id.itemText);
-		holder.itemText.setText(file.getTitle());
-		holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
-		holder.itemEditButton.setTag(holder.file);
-		row.setTag(holder);
+        FlashcardFile file = data.get(position);
+        ItemHolder holder = new ItemHolder();
+        holder.file = file;
+        holder.itemText = (TextView) row.findViewById(R.id.itemText);
+        holder.itemText.setText(file.getTitle());
+        holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
+        holder.itemEditButton.setTag(holder.file);
+        row.setTag(holder);
 
         return row;
     }

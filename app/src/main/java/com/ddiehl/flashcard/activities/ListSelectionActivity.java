@@ -71,9 +71,12 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 
     private void processUpdatedFiles() {
-        while (!updatedLists.isEmpty()) {
-            UpdatedList list = updatedLists.remove();
-            list.flashcardFile.updateContents(getGoogleApiClient(), list.phraseCollection);
+        if (!updatedLists.isEmpty()) {
+            while (!updatedLists.isEmpty()) {
+                UpdatedList list = updatedLists.remove();
+                list.flashcardFile.updateContents(getGoogleApiClient(), list.phraseCollection);
+            }
+            refreshContentView();
         }
     }
 	
