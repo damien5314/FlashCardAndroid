@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ddiehl.flashcard"
+    package="com.ddiehl.android.flashcard"
     android:versionCode="1"
     android:versionName="0.01" >
 
@@ -17,7 +17,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.ddiehl.flashcard.activities.MainActivity"
+            android:name="com.ddiehl.android.flashcard.activities.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,42 +26,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.ListSelectionActivity"
+            android:name="com.ddiehl.android.flashcard.activities.ListSelectionActivity"
             android:label="@string/title_activity_list_selection" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.LoadListDataActivity"
+            android:name="com.ddiehl.android.flashcard.activities.LoadListDataActivity"
             android:label="@string/title_activity_load_list_data"
-            android:parentActivityName="com.ddiehl.flashcard.activities.ListSelectionActivity" >
+            android:parentActivityName="com.ddiehl.android.flashcard.activities.ListSelectionActivity" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.QuizSessionController"
+            android:name="com.ddiehl.android.flashcard.activities.QuizSessionController"
             android:label="@string/title_activity_quiz_session_controller" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.QuizNativePhonetic"
+            android:name="com.ddiehl.android.flashcard.activities.QuizNativePhonetic"
             android:label="@string/title_activity_quiz_kanji_kana" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.QuizSessionResultsActivity"
+            android:name="com.ddiehl.android.flashcard.activities.QuizSessionResultsActivity"
             android:label="@string/title_activity_activity_quiz_session_results" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.SettingsActivity"
+            android:name="com.ddiehl.android.flashcard.activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.EditListActivity"
+            android:name="com.ddiehl.android.flashcard.activities.EditListActivity"
             android:label="@string/title_activity_edit_list"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.EditPhraseActivity"
+            android:name="com.ddiehl.android.flashcard.activities.EditPhraseActivity"
             android:label="@string/title_activity_edit_phrase"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.ddiehl.flashcard.activities.EditSentenceActivity"
+            android:name="com.ddiehl.android.flashcard.activities.EditSentenceActivity"
             android:label="@string/title_activity_edit_sentence"
             android:windowSoftInputMode="stateHidden" >
         </activity>

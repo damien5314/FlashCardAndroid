@@ -8,8 +8,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.activities.ListSelectionActivity;
-import com.ddiehl.flashcard.activities.LoadListDataActivity;
+import com.ddiehl.android.flashcard.activities.ListSelectionActivity;
+import com.ddiehl.android.flashcard.activities.LoadListDataActivity;
 import com.robotium.solo.Solo;
 
 public class Activity_ListSelection_Test extends ActivityInstrumentationTestCase2<ListSelectionActivity> {

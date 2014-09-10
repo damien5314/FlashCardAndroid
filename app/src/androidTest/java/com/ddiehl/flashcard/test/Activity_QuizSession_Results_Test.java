@@ -3,16 +3,15 @@ package com.ddiehl.flashcard.test;
 import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.ddiehl.flashcard.activities.MainActivity;
-import com.ddiehl.flashcard.activities.QuizSessionResultsActivity;
-import com.ddiehl.flashcard.quizsession.Phrase;
-import com.ddiehl.flashcard.quizsession.Quiz;
-import com.ddiehl.flashcard.quizsession.QuizCollection;
+import com.ddiehl.android.flashcard.activities.MainActivity;
+import com.ddiehl.android.flashcard.activities.QuizSessionResultsActivity;
+import com.ddiehl.android.flashcard.quizsession.Phrase;
+import com.ddiehl.android.flashcard.quizsession.Quiz;
+import com.ddiehl.android.flashcard.quizsession.QuizCollection;
 import com.robotium.solo.Solo;
 
 public class Activity_QuizSession_Results_Test extends ActivityInstrumentationTestCase2<MainActivity> {

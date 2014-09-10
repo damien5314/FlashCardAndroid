@@ -7,12 +7,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.ddiehl.flashcard.R;
-import com.ddiehl.flashcard.activities.ListSelectionActivity;
-import com.ddiehl.flashcard.activities.LoadListDataActivity;
-import com.ddiehl.flashcard.activities.MainActivity;
-import com.ddiehl.flashcard.activities.QuizSessionResultsActivity;
-import com.ddiehl.flashcard.activities.QuizNativePhonetic;
-import com.ddiehl.flashcard.activities.QuizSessionController;
+import com.ddiehl.android.flashcard.activities.ListSelectionActivity;
+import com.ddiehl.android.flashcard.activities.LoadListDataActivity;
+import com.ddiehl.android.flashcard.activities.MainActivity;
+import com.ddiehl.android.flashcard.activities.QuizSessionResultsActivity;
+import com.ddiehl.android.flashcard.activities.QuizNativePhonetic;
+import com.ddiehl.android.flashcard.activities.QuizSessionController;
 import com.robotium.solo.Solo;
 
 public class QuizSessionE2ETest extends ActivityInstrumentationTestCase2<MainActivity> {

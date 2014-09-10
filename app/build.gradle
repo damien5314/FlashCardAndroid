@@ -5,7 +5,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.ddiehl.flashcard"
+        applicationId "com.ddiehl.android.flashcard"
         minSdkVersion 11
         targetSdkVersion 19
 
