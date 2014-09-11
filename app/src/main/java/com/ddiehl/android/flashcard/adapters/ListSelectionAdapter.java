@@ -10,18 +10,18 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ddiehl.android.flashcard.R;
-import com.ddiehl.android.flashcard.fileio.FlashcardFile;
+import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 
 import java.util.ArrayList;
 
-public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
+public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
 	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
 	private Context context;
     private int layoutResourceId;
-    private ArrayList<FlashcardFile> data = null;
+    private ArrayList<PhraseCollection> data = null;
     private SparseBooleanArray mSelectedItemsIds;
     
-    public ListSelectionAdapter(Context context, int id, ArrayList<FlashcardFile> data) {
+    public ListSelectionAdapter(Context context, int id, ArrayList<PhraseCollection> data) {
         super(context, id, data);
         this.layoutResourceId = id;
         this.context = context;
@@ -37,13 +37,12 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
             row = ((Activity)context).getLayoutInflater().inflate(layoutResourceId, parent, false);
         }
 
-        FlashcardFile file = data.get(position);
+        PhraseCollection file = data.get(position);
         ItemHolder holder = new ItemHolder();
-        holder.file = file;
         holder.itemText = (TextView) row.findViewById(R.id.itemText);
         holder.itemText.setText(file.getTitle());
         holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
-        holder.itemEditButton.setTag(holder.file);
+        holder.itemEditButton.setTag(file);
         row.setTag(holder);
 
         return row;
@@ -77,7 +76,6 @@ public class ListSelectionAdapter extends ArrayAdapter<FlashcardFile> {
     
     static class ItemHolder
     {
-    	FlashcardFile file;
         TextView itemText;
         ImageButton itemEditButton;
     }

@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.adapters.ListSelectionAdapter;
-import com.ddiehl.android.flashcard.fileio.FlashcardFile;
+import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 
 public class ListSelectionListener implements MultiChoiceModeListener {
 	private static final String TAG = ListSelectionListener.class.getSimpleName();
@@ -30,7 +30,7 @@ public class ListSelectionListener implements MultiChoiceModeListener {
             SparseBooleanArray selected = mAdapter.getSelectedIds();
             for (int i = (selected.size() - 1); i >= 0; i--) {
                 if (selected.valueAt(i)) {
-                	FlashcardFile selectedItem = mAdapter.getItem(selected.keyAt(i));
+                	PhraseCollection selectedItem = mAdapter.getItem(selected.keyAt(i));
 //                    selectedItem.delete(mAdapter.getContext());
                     mAdapter.remove(selectedItem);
                 }

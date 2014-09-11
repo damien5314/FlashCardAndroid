@@ -41,7 +41,7 @@ import java.util.Iterator;
 
 public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = ListSelectionActivity.class.getSimpleName();
-	private ArrayList<FlashcardFile> mFiles = null;
+	private ArrayList<PhraseCollection> mFiles = null;
 	private ListSelectionAdapter mListAdapter = null;
 	private ListView mListView;
 	private static final int REQUEST_CODE_EDIT_LIST = 1001;
@@ -67,7 +67,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	
 	// Instantiate the ArrayList mVocabularyLists with PhraseCollection objects
 	private void generateContentFromDrive() {
-		mFiles = new ArrayList<FlashcardFile>();
+		mFiles = new ArrayList<PhraseCollection>();
 		if (getGoogleApiClient().isConnected()) {
 			if (driveFolderId == null)
 				queryFolderInDrive();
@@ -130,7 +130,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 					while (i.hasNext()) {
 						Metadata m = i.next();
 						DriveFile df = getFileByDriveId(m.getDriveId());
-						FlashcardFile file = new FlashcardFile(m.getTitle(), df);
+                        PhraseCollection file = new PhraseCollection(df.getDriveId());
 						addFileToCollection(file);
 						filesProcessed++;
 					}
@@ -140,21 +140,23 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				}
 			});
 	}
-	
-	private void addFileToCollection(FlashcardFile file) {
-		mFiles.add(file);
-	}
 
+    private void addFileToCollection(PhraseCollection file) {
+        mFiles.add(file);
+        refreshContentView();
+    }
+
+    // TODO Rewrite the Add New List flow to be synchronous
 	public void addNewItem() {
 		if (driveFolderId == null) {
 			createFolderInDrive(Drive.DriveApi.getRootFolder(getGoogleApiClient()));
 		}
-		FlashcardFile newFile = new FlashcardFile();
+		PhraseCollection newFile = new PhraseCollection();
 		Drive.DriveApi.newContents(getGoogleApiClient())
 			.setResultCallback(getNewFileCallback(newFile));
 	}
 	
-	private ResultCallback<ContentsResult> getNewFileCallback(final FlashcardFile file) {
+	private ResultCallback<ContentsResult> getNewFileCallback(final PhraseCollection file) {
 		return new ResultCallback<ContentsResult>() {
 			@Override
 			public void onResult(ContentsResult result) {
@@ -169,21 +171,15 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		};
 	}
 	
-	private ResultCallback<DriveFileResult> getFileCreatedCallback(final FlashcardFile file) {
+	private ResultCallback<DriveFileResult> getFileCreatedCallback(final PhraseCollection file) {
 		return new ResultCallback<DriveFileResult>() {
 			@Override
 			public void onResult(DriveFileResult result) {
 				Log.i(TAG, "Drive file created: " + result.getDriveFile().getDriveId().encodeToString());
-				DriveFile createdFile = result.getDriveFile();
-				file.setDriveFile(createdFile);
-				addToFileList(file);
+                file.setDriveId(result.getDriveFile().getDriveId());
+				addFileToCollection(file);
 			}
 		};
-	}
-	
-	private void addToFileList(FlashcardFile file) {
-		mFiles.add(file);
-		refreshContentView();
 	}
 	
 	private DriveFile getFileByDriveId(DriveId id) {
@@ -198,12 +194,12 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				@Override
 				public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
 					final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
-					final FlashcardFile file = mFiles.get(position);
+					final PhraseCollection file = mFiles.get(position);
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							PhraseCollection pc = file.generatePhraseCollectionFromDriveFile(getGoogleApiClient());
-							intent.putExtra("PhraseCollection", pc);
+                            file.generateCollectionFromDriveFile(getGoogleApiClient());
+							intent.putExtra("PhraseCollection", file);
 							intent.putExtra("position", position);
 							view.getContext().startActivity(intent);
 						}
@@ -218,7 +214,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 
 	public void editList(final View v) {
-		final FlashcardFile file = (FlashcardFile) v.getTag();
+		final PhraseCollection file = (PhraseCollection) v.getTag();
 		final Intent intent = new Intent(this, EditListActivity.class);
 		new Thread(new Runnable() {
 			@Override
@@ -228,7 +224,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
 				int position = lv.getPositionForView(v);
 				intent.putExtra("position", position);
-				DriveFile driveFile = file.getDriveFile();
 				DriveId driveId = driveFile.getDriveId();
 				intent.putExtra("DriveId", driveId.encodeToString());
 				startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
@@ -246,8 +241,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                 Bundle extras = data.getExtras();
 				int position = extras.getInt("position");
 				PhraseCollection list = extras.getParcelable("PhraseCollection");
-				FlashcardFile file = mFiles.get(position);
-				file.setTitle(list.getTitle());
+                mFiles.set(position, list); // Test if we need this
 				mListAdapter.notifyDataSetChanged();
 				break;
 			}

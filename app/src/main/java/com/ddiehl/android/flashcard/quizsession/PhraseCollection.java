@@ -6,11 +6,17 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.drive.Contents;
+import com.google.android.gms.drive.Drive;
+import com.google.android.gms.drive.DriveApi;
+import com.google.android.gms.drive.DriveFile;
+import com.google.android.gms.drive.DriveId;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,32 +24,42 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
-	private String mFilename;
 	private String contentsXml = null;
 	private List<Phrase> list = new ArrayList<Phrase>();
+    private DriveId mDriveId;
 	private String title;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
 //    private OnClickListener editListener;
 	
-	public PhraseCollection() {
-		super();
-		mFilename = UUID.randomUUID().toString();
-	}
+	public PhraseCollection() { }
 
 	public PhraseCollection(InputStream vocabulary) {
 		generateXmlPullParser(vocabulary);
 	}
 
-	public PhraseCollection(InputStream vocabulary, String filename) {
-		mFilename = filename;
-		generateXmlPullParser(vocabulary);
-	}
-	
-	public void generateXmlPullParser(InputStream vocabulary) {
+    public PhraseCollection(DriveId id) {
+        setDriveId(id);
+    }
+
+    public void generateCollectionFromDriveFile(GoogleApiClient client) {
+        DriveFile driveFile = Drive.DriveApi.getFile(client, getDriveId());
+        // Retrieve Contents from DriveFile
+        DriveApi.ContentsResult result = driveFile.openContents(client, DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
+            @Override
+            public void onProgress(long arg0, long arg1) {
+                // Report download progress here
+            }
+        }).await();
+        Contents contents = result.getContents();
+        // Return new PhraseCollection created from Contents
+        InputStream f_in = contents.getInputStream();
+        generateXmlPullParser(f_in);
+    }
+
+	public void generateXmlPullParser(InputStream vocabulary) throws XmlPullParserException, IOException {
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -54,7 +70,69 @@ public class PhraseCollection implements Parcelable {
 		}
         
 		try {
-			parseXML(parser);
+            int eventType = parser.getEventType();
+            Phrase currentPhrase = null;
+            ArrayList<Sentence> phraseSentences = null;
+            Sentence currentSentence = null;
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                String name = null;
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        break;
+                    case XmlPullParser.START_TAG:
+                        name = parser.getName();
+                        if (name.equalsIgnoreCase("information")) {
+
+                        } else if (name.equalsIgnoreCase("title")) {
+                            setTitle(parser.nextText());
+                        } else if (name.equalsIgnoreCase("phrasestotal")) {
+                            setPhrasesTotal(Integer.parseInt(parser.nextText()));
+                        } else if (name.equalsIgnoreCase("phrasesstarted")) {
+                            setPhrasesStarted(Integer.parseInt(parser.nextText()));
+                        } else if (name.equalsIgnoreCase("phrasesmastered")) {
+                            setPhrasesMastered(Integer.parseInt(parser.nextText()));
+                        } else if (name.equalsIgnoreCase("phrases")) {
+
+                        } else if (name.equalsIgnoreCase("phrase")) {
+                            currentPhrase = new Phrase();
+                        } else if (currentPhrase != null) {
+                            if (name.equalsIgnoreCase("p_native")) {
+                                currentPhrase.setPhraseNative(parser.nextText());
+                            } else if (name.equalsIgnoreCase("p_phonetic")) {
+                                currentPhrase.setPhrasePhonetic(parser.nextText());
+                            } else if (name.equalsIgnoreCase("p_romanized")) {
+                                currentPhrase.setPhraseRomanized(parser.nextText());
+                            } else if (name.equalsIgnoreCase("p_translated")) {
+                                currentPhrase.setPhraseTranslated(parser.nextText());
+                            } else if (name.equalsIgnoreCase("sentences")) {
+                                phraseSentences = new ArrayList<Sentence>();
+                            } else if (name.equalsIgnoreCase("sentence")) {
+                                currentSentence = new Sentence();
+                            } else if (name.equalsIgnoreCase("s_native")) {
+                                currentSentence.setSentenceNative(parser.nextText());
+                            } else if (name.equalsIgnoreCase("s_phonetic")) {
+                                currentSentence.setSentencePhonetic(parser.nextText());
+                            } else if (name.equalsIgnoreCase("s_romanized")) {
+                                currentSentence.setSentenceRomanized(parser.nextText());
+                            } else if (name.equalsIgnoreCase("s_translated")) {
+                                currentSentence.setSentenceTranslated(parser.nextText());
+                            }
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        name = parser.getName();
+                        if (name.equalsIgnoreCase("phrase") && currentPhrase != null) {
+                            currentPhrase.setIncludedInSession(true);
+                            this.add(currentPhrase);
+                        } else if (name.equalsIgnoreCase("sentence") && currentSentence != null) {
+                            phraseSentences.add(currentSentence);
+                        } else if (name.equalsIgnoreCase("sentences") && phraseSentences != null) {
+                            currentPhrase.setPhraseSentences(phraseSentences);
+                        }
+                }
+                eventType = parser.next();
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
@@ -62,69 +140,7 @@ public class PhraseCollection implements Parcelable {
 	
 	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
 	{
-        int eventType = parser.getEventType();
-        Phrase currentPhrase = null;
-        ArrayList<Sentence> phraseSentences = null;
-        Sentence currentSentence = null;
 
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            String name = null;
-            switch (eventType) {
-                case XmlPullParser.START_DOCUMENT:
-                    break;
-                case XmlPullParser.START_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("information")) {
-                    	
-                    } else if (name.equalsIgnoreCase("title")) {
-                    	setTitle(parser.nextText());
-                    } else if (name.equalsIgnoreCase("phrasestotal")) {
-                    	setPhrasesTotal(Integer.parseInt(parser.nextText()));
-                    } else if (name.equalsIgnoreCase("phrasesstarted")) {
-                    	setPhrasesStarted(Integer.parseInt(parser.nextText()));
-                    } else if (name.equalsIgnoreCase("phrasesmastered")) {
-                    	setPhrasesMastered(Integer.parseInt(parser.nextText()));
-                    } else if (name.equalsIgnoreCase("phrases")) {
-                    	
-                    } else if (name.equalsIgnoreCase("phrase")) {  
-                    	currentPhrase = new Phrase();
-                    } else if (currentPhrase != null) {
-                        if (name.equalsIgnoreCase("p_native")) {
-                            currentPhrase.setPhraseNative(parser.nextText());
-                        } else if (name.equalsIgnoreCase("p_phonetic")) {
-                        	currentPhrase.setPhrasePhonetic(parser.nextText());
-                        } else if (name.equalsIgnoreCase("p_romanized")) {
-                        	currentPhrase.setPhraseRomanized(parser.nextText());
-                        } else if (name.equalsIgnoreCase("p_translated")) {
-                        	currentPhrase.setPhraseTranslated(parser.nextText());
-                        } else if (name.equalsIgnoreCase("sentences")) {
-                        	phraseSentences = new ArrayList<Sentence>();
-                        } else if (name.equalsIgnoreCase("sentence")) {
-                        	currentSentence = new Sentence();
-                        } else if (name.equalsIgnoreCase("s_native")) {
-                        	currentSentence.setSentenceNative(parser.nextText());
-                        } else if (name.equalsIgnoreCase("s_phonetic")) {
-                        	currentSentence.setSentencePhonetic(parser.nextText());                        	
-                        } else if (name.equalsIgnoreCase("s_romanized")) {
-                        	currentSentence.setSentenceRomanized(parser.nextText());
-                        } else if (name.equalsIgnoreCase("s_translated")) {
-                        	currentSentence.setSentenceTranslated(parser.nextText());
-                        }
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("phrase") && currentPhrase != null) {
-                    	currentPhrase.setIncludedInSession(true);
-                    	this.add(currentPhrase);
-                    } else if (name.equalsIgnoreCase("sentence") && currentSentence != null) {
-                    	phraseSentences.add(currentSentence);
-                    } else if (name.equalsIgnoreCase("sentences") && phraseSentences != null) {
-                    	currentPhrase.setPhraseSentences(phraseSentences);
-                    }
-            }
-            eventType = parser.next();
-        }
 
 	}
 	
@@ -214,9 +230,8 @@ public class PhraseCollection implements Parcelable {
 	}
 
 	public boolean delete(Context ctx) {
-		File dir = ctx.getFilesDir();
-		File file = new File(dir, mFilename);
-		return file.delete();
+        // TODO Refactor deletion function for DriveFiles
+        return false;
 	}
 	
 	public List<Phrase> add(Phrase q) {
@@ -255,13 +270,13 @@ public class PhraseCollection implements Parcelable {
 		this.list = in;
 	}
 
-	public String getFilename() {
-		return mFilename;
-	}
+    public DriveId getDriveId() {
+        return mDriveId;
+    }
 
-	public void setFilename(String mFilename) {
-		this.mFilename = mFilename;
-	}
+    public void setDriveId(DriveId mDriveId) {
+        this.mDriveId = mDriveId;
+    }
 
 	public String getTitle() {
 		return title;
@@ -305,24 +320,24 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public PhraseCollection(Parcel in) {
-		mFilename = in.readString();
 		this.contentsXml = in.readString(); // String contentsXml
 		in.readTypedList(list, Phrase.CREATOR);
 		this.setTitle(in.readString());
 		this.setPhrasesTotal(in.readInt());
 		this.setPhrasesStarted(in.readInt());
 		this.setPhrasesMastered(in.readInt());
+        this.setDriveId(DriveId.decodeFromString(in.readString()));
 	}
 
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
-		arg0.writeString(mFilename);
 		arg0.writeString(contentsXml); // String contentsXml
 		arg0.writeTypedList(list);
 		arg0.writeString(getTitle());
 		arg0.writeInt(getPhrasesTotal());
 		arg0.writeInt(getPhrasesStarted());
 		arg0.writeInt(getPhrasesMastered());
+        arg0.writeString(getDriveId().encodeToString());
 	}
 	
 	public static final Parcelable.Creator<PhraseCollection> CREATOR = new Parcelable.Creator<PhraseCollection>() {
