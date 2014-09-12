@@ -47,7 +47,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_list_selection);
+        setContentView(R.layout.activity_list_selection);
 	}
 	
 	@Override
@@ -60,15 +60,14 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		super.onConnected(connectionHint);
 		if (mFiles == null) {
             Log.d(TAG, "No files in list, generating content from Drive.");
-
-            // Set content view to loading dialog while list is generated
-
-
             generateContentFromDrive();
         }
 	}
 
 	private void generateContentFromDrive() {
+        // Set content view to loading dialog while list is generated
+        setContentView(R.layout.activity_circle);
+
 		mFiles = new ArrayList<PhraseCollection>();
 		if (getGoogleApiClient().isConnected()) {
 			if (driveFolderId == null)
@@ -141,6 +140,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                             filesProcessed++;
                         }
                         buffer.close();
+                        setContentView(R.layout.activity_list_selection);
                         mListAdapter = new ListSelectionAdapter(c, R.layout.activity_list_selection_item, mFiles);
                         mListView = (ListView) findViewById(R.id.vocabulary_lists);
                         mListView.setOnItemClickListener(getOnItemClickListener());
