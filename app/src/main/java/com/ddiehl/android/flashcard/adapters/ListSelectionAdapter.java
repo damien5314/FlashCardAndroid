@@ -1,6 +1,5 @@
 package com.ddiehl.android.flashcard.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.SparseBooleanArray;
 import android.view.View;
@@ -10,13 +9,14 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ddiehl.android.flashcard.R;
+import com.ddiehl.android.flashcard.activities.ListSelectionActivity;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 
 import java.util.ArrayList;
 
 public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
 	private static final String TAG = ListSelectionAdapter.class.getSimpleName();
-	private Context context;
+	private ListSelectionActivity context;
     private int layoutResourceId;
     private ArrayList<PhraseCollection> data = null;
     private SparseBooleanArray mSelectedItemsIds;
@@ -24,7 +24,7 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
     public ListSelectionAdapter(Context context, int id, ArrayList<PhraseCollection> data) {
         super(context, id, data);
         this.layoutResourceId = id;
-        this.context = context;
+        this.context = (ListSelectionActivity) context;
         this.data = data;
         this.mSelectedItemsIds = new SparseBooleanArray();
     }
@@ -34,13 +34,13 @@ public class ListSelectionAdapter extends ArrayAdapter<PhraseCollection> {
         View row = convertView;
 
         if (row == null) {
-            row = ((Activity)context).getLayoutInflater().inflate(layoutResourceId, parent, false);
+            row = context.getLayoutInflater().inflate(layoutResourceId, parent, false);
         }
 
         PhraseCollection file = data.get(position);
         ItemHolder holder = new ItemHolder();
         holder.itemText = (TextView) row.findViewById(R.id.itemText);
-        holder.itemText.setText(file.getTitle());
+        holder.itemText.setText(file.getListTitle());
         holder.itemEditButton = (ImageButton) row.findViewById(R.id.itemEditButton);
         holder.itemEditButton.setTag(file);
         row.setTag(holder);

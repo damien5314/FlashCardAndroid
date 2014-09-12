@@ -22,7 +22,7 @@ public class EditListPhrasesAdapter extends ArrayAdapter<Phrase> {
     private SparseBooleanArray mSelectedItemsIds;
     
     public EditListPhrasesAdapter(Context context, int layoutResourceId, PhraseCollection data) {
-        super(context, layoutResourceId, data.getList());
+        super(context, layoutResourceId, data.getPhraseList());
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;

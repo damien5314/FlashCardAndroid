@@ -20,7 +20,7 @@ public class ListPhrasesAdapter extends ArrayAdapter<Phrase> {
     PhraseCollection data = null;
     
     public ListPhrasesAdapter(Context context, int layoutResourceId, PhraseCollection data) {
-        super(context, layoutResourceId, data.getList());
+        super(context, layoutResourceId, data.getPhraseList());
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;

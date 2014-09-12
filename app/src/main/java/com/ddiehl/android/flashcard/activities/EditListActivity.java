@@ -21,14 +21,12 @@ import com.ddiehl.android.flashcard.listeners.PhraseSelectionListener;
 import com.ddiehl.android.flashcard.quizsession.Phrase;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
-import com.google.android.gms.drive.DriveId;
 
 public class EditListActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = EditListActivity.class.getSimpleName();
 	public static final int RESULT_CODE_SAVE = 1001;
 	private PhraseCollection mPhraseCollection;
 	private int mPosition;
-	private DriveId mDriveId;
 	private EditListPhrasesAdapter mPhraseAdapter;
 	private boolean isAltered = false;
 
@@ -40,9 +38,6 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 		if (extras.containsKey("position")) {
 			mPosition = extras.getInt("position");
 		}
-		if (extras.containsKey("DriveId")) {
-			mDriveId = DriveId.decodeFromString(extras.getString("DriveId"));
-		}
 		if (extras.containsKey("PhraseCollection")) {
 			populateContentView((PhraseCollection) extras.getParcelable("PhraseCollection"));
 		} else {
@@ -53,7 +48,7 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 	private void populateContentView(PhraseCollection in) {
 		mPhraseCollection = in;
 		EditText tv = (EditText) findViewById(R.id.edit_list_title);
-		tv.setText(mPhraseCollection.getTitle());
+		tv.setText(mPhraseCollection.getListTitle());
 		updateTotalPhrases();
 		mPhraseAdapter = new EditListPhrasesAdapter(this, R.layout.activity_edit_list_item, mPhraseCollection);
 		ListView vLists = (ListView) findViewById(R.id.editList_phraseList);
@@ -93,19 +88,17 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 
 	public void quitAndSave(final View v) {
         // Set title of the PhraseCollection before we shift to loading view
-        mPhraseCollection.setTitle(((EditText) findViewById(R.id.edit_list_title)).getText().toString());
+        mPhraseCollection.setListTitle(((EditText) findViewById(R.id.edit_list_title)).getText().toString());
 
         // Open layout with ProgressBar while we are processing DriveFile
         setContentView(R.layout.activity_circle);
-
-        // Serialize PhraseCollection to XML and feed that into update function
-        final String listXml = mPhraseCollection.serializeToXml(this);
 
 		// Open a new Thread to save the file and exit back to ListSelectionActivity
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mPhraseCollection.writeChangesToDrive(listXml, (EditListActivity)v.getContext());
+				if (mPhraseCollection.writeChangesToDrive((EditListActivity)v.getContext()))
+                    Log.i(TAG, "DriveFile contents committed successfully.");
 
 				// Open new Intent to create Bundle to pass back to ListSelectionActivity
 				Intent rIntent = new Intent();

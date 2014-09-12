@@ -23,7 +23,6 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
 import com.google.android.gms.drive.DriveApi.MetadataBufferResult;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveFolder;
 import com.google.android.gms.drive.DriveFolder.DriveFileResult;
 import com.google.android.gms.drive.DriveFolder.DriveFolderResult;
@@ -60,8 +59,10 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		super.onConnected(connectionHint);
-		if (mFiles == null)
-			generateContentFromDrive();
+		if (mFiles == null) {
+            Log.d(TAG, "No files in list, generating content from Drive.");
+            generateContentFromDrive();
+        }
 	}
 
 	private void generateContentFromDrive() {
@@ -122,10 +123,11 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 	
 	private void listFilesFromDrive(DriveFolder folder) {
+        final ListSelectionActivity c = this;
 		folder.listChildren(getGoogleApiClient()).setResultCallback(
-			new ResultCallback<MetadataBufferResult>() {
-				@Override
-				public void onResult(MetadataBufferResult result) {
+            new ResultCallback<MetadataBufferResult>() {
+                @Override
+                public void onResult(MetadataBufferResult result) {
                     if (result.getStatus().isSuccess()) {
                         MetadataBuffer buffer = result.getMetadataBuffer();
                         Iterator<Metadata> i = buffer.iterator();
@@ -133,24 +135,44 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                         while (i.hasNext()) { // Add each DriveFile in result to file list
                             Metadata m = i.next();
                             PhraseCollection file = new PhraseCollection(m.getDriveId());
-                            file.setTitle(m.getTitle());
-                            addFileToCollection(file);
+                            file.setListTitle(m.getTitle());
+                            mFiles.add(file);
                             filesProcessed++;
                         }
                         buffer.close();
-                        refreshContentView();
-                        Utils.showToast(getBaseContext(), "Files found in Drive: " + filesProcessed);
+                        mListAdapter = new ListSelectionAdapter(c, R.layout.activity_list_selection_item, mFiles);
+                        mListView = (ListView) findViewById(R.id.vocabulary_lists);
+                        mListView.setOnItemClickListener(getOnItemClickListener());
+                        mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
+                        mListView.setAdapter(mListAdapter);
+                        Utils.showToast(c, "Files found in Drive: " + filesProcessed);
                     } else {
                         Log.e(TAG, "DriveFiles not successfully retrieved.");
                         Log.e(TAG, "Status code: " + result.getStatus().getStatusCode() + " - " + "Message: " + result.getStatus().getStatusMessage());
                     }
-				}
-			});
+                }
+            });
 	}
 
-    private void addFileToCollection(PhraseCollection file) {
-        mFiles.add(file);
-        refreshContentView();
+    private OnItemClickListener getOnItemClickListener() {
+        final ListSelectionActivity c = this;
+        return new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
+                final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
+                final PhraseCollection file = mFiles.get(position);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO setContentView to loading overlay while generating PhraseCollection
+                        file.loadCollectionDataFromDrive(c);
+                        intent.putExtra("PhraseCollection", file);
+                        intent.putExtra("position", position);
+                        view.getContext().startActivity(intent);
+                    }
+                }).start();
+            }
+        };
     }
 
     // TODO Rewrite the Add New List flow to be synchronous
@@ -169,7 +191,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			public void onResult(ContentsResult result) {
 				DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
 				MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-						.setTitle(file.getTitle())
+						.setTitle(file.getListTitle())
 						.setMimeType("text/xml")
 						.build();
 				folder.createFile(getGoogleApiClient(), changeSet, result.getContents())
@@ -184,56 +206,26 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			public void onResult(DriveFileResult result) {
 				Log.i(TAG, "Drive file created: " + result.getDriveFile().getDriveId().encodeToString());
                 file.setDriveId(result.getDriveFile().getDriveId());
-				addFileToCollection(file);
+                mFiles.add(file);
+                mListAdapter.notifyDataSetChanged();
 			}
 		};
 	}
-	
-	private DriveFile getFileByDriveId(DriveId id) {
-		return Drive.DriveApi.getFile(this.getGoogleApiClient(), id);
-	}
-	
-	private void refreshContentView() {
-		if (mListAdapter == null) {
-			mListAdapter = new ListSelectionAdapter(this, R.layout.activity_list_selection_item, mFiles);
-			mListView = (ListView) findViewById(R.id.vocabulary_lists);
-			mListView.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-					final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
-					final PhraseCollection file = mFiles.get(position);
-					new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// TODO setContentView to loading overlay while generating PhraseCollection
-                            file.generateCollectionFromDriveFile(getGoogleApiClient());
-							intent.putExtra("PhraseCollection", file);
-							intent.putExtra("position", position);
-							view.getContext().startActivity(intent);
-						}
-					}).start();
-				}
-			});
-			mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
-			mListView.setAdapter(mListAdapter);
-		} else {
-			mListAdapter.notifyDataSetChanged();
-		}
-	}
 
 	public void editList(final View v) {
+        final ListSelectionActivity c = this;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				PhraseCollection file = (PhraseCollection) v.getTag();
 				Intent intent = new Intent(v.getContext(), EditListActivity.class);
-				file.generateCollectionFromDriveFile(getGoogleApiClient());
-				intent.putExtra("PhraseCollection", file);
-				int position = ((ListView) findViewById(R.id.vocabulary_lists)).getPositionForView(v);
-				DriveId driveId = file.getDriveId();
-				intent.putExtra("position", position);
-				intent.putExtra("DriveId", driveId.encodeToString());
-				startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
+				if (file.loadCollectionDataFromDrive(c)) {
+                    intent.putExtra("PhraseCollection", file);
+                    intent.putExtra("position", ((ListView) findViewById(R.id.vocabulary_lists)).getPositionForView(v));
+                    startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
+                } else {
+                   Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
+                }
 			}
 		}).start();
 	}
@@ -255,7 +247,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			break;
 			
 		default:
-			Log.d(TAG, "Request Code not recognized: " + requestCode);
+			Log.e(TAG, "Request Code not recognized: " + requestCode);
 		}
 	}
 

@@ -6,9 +6,9 @@ import android.util.Log;
 import android.util.Xml;
 
 import com.ddiehl.android.flashcard.activities.EditListActivity;
+import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
 import com.ddiehl.android.flashcard.util.Utils;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
@@ -28,38 +28,41 @@ import java.util.List;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
-	private List<Phrase> list = new ArrayList<Phrase>();
+	private List<Phrase> mPhraseList = new ArrayList<Phrase>();
     private DriveId mDriveId;
-	private String title;
+	private String mListTitle;
 	private int phrasesTotal, phrasesStarted, phrasesMastered;
 //    private OnClickListener editListener;
 	
 	public PhraseCollection() { }
 
 	public PhraseCollection(InputStream vocabulary) {
-		parseVocabularyXml(vocabulary);
+		buildCollectionFromInputStream(vocabulary);
 	}
 
     public PhraseCollection(DriveId id) {
         setDriveId(id);
     }
 
-    public void generateCollectionFromDriveFile(GoogleApiClient client) {
-        DriveFile driveFile = Drive.DriveApi.getFile(client, getDriveId());
+    public boolean loadCollectionDataFromDrive(GooglePlayConnectedActivity c) {
+        DriveFile driveFile = Drive.DriveApi.getFile(c.getGoogleApiClient(), this.getDriveId());
         // Retrieve Contents from DriveFile
-        DriveApi.ContentsResult result = driveFile.openContents(client, DriveFile.MODE_READ_ONLY, new DriveFile.DownloadProgressListener() {
+        DriveApi.ContentsResult result = driveFile.openContents(c.getGoogleApiClient(), DriveFile.MODE_READ_ONLY,
+                new DriveFile.DownloadProgressListener() {
             @Override
             public void onProgress(long arg0, long arg1) {
                 // Report download progress here
             }
         }).await();
-        Contents contents = result.getContents();
-        // Return new PhraseCollection created from Contents
-        InputStream f_in = contents.getInputStream();
-        parseVocabularyXml(f_in);
+        if (result.getStatus().isSuccess()) {
+            // Return new PhraseCollection created from Contents
+            buildCollectionFromInputStream(result.getContents().getInputStream());
+            return true;
+        }
+        return false;
     }
 
-	public void parseVocabularyXml(InputStream vocabulary) {
+	public void buildCollectionFromInputStream(InputStream vocabulary) {
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -84,7 +87,7 @@ public class PhraseCollection implements Parcelable {
                         if (name.equalsIgnoreCase("information")) {
 
                         } else if (name.equalsIgnoreCase("title")) {
-                            setTitle(parser.nextText());
+                            setListTitle(parser.nextText());
                         } else if (name.equalsIgnoreCase("phrasestotal")) {
                             setPhrasesTotal(Integer.parseInt(parser.nextText()));
                         } else if (name.equalsIgnoreCase("phrasesstarted")) {
@@ -137,7 +140,7 @@ public class PhraseCollection implements Parcelable {
 		}
 	}
 
-	public String serializeToXml(EditListActivity c) {
+	public String serializeToXml() {
         StringWriter writer = new StringWriter();
         XmlSerializer xmlSerializer = Xml.newSerializer();
 		try {
@@ -148,7 +151,7 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.startTag(ns, "vocabulary");
 	        xmlSerializer.startTag(ns, "information");
 	        xmlSerializer.startTag(ns, "Title");
-	        xmlSerializer.text(this.getTitle());
+	        xmlSerializer.text(this.getListTitle());
 	        xmlSerializer.endTag(ns, "Title");
 	        xmlSerializer.startTag(ns, "PhrasesTotal");
 	        xmlSerializer.text(String.valueOf(this.getPhrasesTotal()));
@@ -161,8 +164,8 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.endTag(ns, "PhrasesMastered");
 	        xmlSerializer.endTag(ns, "information");
 	        xmlSerializer.startTag(ns, "phrases");
-	        for (int i = 0; i < list.size(); i++) {
-	        	Phrase p = list.get(i);
+	        for (int i = 0; i < mPhraseList.size(); i++) {
+	        	Phrase p = mPhraseList.get(i);
 	        	ArrayList<Sentence> sentences = p.getPhraseSentences();
 		        xmlSerializer.startTag(ns, "phrase");
 		        xmlSerializer.attribute(ns, "ID", String.valueOf(i+1));
@@ -210,7 +213,8 @@ public class PhraseCollection implements Parcelable {
         return writer.toString();
 	}
 
-	public void writeChangesToDrive(String listXml, EditListActivity c) {
+	public boolean writeChangesToDrive(EditListActivity c) {
+        String listXml = this.serializeToXml(); // Serialize PhraseCollection to XML
 		final GoogleApiClient client = c.getGoogleApiClient();
 		if (!client.isConnected()) {
 			Utils.showToast(c, "Error: Play services not yet connected.");
@@ -219,7 +223,7 @@ public class PhraseCollection implements Parcelable {
 			DriveFile driveFile = Drive.DriveApi.getFile(c.getGoogleApiClient(), mDriveId);
 
 			// Create MetadataChangeSet to update title of DriveFile
-			MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(this.getTitle()).build();
+			MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(this.getListTitle()).build();
 
 			// Submit MetadataChangeSet and check result
 			if (driveFile.updateMetadata(client, cs).await().getStatus().isSuccess())
@@ -244,12 +248,14 @@ public class PhraseCollection implements Parcelable {
                     f_out.write(listXml.getBytes());
                     f_out.close();
                     // Call commitAndCloseContents to write changes to DriveFile
-                    driveFile.commitAndCloseContents(client, result.getContents());
+                    if (driveFile.commitAndCloseContents(client, result.getContents()).await().getStatus().isSuccess())
+                        return true;
                 } catch (IOException e) {
                     Log.e(TAG, "Error writing contents to DriveFile: " + e.getMessage());
                 }
             }
 		}
+        return false;
 }
 
 	// TODO Refactor deletion function for DriveFiles
@@ -258,40 +264,40 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public List<Phrase> add(Phrase q) {
-		list.add(q);
-		return list;
+		mPhraseList.add(q);
+		return mPhraseList;
 	}
 	
 	public Phrase get(int index) {
-		return list.get(index);
+		return mPhraseList.get(index);
 	}
 	
 	public Phrase remove(int index) {
-		return list.remove(index);
+		return mPhraseList.remove(index);
 	}
 	
 	public boolean isEmpty() {
-		return list.isEmpty();
+		return mPhraseList.isEmpty();
 	}
 	
 	public PhraseCollection clone() throws CloneNotSupportedException {
 		super.clone();
 		PhraseCollection clone = new PhraseCollection();
-		clone.setTitle(getTitle());
-		clone.getList().addAll(getList());
+		clone.setListTitle(getListTitle());
+		clone.getPhraseList().addAll(getPhraseList());
 		return clone;
 	}
 	
 	public int size() {
-		return list.size();
+		return mPhraseList.size();
 	}
 	
-	public List<Phrase> getList() {
-		return list;
+	public List<Phrase> getPhraseList() {
+		return mPhraseList;
 	}
 	
-	public void setList(List<Phrase> in) {
-		this.list = in;
+	public void setPhraseList(List<Phrase> in) {
+		this.mPhraseList = in;
 	}
 
     public DriveId getDriveId() {
@@ -302,12 +308,12 @@ public class PhraseCollection implements Parcelable {
         this.mDriveId = mDriveId;
     }
 
-	public String getTitle() {
-		return title;
+	public String getListTitle() {
+		return mListTitle;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setListTitle(String title) {
+		this.mListTitle = title;
 	}
 
 	public int getPhrasesTotal() {
@@ -335,7 +341,7 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public Phrase set(int index, Phrase p) {
-		return list.set(index, p);
+		return mPhraseList.set(index, p);
 	}
 
 	@Override
@@ -344,8 +350,8 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public PhraseCollection(Parcel in) {
-		in.readTypedList(list, Phrase.CREATOR);
-		this.setTitle(in.readString());
+		in.readTypedList(mPhraseList, Phrase.CREATOR);
+		this.setListTitle(in.readString());
 		this.setPhrasesTotal(in.readInt());
 		this.setPhrasesStarted(in.readInt());
 		this.setPhrasesMastered(in.readInt());
@@ -354,8 +360,8 @@ public class PhraseCollection implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
-		arg0.writeTypedList(list);
-		arg0.writeString(getTitle());
+		arg0.writeTypedList(mPhraseList);
+		arg0.writeString(getListTitle());
 		arg0.writeInt(getPhrasesTotal());
 		arg0.writeInt(getPhrasesStarted());
 		arg0.writeInt(getPhrasesMastered());
@@ -373,6 +379,6 @@ public class PhraseCollection implements Parcelable {
 	};
 
 	public Iterator<Phrase> iterator() {
-		return list.iterator();
+		return mPhraseList.iterator();
 	}
 }

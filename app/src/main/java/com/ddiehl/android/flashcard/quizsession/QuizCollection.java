@@ -32,7 +32,7 @@ public class QuizCollection implements Parcelable {
 					this.add(q);
 				}
 		}
-		setTitle(pc.getTitle());
+		setTitle(pc.getListTitle());
 	}
 
 	public QuizCollection(Parcel in) {

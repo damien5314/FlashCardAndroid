@@ -98,7 +98,7 @@ public class LoadListDataActivity extends Activity {
 		vPhrasesTotal = (TextView) findViewById(R.id.list_data_wordcount_total_value);
 		vPhrasesStarted = (TextView) findViewById(R.id.list_data_wordcount_started_value);
 		vPhrasesMastered = (TextView) findViewById(R.id.list_data_wordcount_completed_value);
-		vTitle.setText(pc.getTitle());
+		vTitle.setText(pc.getListTitle());
 		vPhrasesTotal.setText(String.valueOf(pc.getPhrasesTotal()));
 		vPhrasesStarted.setText(String.valueOf(pc.getPhrasesStarted()));
 		vPhrasesMastered.setText(String.valueOf(pc.getPhrasesMastered()));
