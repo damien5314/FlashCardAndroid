@@ -97,15 +97,16 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				if (mPhraseCollection.writeChangesToDrive((EditListActivity)v.getContext()))
-                    Log.i(TAG, "DriveFile contents committed successfully.");
-
-				// Open new Intent to create Bundle to pass back to ListSelectionActivity
-				Intent rIntent = new Intent();
-				rIntent.putExtra("PhraseCollection", mPhraseCollection);
-				rIntent.putExtra("position", mPosition);
-				setResult(RESULT_CODE_SAVE, rIntent);
-				finish();
+				if (mPhraseCollection.writeChangesToDrive((EditListActivity)v.getContext())) {
+                    // Open new Intent to create Bundle to pass back to ListSelectionActivity
+                    Intent rIntent = new Intent();
+                    rIntent.putExtra("PhraseCollection", mPhraseCollection);
+                    rIntent.putExtra("position", mPosition);
+                    setResult(RESULT_CODE_SAVE, rIntent);
+                    finish();
+                } else {
+                    // TODO Display error to user when writing changes to Drive is unsuccessful
+                }
 			}
 		}).start();
 	}

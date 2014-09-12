@@ -18,7 +18,6 @@ import com.ddiehl.android.flashcard.dialogs.ExitAppDialog;
 import com.ddiehl.android.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
-import com.ddiehl.android.flashcard.util.Utils;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi.ContentsResult;
@@ -89,10 +88,8 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                         if (result.getStatus().isSuccess()) {
                             MetadataBuffer buffer = result.getMetadataBuffer();
                             if (buffer.getCount() == 0) { // If folder does not exist
-                                Log.i(TAG, "FlashCard folder not found in Drive, creating.");
                                 createFolderInDrive(rootFolder);
                             } else { // If folder does exist
-                                Log.i(TAG, "FlashCard folder found in Drive.");
                                 Metadata data = buffer.get(0);
                                 driveFolderId = data.getDriveId();
                                 DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
@@ -108,6 +105,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 	
 	private void createFolderInDrive(DriveFolder pFolder) {
+        Log.i(TAG, "FlashCard folder not found in Drive, creating.");
         MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
     		.setTitle("FlashCard").build();
 	    
@@ -120,7 +118,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			@Override
 			public void onResult(DriveFolderResult result) {
 				Log.i(TAG, "FlashCard folder created in Drive root folder.");
-				Log.d(TAG, "Drive resource ID: " + result.getDriveFolder().getDriveId());
 				driveFolderId = result.getDriveFolder().getDriveId();
 			}
 	    };
@@ -149,9 +146,9 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                         mListView.setOnItemClickListener(getOnItemClickListener());
                         mListView.setMultiChoiceModeListener(new ListSelectionListener(mListView, mListAdapter));
                         mListView.setAdapter(mListAdapter);
-                        Utils.showToast(c, "Files found in Drive: " + filesProcessed);
+//                        Utils.showToast(c, "Files found in Drive: " + filesProcessed);
                     } else {
-                        Log.e(TAG, "DriveFiles not successfully retrieved.");
+                        Log.e(TAG, "Failed to retrieve DriveFiles.");
                         Log.e(TAG, "Status code: " + result.getStatus().getStatusCode() + " - " + "Message: " + result.getStatus().getStatusMessage());
                     }
                 }
@@ -168,7 +165,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                     @Override
                     public void run() {
                         if (file.isEmpty()) {
-                            Log.d(TAG, "No phrases in PhraseCollection, generating from Drive.");
                             if (file.loadCollectionDataFromDrive(c)) startListDataActivity(file);
                             else Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
                         }
@@ -230,7 +226,6 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			public void run() {
 				PhraseCollection file = (PhraseCollection) v.getTag();
                 if (file.isEmpty()) {
-                    Log.d(TAG, "No phrases in PhraseCollection, generating from Drive.");
                     if (file.loadCollectionDataFromDrive(c)) startEditActivity(file);
                     else Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
                 }
@@ -256,8 +251,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                 Bundle extras = data.getExtras();
 				int position = extras.getInt("position");
 				PhraseCollection list = extras.getParcelable("PhraseCollection");
-                Log.d(TAG, "Setting PhraseCollection to position " + position + " of " + mFiles.size());
-                mFiles.set(position, list); // Test if we need this
+                mFiles.set(position, list);
 				mListAdapter.notifyDataSetChanged();
 				break;
 			}

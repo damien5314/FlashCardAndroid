@@ -226,9 +226,8 @@ public class PhraseCollection implements Parcelable {
 			MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(this.getListTitle()).build();
 
 			// Submit MetadataChangeSet and check result
-			if (driveFile.updateMetadata(client, cs).await().getStatus().isSuccess())
-				Log.d(TAG, "Updated file metadata successfully.");
-			else Log.e(TAG, "Error updating file metadata.");
+			if (!driveFile.updateMetadata(client, cs).await().getStatus().isSuccess())
+				Log.e(TAG, "Error updating file metadata.");
 
 			// Open DriveFile contents
 			DriveApi.ContentsResult result = driveFile.openContents(client, DriveFile.MODE_WRITE_ONLY,
@@ -248,7 +247,9 @@ public class PhraseCollection implements Parcelable {
                     f_out.write(listXml.getBytes());
                     f_out.close();
                     // Call commitAndCloseContents to write changes to DriveFile
-                    if (driveFile.commitAndCloseContents(client, result.getContents()).await().getStatus().isSuccess())
+                    if (!driveFile.commitAndCloseContents(client, result.getContents()).await().getStatus().isSuccess())
+                        Log.e(TAG, "Error writing contents to DriveFile.");
+                    else
                         return true;
                 } catch (IOException e) {
                     Log.e(TAG, "Error writing contents to DriveFile: " + e.getMessage());

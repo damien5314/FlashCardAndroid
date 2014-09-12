@@ -45,10 +45,8 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 	protected void onStart() {
 		super.onStart();
 
-		if (!mResolvingError) {
-			Log.i(TAG, "Attempting to connect to Google Play services.");
+		if (!mResolvingError)
 			mClient.connect();
-		}
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 
 	@Override
 	public void onConnected(Bundle connectionHint) {
-		Log.i(TAG, "Connected to Google Play services.");
+
 	}
 
 	@Override
@@ -73,12 +71,12 @@ public abstract class GooglePlayConnectedActivity extends Activity implements
 		// The connection has been interrupted.
 		// Disable any UI components that depend on Google APIs
 		// until onConnected() is called.
-		Log.i(TAG, "Connection to Google Play services has been suspended.");
+		Log.i(TAG, "Connection to Google Play services has been suspended. Cause: " + cause);
 	}
 
 	@Override
 	public void onConnectionFailed(ConnectionResult result) {
-		Log.i(TAG, "Unable to connect to Google Play services.");
+		Log.i(TAG, "Failed to connect to Google Play services.");
 		if (mResolvingError) {
 			// Already attempting to resolve an error.
 			return;
