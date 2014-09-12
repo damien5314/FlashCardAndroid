@@ -90,16 +90,23 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 	private boolean checkIfAltered() {
 		return isAltered;
 	}
-	
+
 	public void quitAndSave(final View v) {
+        // Set title of the PhraseCollection before we shift to loading view
+        mPhraseCollection.setTitle(((EditText) findViewById(R.id.edit_list_title)).getText().toString());
+
+        // Open layout with ProgressBar while we are processing DriveFile
+        setContentView(R.layout.activity_circle);
+
+        // Serialize PhraseCollection to XML and feed that into update function
+        final String listXml = mPhraseCollection.serializeToXml(this);
+
 		// Open a new Thread to save the file and exit back to ListSelectionActivity
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mPhraseCollection.save(v.getContext());
-				// Open layout with ProgressBar while we are processing DriveFile
-				setContentView(R.layout.activity_circle);
-				mPhraseCollection.writeChangesToDrive((EditListActivity)v.getContext());
+				mPhraseCollection.writeChangesToDrive(listXml, (EditListActivity)v.getContext());
+
 				// Open new Intent to create Bundle to pass back to ListSelectionActivity
 				Intent rIntent = new Intent();
 				rIntent.putExtra("PhraseCollection", mPhraseCollection);

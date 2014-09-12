@@ -1,14 +1,10 @@
 package com.ddiehl.android.flashcard.quizsession;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
-import android.widget.EditText;
 
-import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.activities.EditListActivity;
 import com.ddiehl.android.flashcard.util.Utils;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,7 +28,6 @@ import java.util.List;
 
 public class PhraseCollection implements Parcelable {
 	private static final String TAG = PhraseCollection.class.getSimpleName();
-	private String contentsXml = null;
 	private List<Phrase> list = new ArrayList<Phrase>();
     private DriveId mDriveId;
 	private String title;
@@ -138,18 +133,15 @@ public class PhraseCollection implements Parcelable {
                 eventType = parser.next();
             }
 		} catch (Exception e) {
-			Log.e(TAG, "Error while deserializing vocabulary XML.");
+			Log.e(TAG, "Error while deserializing vocabulary XML: " + e.getMessage());
 		}
 	}
 
-	public void save(Context c) {
+	public String serializeToXml(EditListActivity c) {
+        StringWriter writer = new StringWriter();
+        XmlSerializer xmlSerializer = Xml.newSerializer();
 		try {
-	        XmlSerializer xmlSerializer = Xml.newSerializer();
-	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
-
-			EditText vTitle = (EditText) ((Activity)c).findViewById(R.id.edit_list_title);
-			setTitle(vTitle.getText().toString());
 	        
 	        String ns = ""; // Namespace
 	        xmlSerializer.startDocument("UTF-8",true);
@@ -211,15 +203,14 @@ public class PhraseCollection implements Parcelable {
 	        xmlSerializer.endTag(ns, "phrases");
 	        xmlSerializer.endTag(ns, "vocabulary");
 	        xmlSerializer.endDocument();
-
-	        this.setContents(writer.toString());
-	        
 		} catch (Exception e) {
-			Log.e(TAG, "Error while deserializing vocabulary XML: " + e.getMessage());
+			Log.e(TAG, "Error while serializing vocabulary XML: " + e.getMessage());
+            e.printStackTrace();
 		}
+        return writer.toString();
 	}
 
-	public void writeChangesToDrive(EditListActivity c) {
+	public void writeChangesToDrive(String listXml, EditListActivity c) {
 		final GoogleApiClient client = c.getGoogleApiClient();
 		if (!client.isConnected()) {
 			Utils.showToast(c, "Error: Play services not yet connected.");
@@ -236,35 +227,30 @@ public class PhraseCollection implements Parcelable {
 			else Log.e(TAG, "Error updating file metadata.");
 
 			// Open DriveFile contents
-			Contents contents = driveFile.openContents(client, DriveFile.MODE_WRITE_ONLY,
+			DriveApi.ContentsResult result = driveFile.openContents(client, DriveFile.MODE_WRITE_ONLY,
 					new DriveFile.DownloadProgressListener() {
 				@Override
 				public void onProgress(long arg0, long arg1) {
 
 				}
-			}).await().getContents();
+			}).await();
 
-			// Write changes to OutputStream generated from DriveFile contents
-			try {
-				OutputStream f_out = contents.getOutputStream();
-				if (this.getContents() != null) {
-					f_out.write(this.getContents().getBytes());
-					// Call commitAndCloseContents to write changes to DriveFile
-					driveFile.commitAndCloseContents(client, contents);
-				} else Log.e(TAG, "Contents of PhraseCollection are empty, did you save?");
-			} catch (IOException e) {
-				Log.e(TAG, "Error writing contents to DriveFile: " + e.getMessage());
-			}
+            if (!result.getStatus().isSuccess()) {
+                Log.e(TAG, "Error while opening file contents: " + result.getStatus().getStatusMessage());
+            } else {
+                // Write changes to OutputStream generated from DriveFile contents
+                try {
+                    OutputStream f_out = result.getContents().getOutputStream();
+                    f_out.write(listXml.getBytes());
+                    f_out.close();
+                    // Call commitAndCloseContents to write changes to DriveFile
+                    driveFile.commitAndCloseContents(client, result.getContents());
+                } catch (IOException e) {
+                    Log.e(TAG, "Error writing contents to DriveFile: " + e.getMessage());
+                }
+            }
 		}
 }
-
-	private void setContents(String contents) {
-		this.contentsXml = contents;
-	}
-	
-	public String getContents() {
-		return contentsXml;
-	}
 
 	// TODO Refactor deletion function for DriveFiles
 	public boolean delete() {
@@ -358,7 +344,6 @@ public class PhraseCollection implements Parcelable {
 	}
 	
 	public PhraseCollection(Parcel in) {
-		this.contentsXml = in.readString(); // String contentsXml
 		in.readTypedList(list, Phrase.CREATOR);
 		this.setTitle(in.readString());
 		this.setPhrasesTotal(in.readInt());
@@ -369,7 +354,6 @@ public class PhraseCollection implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel arg0, int arg1) {
-		arg0.writeString(contentsXml); // String contentsXml
 		arg0.writeTypedList(list);
 		arg0.writeString(getTitle());
 		arg0.writeInt(getPhrasesTotal());

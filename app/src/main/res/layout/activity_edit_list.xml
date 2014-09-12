@@ -55,7 +55,7 @@
 
     <Button
         style="@style/CallToActionButton"
-        android:onClick="save"
+        android:onClick="quitAndSave"
         android:text="@string/edit_list_cta_text" />
 
 </LinearLayout>
