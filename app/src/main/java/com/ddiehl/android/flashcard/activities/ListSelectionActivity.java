@@ -63,8 +63,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		if (mFiles == null)
 			generateContentFromDrive();
 	}
-	
-	// Instantiate the ArrayList mVocabularyLists with PhraseCollection objects
+
 	private void generateContentFromDrive() {
 		mFiles = new ArrayList<PhraseCollection>();
 		if (getGoogleApiClient().isConnected()) {
@@ -82,18 +81,23 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 				.setResultCallback(new ResultCallback<MetadataBufferResult>() {
 					@Override
 					public void onResult(MetadataBufferResult result) {
-						MetadataBuffer buffer = result.getMetadataBuffer();
-						if (buffer.getCount() == 0) { // If folder does not exist
-							Log.i(TAG, "FlashCard folder not found in Drive, creating.");
-							createFolderInDrive(rootFolder);
-						} else { // If folder does exist
-							Log.i(TAG, "FlashCard folder found in Drive.");
-							Metadata data = buffer.get(0);
-							driveFolderId = data.getDriveId();
-							DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
-							listFilesFromDrive(folder);
-						}
-						buffer.close();
+                        if (result.getStatus().isSuccess()) {
+                            MetadataBuffer buffer = result.getMetadataBuffer();
+                            if (buffer.getCount() == 0) { // If folder does not exist
+                                Log.i(TAG, "FlashCard folder not found in Drive, creating.");
+                                createFolderInDrive(rootFolder);
+                            } else { // If folder does exist
+                                Log.i(TAG, "FlashCard folder found in Drive.");
+                                Metadata data = buffer.get(0);
+                                driveFolderId = data.getDriveId();
+                                DriveFolder folder = Drive.DriveApi.getFolder(getGoogleApiClient(), driveFolderId);
+                                listFilesFromDrive(folder);
+                            }
+                            buffer.close();
+                        } else {
+                            Log.e(TAG, "DriveFolder not successfully retrieved.");
+                            Log.e(TAG, "Status code: " + result.getStatus().getStatusCode() + " - " + "Message: " + result.getStatus().getStatusMessage());
+                        }
 					}
 				});
 	}
@@ -122,20 +126,24 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			new ResultCallback<MetadataBufferResult>() {
 				@Override
 				public void onResult(MetadataBufferResult result) {
-					Log.i(TAG, "FlashCard DriveFolder contents retrieved successfully.");
-					MetadataBuffer buffer = result.getMetadataBuffer();
-					Iterator<Metadata> i = buffer.iterator();
-					int filesProcessed = 0;
-					while (i.hasNext()) {
-						Metadata m = i.next();
-						DriveFile df = getFileByDriveId(m.getDriveId());
-                        PhraseCollection file = new PhraseCollection(df.getDriveId());
-						addFileToCollection(file);
-						filesProcessed++;
-					}
-					buffer.close();
-					refreshContentView();
-					Utils.showToast(getBaseContext(), "Files processed from Drive folder: " + filesProcessed);
+                    if (result.getStatus().isSuccess()) {
+                        MetadataBuffer buffer = result.getMetadataBuffer();
+                        Iterator<Metadata> i = buffer.iterator();
+                        int filesProcessed = 0;
+                        while (i.hasNext()) { // Add each DriveFile in result to file list
+                            Metadata m = i.next();
+                            PhraseCollection file = new PhraseCollection(m.getDriveId());
+                            file.setTitle(m.getTitle());
+                            addFileToCollection(file);
+                            filesProcessed++;
+                        }
+                        buffer.close();
+                        refreshContentView();
+                        Utils.showToast(getBaseContext(), "Files found in Drive: " + filesProcessed);
+                    } else {
+                        Log.e(TAG, "DriveFiles not successfully retrieved.");
+                        Log.e(TAG, "Status code: " + result.getStatus().getStatusCode() + " - " + "Message: " + result.getStatus().getStatusMessage());
+                    }
 				}
 			});
 	}
