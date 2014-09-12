@@ -61,6 +61,10 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 		super.onConnected(connectionHint);
 		if (mFiles == null) {
             Log.d(TAG, "No files in list, generating content from Drive.");
+
+            // Set content view to loading dialog while list is generated
+
+
             generateContentFromDrive();
         }
 	}
@@ -159,20 +163,27 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
         return new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, final int position, long id) {
-                final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
                 final PhraseCollection file = mFiles.get(position);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        // TODO setContentView to loading overlay while generating PhraseCollection
-                        file.loadCollectionDataFromDrive(c);
-                        intent.putExtra("PhraseCollection", file);
-                        intent.putExtra("position", position);
-                        view.getContext().startActivity(intent);
+                        if (file.isEmpty()) {
+                            Log.d(TAG, "No phrases in PhraseCollection, generating from Drive.");
+                            if (file.loadCollectionDataFromDrive(c)) startListDataActivity(file);
+                            else Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
+                        }
+                        else startListDataActivity(file);
                     }
                 }).start();
             }
         };
+    }
+
+    public void startListDataActivity(PhraseCollection file) {
+        final Intent intent = new Intent(getBaseContext(), LoadListDataActivity.class);
+        intent.putExtra("PhraseCollection", file);
+        intent.putExtra("position", mFiles.indexOf(file));
+        startActivity(intent);
     }
 
     // TODO Rewrite the Add New List flow to be synchronous
@@ -218,17 +229,22 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 			@Override
 			public void run() {
 				PhraseCollection file = (PhraseCollection) v.getTag();
-				Intent intent = new Intent(v.getContext(), EditListActivity.class);
-				if (file.loadCollectionDataFromDrive(c)) {
-                    intent.putExtra("PhraseCollection", file);
-                    intent.putExtra("position", ((ListView) findViewById(R.id.vocabulary_lists)).getPositionForView(v));
-                    startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
-                } else {
-                   Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
+                if (file.isEmpty()) {
+                    Log.d(TAG, "No phrases in PhraseCollection, generating from Drive.");
+                    if (file.loadCollectionDataFromDrive(c)) startEditActivity(file);
+                    else Log.e(TAG, "Error generating PhraseCollection from DriveFile.");
                 }
+                else startEditActivity(file);
 			}
 		}).start();
 	}
+
+    public void startEditActivity(PhraseCollection file) {
+        Intent intent = new Intent(this, EditListActivity.class);
+        intent.putExtra("PhraseCollection", file);
+        intent.putExtra("position", mFiles.indexOf(file));
+        startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
+    }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -240,6 +256,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
                 Bundle extras = data.getExtras();
 				int position = extras.getInt("position");
 				PhraseCollection list = extras.getParcelable("PhraseCollection");
+                Log.d(TAG, "Setting PhraseCollection to position " + position + " of " + mFiles.size());
                 mFiles.set(position, list); // Test if we need this
 				mListAdapter.notifyDataSetChanged();
 				break;

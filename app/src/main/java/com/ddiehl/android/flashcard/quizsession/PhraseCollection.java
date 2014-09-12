@@ -140,7 +140,7 @@ public class PhraseCollection implements Parcelable {
 		}
 	}
 
-	public String serializeToXml() {
+	private String serializeToXml() {
         StringWriter writer = new StringWriter();
         XmlSerializer xmlSerializer = Xml.newSerializer();
 		try {
