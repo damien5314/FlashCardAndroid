@@ -1,25 +1,30 @@
 package com.ddiehl.android.flashcard.quizsession;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.EditText;
 
+import com.ddiehl.android.flashcard.R;
+import com.ddiehl.android.flashcard.activities.EditListActivity;
+import com.ddiehl.android.flashcard.util.Utils;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.drive.Contents;
 import com.google.android.gms.drive.Drive;
 import com.google.android.gms.drive.DriveApi;
 import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
+import com.google.android.gms.drive.MetadataChangeSet;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -37,7 +42,7 @@ public class PhraseCollection implements Parcelable {
 	public PhraseCollection() { }
 
 	public PhraseCollection(InputStream vocabulary) {
-		generateXmlPullParser(vocabulary);
+		parseVocabularyXml(vocabulary);
 	}
 
     public PhraseCollection(DriveId id) {
@@ -56,17 +61,16 @@ public class PhraseCollection implements Parcelable {
         Contents contents = result.getContents();
         // Return new PhraseCollection created from Contents
         InputStream f_in = contents.getInputStream();
-        generateXmlPullParser(f_in);
+        parseVocabularyXml(f_in);
     }
 
-	public void generateXmlPullParser(InputStream vocabulary) throws XmlPullParserException, IOException {
+	public void parseVocabularyXml(InputStream vocabulary) {
 		XmlPullParser parser = Xml.newPullParser();
         try {
 			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 	        parser.setInput(vocabulary, null);
 		} catch (Exception e) {
-			Log.e(TAG, "Error initializing XmlPullParser");
-			e.printStackTrace();
+			Log.e(TAG, "Error initializing XmlPullParser" + e.getMessage());
 		}
         
 		try {
@@ -76,7 +80,7 @@ public class PhraseCollection implements Parcelable {
             Sentence currentSentence = null;
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String name = null;
+				String name;
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
                         break;
@@ -109,13 +113,13 @@ public class PhraseCollection implements Parcelable {
                                 phraseSentences = new ArrayList<Sentence>();
                             } else if (name.equalsIgnoreCase("sentence")) {
                                 currentSentence = new Sentence();
-                            } else if (name.equalsIgnoreCase("s_native")) {
+                            } else if (name.equalsIgnoreCase("s_native") && currentSentence != null) {
                                 currentSentence.setSentenceNative(parser.nextText());
-                            } else if (name.equalsIgnoreCase("s_phonetic")) {
+                            } else if (name.equalsIgnoreCase("s_phonetic") && currentSentence != null) {
                                 currentSentence.setSentencePhonetic(parser.nextText());
-                            } else if (name.equalsIgnoreCase("s_romanized")) {
+                            } else if (name.equalsIgnoreCase("s_romanized") && currentSentence != null) {
                                 currentSentence.setSentenceRomanized(parser.nextText());
-                            } else if (name.equalsIgnoreCase("s_translated")) {
+                            } else if (name.equalsIgnoreCase("s_translated") && currentSentence != null) {
                                 currentSentence.setSentenceTranslated(parser.nextText());
                             }
                         }
@@ -125,7 +129,7 @@ public class PhraseCollection implements Parcelable {
                         if (name.equalsIgnoreCase("phrase") && currentPhrase != null) {
                             currentPhrase.setIncludedInSession(true);
                             this.add(currentPhrase);
-                        } else if (name.equalsIgnoreCase("sentence") && currentSentence != null) {
+                        } else if (name.equalsIgnoreCase("sentence") && currentSentence != null && phraseSentences != null) {
                             phraseSentences.add(currentSentence);
                         } else if (name.equalsIgnoreCase("sentences") && phraseSentences != null) {
                             currentPhrase.setPhraseSentences(phraseSentences);
@@ -134,22 +138,18 @@ public class PhraseCollection implements Parcelable {
                 eventType = parser.next();
             }
 		} catch (Exception e) {
-			e.printStackTrace();
-		}		
+			Log.e(TAG, "Error while deserializing vocabulary XML.");
+		}
 	}
-	
-	private void parseXML(XmlPullParser parser) throws XmlPullParserException, IOException
-	{
 
-
-	}
-	
-	public void save() {
-		Log.i(TAG, "Saving PhraseCollection to XML");
+	public void save(Context c) {
 		try {
 	        XmlSerializer xmlSerializer = Xml.newSerializer();
 	        StringWriter writer = new StringWriter();
 	        xmlSerializer.setOutput(writer);
+
+			EditText vTitle = (EditText) ((Activity)c).findViewById(R.id.edit_list_title);
+			setTitle(vTitle.getText().toString());
 	        
 	        String ns = ""; // Namespace
 	        xmlSerializer.startDocument("UTF-8",true);
@@ -214,13 +214,50 @@ public class PhraseCollection implements Parcelable {
 
 	        this.setContents(writer.toString());
 	        
-		} catch (FileNotFoundException e) {
-		    Log.e(TAG, "FileNotFoundException: " + e.getMessage());
-		} catch (IOException e) {
-		    Log.e(TAG, "Caught IOException: " + e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Error while deserializing vocabulary XML: " + e.getMessage());
 		}
 	}
-	
+
+	public void writeChangesToDrive(EditListActivity c) {
+		final GoogleApiClient client = c.getGoogleApiClient();
+		if (!client.isConnected()) {
+			Utils.showToast(c, "Error: Play services not yet connected.");
+		} else {
+			// Retrieve DriveFile with the DriveId
+			DriveFile driveFile = Drive.DriveApi.getFile(c.getGoogleApiClient(), mDriveId);
+
+			// Create MetadataChangeSet to update title of DriveFile
+			MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(this.getTitle()).build();
+
+			// Submit MetadataChangeSet and check result
+			if (driveFile.updateMetadata(client, cs).await().getStatus().isSuccess())
+				Log.d(TAG, "Updated file metadata successfully.");
+			else Log.e(TAG, "Error updating file metadata.");
+
+			// Open DriveFile contents
+			Contents contents = driveFile.openContents(client, DriveFile.MODE_WRITE_ONLY,
+					new DriveFile.DownloadProgressListener() {
+				@Override
+				public void onProgress(long arg0, long arg1) {
+
+				}
+			}).await().getContents();
+
+			// Write changes to OutputStream generated from DriveFile contents
+			try {
+				OutputStream f_out = contents.getOutputStream();
+				if (this.getContents() != null) {
+					f_out.write(this.getContents().getBytes());
+					// Call commitAndCloseContents to write changes to DriveFile
+					driveFile.commitAndCloseContents(client, contents);
+				} else Log.e(TAG, "Contents of PhraseCollection are empty, did you save?");
+			} catch (IOException e) {
+				Log.e(TAG, "Error writing contents to DriveFile: " + e.getMessage());
+			}
+		}
+}
+
 	private void setContents(String contents) {
 		this.contentsXml = contents;
 	}
@@ -229,8 +266,8 @@ public class PhraseCollection implements Parcelable {
 		return contentsXml;
 	}
 
-	public boolean delete(Context ctx) {
-        // TODO Refactor deletion function for DriveFiles
+	// TODO Refactor deletion function for DriveFiles
+	public boolean delete() {
         return false;
 	}
 	
@@ -251,7 +288,8 @@ public class PhraseCollection implements Parcelable {
 		return list.isEmpty();
 	}
 	
-	public PhraseCollection clone() {
+	public PhraseCollection clone() throws CloneNotSupportedException {
+		super.clone();
 		PhraseCollection clone = new PhraseCollection();
 		clone.setTitle(getTitle());
 		clone.getList().addAll(getList());

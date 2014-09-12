@@ -15,7 +15,6 @@ import android.widget.ListView;
 import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.adapters.ListSelectionAdapter;
 import com.ddiehl.android.flashcard.dialogs.ExitAppDialog;
-import com.ddiehl.android.flashcard.fileio.FlashcardFile;
 import com.ddiehl.android.flashcard.listeners.ListSelectionListener;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
@@ -198,6 +197,7 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
+							// TODO setContentView to loading overlay while generating PhraseCollection
                             file.generateCollectionFromDriveFile(getGoogleApiClient());
 							intent.putExtra("PhraseCollection", file);
 							intent.putExtra("position", position);
@@ -214,17 +214,16 @@ public class ListSelectionActivity extends GooglePlayConnectedActivity {
 	}
 
 	public void editList(final View v) {
-		final PhraseCollection file = (PhraseCollection) v.getTag();
-		final Intent intent = new Intent(this, EditListActivity.class);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				PhraseCollection pc = file.generatePhraseCollectionFromDriveFile(getGoogleApiClient());
-				intent.putExtra("PhraseCollection", pc);
-				ListView lv = (ListView) findViewById(R.id.vocabulary_lists);
-				int position = lv.getPositionForView(v);
+				PhraseCollection file = (PhraseCollection) v.getTag();
+				Intent intent = new Intent(v.getContext(), EditListActivity.class);
+				file.generateCollectionFromDriveFile(getGoogleApiClient());
+				intent.putExtra("PhraseCollection", file);
+				int position = ((ListView) findViewById(R.id.vocabulary_lists)).getPositionForView(v);
+				DriveId driveId = file.getDriveId();
 				intent.putExtra("position", position);
-				DriveId driveId = driveFile.getDriveId();
 				intent.putExtra("DriveId", driveId.encodeToString());
 				startActivityForResult(intent, REQUEST_CODE_EDIT_LIST);
 			}

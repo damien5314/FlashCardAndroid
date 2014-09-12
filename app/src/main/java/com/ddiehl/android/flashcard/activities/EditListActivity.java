@@ -14,23 +14,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ddiehl.android.flashcard.R;
 import com.ddiehl.android.flashcard.adapters.EditListPhrasesAdapter;
 import com.ddiehl.android.flashcard.dialogs.DiscardChangedPhraseDialog;
 import com.ddiehl.android.flashcard.listeners.PhraseSelectionListener;
 import com.ddiehl.android.flashcard.quizsession.Phrase;
 import com.ddiehl.android.flashcard.quizsession.PhraseCollection;
 import com.ddiehl.android.flashcard.util.GooglePlayConnectedActivity;
-import com.ddiehl.android.flashcard.util.Utils;
-import com.ddiehl.android.flashcard.R;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Contents;
-import com.google.android.gms.drive.Drive;
-import com.google.android.gms.drive.DriveFile;
 import com.google.android.gms.drive.DriveId;
-import com.google.android.gms.drive.MetadataChangeSet;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class EditListActivity extends GooglePlayConnectedActivity {
 	private static final String TAG = EditListActivity.class.getSimpleName();
@@ -96,71 +87,27 @@ public class EditListActivity extends GooglePlayConnectedActivity {
 		mPhraseAdapter.notifyDataSetChanged();
 	}
 	
-	public void save(View v) {
-		final GoogleApiClient client = getGoogleApiClient();
-		if (!client.isConnected()) {
-			Utils.showToast(this, "Error: Play services not yet connected.");
-		} else {
-			// Update title of PhraseCollection and call save() to serialize to XML
-			EditText vTitle = (EditText) findViewById(R.id.edit_list_title);
-			mPhraseCollection.setTitle(vTitle.getText().toString());
-			mPhraseCollection.save();
-
-			// Open layout with ProgressBar while we are processing DriveFile
-			setContentView(R.layout.activity_circle);
-
-			// Open new worker thread to synchronously update DriveFile before returning to ListSelectionActivity
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// Retrieve DriveFile with the DriveId
-					DriveFile dfile = Drive.DriveApi.getFile(getGoogleApiClient(), mDriveId);
-					// Create MetadataChangeSet to update title of DriveFile
-					MetadataChangeSet cs = new MetadataChangeSet.Builder().setTitle(mPhraseCollection.getTitle()).build();
-
-					// Submit MetadataChangeSet and check result
-					if (dfile.updateMetadata(client, cs).await().getStatus().isSuccess())
-						Log.d(TAG, "Updated file metadata successfully.");
-
-					// Open DriveFile contents
-					Contents contents = dfile.openContents(client, DriveFile.MODE_WRITE_ONLY, new DriveFile.DownloadProgressListener() {
-						@Override
-						public void onProgress(long arg0, long arg1) {
-
-						}
-					}).await().getContents();
-
-					// Write changes to OutputStream generated from DriveFile contents
-					try {
-						OutputStream f_out = contents.getOutputStream();
-						if (mPhraseCollection.getContents() != null) {
-							f_out.write(mPhraseCollection.getContents().getBytes());
-							// Call commitAndCloseContents to write changes to DriveFile
-							dfile.commitAndCloseContents(client, contents);
-						} else {
-							Log.e(TAG, "Contents of PhraseCollection are empty, did you save?");
-						}
-					} catch (IOException e) { e.printStackTrace(); }
-
-					// Open new Intent to create Bundle to pass back to ListSelectionActivity
-					Intent rIntent = new Intent();
-					rIntent.putExtra("PhraseCollection", mPhraseCollection);
-					rIntent.putExtra("position", mPosition);
-					setResult(RESULT_CODE_SAVE, rIntent);
-					finish();
-				}
-			}).start();
-
-		}
-
-	}
-	
 	private boolean checkIfAltered() {
 		return isAltered;
 	}
 	
-	public void quitAndSave(View v) {
-		save(v);
+	public void quitAndSave(final View v) {
+		// Open a new Thread to save the file and exit back to ListSelectionActivity
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				mPhraseCollection.save(v.getContext());
+				// Open layout with ProgressBar while we are processing DriveFile
+				setContentView(R.layout.activity_circle);
+				mPhraseCollection.writeChangesToDrive((EditListActivity)v.getContext());
+				// Open new Intent to create Bundle to pass back to ListSelectionActivity
+				Intent rIntent = new Intent();
+				rIntent.putExtra("PhraseCollection", mPhraseCollection);
+				rIntent.putExtra("position", mPosition);
+				setResult(RESULT_CODE_SAVE, rIntent);
+				finish();
+			}
+		}).start();
 	}
 	
 	public void quitAndDiscard(View v) {
